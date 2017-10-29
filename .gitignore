@@ -259,3 +259,12 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# Settings for different environments
+appsettings.*.json
+
+# Rider IDE
+.idea/
+
+# VS Code Editor
+.vscode/
