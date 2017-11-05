@@ -268,3 +268,6 @@ appsettings.*.json
 
 # VS Code Editor
 .vscode/
+
+# SQLite Database files
+**/*.db
