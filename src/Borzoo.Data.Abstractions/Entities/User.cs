@@ -5,7 +5,7 @@ namespace Borzoo.Data.Abstractions.Entities
 {
     public class User : EntityBase
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string DisplayId { get; set; }
