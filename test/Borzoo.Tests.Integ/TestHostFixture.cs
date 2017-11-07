@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Borzoo.Tests.Integ
@@ -30,6 +31,7 @@ namespace Borzoo.Tests.Integ
                 .UseContentRoot(contentRoot)
                 .ConfigureServices(InitializeServices)
                 .UseEnvironment("Development")
+                .UseConfiguration(BuildConfiguration())
                 .UseStartup(typeof(TStartup));
 
             _server = new TestServer(builder);
@@ -38,6 +40,14 @@ namespace Borzoo.Tests.Integ
             Client.BaseAddress = new Uri("http://localhost");
         }
 
+        private static IConfigurationRoot BuildConfiguration()
+        {
+            return new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.Test.json")
+                .Build();
+        }
+        
         private static void InitializeServices(IServiceCollection services)
         {
             var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;

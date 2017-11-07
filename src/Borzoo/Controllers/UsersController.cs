@@ -1,13 +1,25 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Borzoo.Data.Abstractions;
 using Borzoo.Models;
 using Borzoo.Models.User;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Controllers
 {
     [Route("/zv/[controller]")]
     public class UsersController : Controller
     {
+        private readonly IEntityRepository<UserEntity> _userRepo;
+
+        public UsersController(IEntityRepository<UserEntity> userRepo)
+        {
+            _userRepo = userRepo;
+        }
+
         [HttpGet("{userId}")]
         public IActionResult Get(string userId)
         {
@@ -20,14 +32,26 @@ namespace Borzoo.Controllers
 //        [ProducesResponseType(typeof(UserPrettyDto), (int) HttpStatusCode.Created)] // ToDo
         [ProducesResponseType(typeof(EmptyContentDto), (int) HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(Error), (int) HttpStatusCode.Conflict)]
-        public IActionResult Post([FromBody] UserCreationRequest model)
+        public async Task<IActionResult> Post([FromBody] UserCreationRequest model)
         {
             if (model is null || !TryValidateModel(model))
             {
                 return StatusCode((int) HttpStatusCode.BadRequest);
             }
 
-            return StatusCode((int) HttpStatusCode.NotImplemented);
+            var entity = (UserEntity) model;
+
+            await _userRepo.CreateAsync(entity);
+
+            bool hasAcceptHeader = HttpContext.Request.Headers.TryGetValue("ACCEPT", out StringValues vals);
+            if (hasAcceptHeader && vals.First().Equals(Constants.ZVeerContentTypes.User.Full))
+            {
+                return StatusCode((int) HttpStatusCode.Created, (UserFullDto) entity);
+            }
+            else
+            {
+                return StatusCode((int) HttpStatusCode.NotImplemented);
+            }
         }
 
         [HttpPatch("{userId}")]

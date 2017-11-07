@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 
 namespace Borzoo.Data.SQLite
@@ -20,12 +18,16 @@ namespace Borzoo.Data.SQLite
             return (long) diff.TotalMilliseconds;
         }
 
-        public static async Task<string> GetLastInsertedRowIdAsync(this SqliteConnection connection,
-            CancellationToken cancellationToken = default)
+        public static string GetLastInsertedRowId(this SqliteConnection connection,
+            SqliteTransaction transaction = default)
         {
             var cmd = connection.CreateCommand();
+            if (transaction != null)
+            {
+                cmd.Transaction = transaction;
+            }
             cmd.CommandText = "SELECT last_insert_rowid() AS id";
-            return (await cmd.ExecuteScalarAsync(cancellationToken)).ToString();
+            return cmd.ExecuteScalar().ToString();
         }
     }
 }

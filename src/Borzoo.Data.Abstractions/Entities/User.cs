@@ -16,6 +16,9 @@ namespace Borzoo.Data.Abstractions.Entities
         public string LastName { get; set; }
 
         [Required]
+        public string PassphraseHash { get; set; }
+
+        [Required]
         public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? ModifiedAt { get; set; }

@@ -7,12 +7,7 @@ namespace Borzoo.Data.SQLite
 {
     public class UserRepository : EntityRepositoryBase, IEntityRepository<User>
     {
-        public UserRepository(string connectionString, string creationScriptFile)
-            : base(connectionString, creationScriptFile)
-        {
-        }
-
-        public async Task<User> CreateAsync(User entity, CancellationToken cancellationToken) // = default
+        public Task<User> CreateAsync(User entity, CancellationToken cancellationToken)
         {
             bool hasLastName = !string.IsNullOrWhiteSpace(entity.LastName);
             string sql = $"INSERT INTO user(name, first_name, joined_at {(hasLastName ? ", last_name" : "")} ) " +
@@ -20,20 +15,25 @@ namespace Borzoo.Data.SQLite
 
             using (var conn = CreateConnection())
             {
-                var cmd = conn.CreateCommand();
+                conn.Open();
+                using (var tnx = conn.BeginTransaction())
+                {
+                    var cmd = conn.CreateCommand();
+                    cmd.Transaction = tnx;
 
-                cmd.CommandText = sql;
-                cmd.Parameters.AddWithValue("$name", entity.DisplayId);
-                cmd.Parameters.AddWithValue("$fname", entity.FirstName);
-                cmd.Parameters.AddWithValue("$time", entity.JoinedAt.ToUnixEpoch());
-                if (hasLastName)
-                    cmd.Parameters.AddWithValue("$lname", entity.LastName);
+                    cmd.CommandText = sql;
+                    cmd.Parameters.AddWithValue("$name", entity.DisplayId);
+                    cmd.Parameters.AddWithValue("$fname", entity.FirstName);
+                    cmd.Parameters.AddWithValue("$time", entity.JoinedAt.ToUnixEpoch());
+                    if (hasLastName)
+                        cmd.Parameters.AddWithValue("$lname", entity.LastName);
 
-                await conn.OpenAsync(cancellationToken);
-                await cmd.ExecuteNonQueryAsync(cancellationToken);
-                entity.Id = await conn.GetLastInsertedRowIdAsync(cancellationToken);
+                    cmd.ExecuteNonQuery();
+                    entity.Id = conn.GetLastInsertedRowId(tnx);
+                    tnx.Commit();
+                }
             }
-            return entity;
+            return Task.FromResult(entity);
         }
     }
 }

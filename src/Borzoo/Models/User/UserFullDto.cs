@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Models.User
 {
@@ -13,7 +14,7 @@ namespace Borzoo.Models.User
     {
         [Required]
         public string Id { get; set; }
-        
+
         [Required]
         public string FirstName { get; set; }
 
@@ -21,5 +22,14 @@ namespace Borzoo.Models.User
 
         [Required]
         public DateTime JoinedAt { get; set; }
+
+        public static explicit operator UserFullDto(UserEntity entity) =>
+            new UserFullDto
+            {
+                Id = entity.DisplayId,
+                FirstName = entity.FirstName,
+                LastName = entity.LastName,
+                JoinedAt = entity.JoinedAt
+            };
     }
 }

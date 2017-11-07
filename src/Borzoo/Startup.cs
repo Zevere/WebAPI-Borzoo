@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Borzoo.Data;
+﻿using Borzoo.Data;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
@@ -23,17 +22,8 @@ namespace Borzoo
         {
             #region SQLite
 
-            // ToDo: Register all with an extension method
-            string connectionString = Configuration["sqlite_connection_string"] ?? "borzoo.db";
-            services.AddTransient<IEntityRepository<User>>(provider =>
-            {
-                var repo = new UserRepository(
-                    connectionString,
-                    Path.GetFullPath("../Borzoo.Data.SQLite/scripts/user.sql")
-                );
-                repo.InitializeDatabaseAsync().GetAwaiter().GetResult();
-                return repo;
-            });
+            DatabaseInitializer.ConnectionString = Configuration["SQLite_Connection_String"] ?? "borzoo.db";
+            services.AddTransient<IEntityRepository<User>, UserRepository>();
 
             services.AddSingleton<DataSeeder>();
 
@@ -46,11 +36,12 @@ namespace Borzoo
         {
             if (env.IsDevelopment())
             {
+                DatabaseInitializer.InitDatabase(Configuration["SQLite_Migrations_Script"]);
                 app.UseDeveloperExceptionPage();
             }
 
-            var seeder = app.ApplicationServices.GetRequiredService<DataSeeder>();
-            seeder.Seed().GetAwaiter().GetResult();
+//            var seeder = app.ApplicationServices.GetRequiredService<DataSeeder>();
+//            seeder.Seed().GetAwaiter().GetResult();
 
             app.UseMvc();
         }
