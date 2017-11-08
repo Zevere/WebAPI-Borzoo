@@ -1,13 +1,13 @@
-﻿using Borzoo.Data;
-using Borzoo.Data.Abstractions;
+﻿using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
+using Borzoo.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Borzoo
+namespace Borzoo.Web
 {
     public class Startup
     {

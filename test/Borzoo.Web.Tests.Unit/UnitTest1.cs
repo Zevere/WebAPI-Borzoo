@@ -1,13 +1,12 @@
-using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Borzoo.Tests.Unit
+namespace Borzoo.Web.Tests.Unit
 {
     public class UnitTest1
     {
         [Fact]
-        public async Task Should_Do()
+        public void Should_Do()
         {
         }
     }

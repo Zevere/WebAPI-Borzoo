@@ -3,11 +3,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Borzoo.Models.User;
+using Borzoo.Web.Models.User;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Borzoo.Tests.Integ
+namespace Borzoo.Web.Tests.Integ
 {
     public class UsersControllerTests : IClassFixture<TestHostFixture<Startup>>
     {

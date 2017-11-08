@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Borzoo.Tests.Integ
+namespace Borzoo.Web.Tests.Integ
 {
     public class TestHostFixture<TStartup> : IDisposable
     {

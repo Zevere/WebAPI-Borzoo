@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
-namespace Borzoo.Models.User
+namespace Borzoo.Web.Models.User
 {
     [JsonObject(
         MemberSerialization.OptOut,

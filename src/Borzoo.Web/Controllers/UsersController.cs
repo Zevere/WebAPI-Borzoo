@@ -2,13 +2,13 @@
 using System.Net;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
-using Borzoo.Models;
-using Borzoo.Models.User;
+using Borzoo.Web.Models;
+using Borzoo.Web.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
-namespace Borzoo.Controllers
+namespace Borzoo.Web.Controllers
 {
     [Route("/zv/[controller]")]
     public class UsersController : Controller

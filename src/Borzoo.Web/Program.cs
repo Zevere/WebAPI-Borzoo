@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Borzoo
+namespace Borzoo.Web
 {
     public class Program
     {

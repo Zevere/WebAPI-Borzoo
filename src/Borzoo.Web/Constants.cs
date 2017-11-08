@@ -1,4 +1,4 @@
-﻿namespace Borzoo
+﻿namespace Borzoo.Web
 {
     public static class Constants
     {

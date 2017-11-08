@@ -1,4 +1,4 @@
-﻿namespace Borzoo.Models
+﻿namespace Borzoo.Web.Models
 {
     public class EmptyContentDto
     {

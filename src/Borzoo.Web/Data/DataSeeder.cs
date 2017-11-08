@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 
-namespace Borzoo.Data
+namespace Borzoo.Web.Data
 {
     public class DataSeeder
     {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Borzoo.Models
+namespace Borzoo.Web.Models
 {
     [JsonObject(
         MemberSerialization.OptOut,
