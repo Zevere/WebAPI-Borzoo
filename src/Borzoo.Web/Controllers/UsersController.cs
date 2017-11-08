@@ -41,7 +41,7 @@ namespace Borzoo.Controllers
 
             var entity = (UserEntity) model;
 
-            await _userRepo.CreateAsync(entity);
+            await _userRepo.AddAsync(entity);
 
             bool hasAcceptHeader = HttpContext.Request.Headers.TryGetValue("ACCEPT", out StringValues vals);
             if (hasAcceptHeader && vals.First().Equals(Constants.ZVeerContentTypes.User.Full))

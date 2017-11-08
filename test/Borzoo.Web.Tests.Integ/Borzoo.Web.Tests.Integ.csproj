@@ -11,7 +11,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Borzoo\Borzoo.csproj" />
+    <ProjectReference Include="..\..\src\Borzoo.Web\Borzoo.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.*">

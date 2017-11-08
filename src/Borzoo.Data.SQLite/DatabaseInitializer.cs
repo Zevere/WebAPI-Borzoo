@@ -7,11 +7,14 @@ namespace Borzoo.Data.SQLite
     {
         public static string ConnectionString;
 
-        public static void InitDatabase(string creationScriptFile)
+        public static void InitDatabase(string creationScriptFile) =>
+            InitDatabase(ConnectionString, creationScriptFile);
+
+        public static void InitDatabase(string connectionString, string creationScriptFile)
         {
             string sql = File.ReadAllText(creationScriptFile);
 
-            using (var conn = CreateConnection())
+            using (var conn = new SqliteConnection(connectionString))
             {
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = sql;
@@ -21,8 +24,17 @@ namespace Borzoo.Data.SQLite
             }
         }
 
-        internal static SqliteConnection CreateConnection() => new SqliteConnection(
-            "" + new SqliteConnectionStringBuilder {DataSource = ConnectionString}
-        );
+        public static SqliteConnection ConnectAndCreateDatabase(string connectionString, string creationScriptFile)
+        {
+            string sql = File.ReadAllText(creationScriptFile);
+
+            var conn = new SqliteConnection(connectionString);
+            var cmd = conn.CreateCommand();
+            cmd.CommandText = sql;
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            return conn;
+        }
     }
 }

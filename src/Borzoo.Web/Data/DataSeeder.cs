@@ -33,7 +33,7 @@ namespace Borzoo.Data
 
             foreach (var user in testUsers)
             {
-                await _useRepository.CreateAsync(user, cancellationToken);
+                await _useRepository.AddAsync(user, cancellationToken);
             }
         }
     }

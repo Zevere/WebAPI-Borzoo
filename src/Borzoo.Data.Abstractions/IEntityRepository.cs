@@ -7,6 +7,6 @@ namespace Borzoo.Data.Abstractions
     public interface IEntityRepository<TEntity>
         where TEntity : IEntity
     {
-        Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default);
+        Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
     }
 }

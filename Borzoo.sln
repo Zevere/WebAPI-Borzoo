@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo", "src\Borzoo\Borzoo.csproj", "{869E9A44-6733-4394-BB67-A647477186BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web", "src\Borzoo.Web\Borzoo.Web.csproj", "{869E9A44-6733-4394-BB67-A647477186BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.Abstractions", "src\Borzoo.Data.Abstractions\Borzoo.Data.Abstractions.csproj", "{DC301BFC-D34A-44E8-8B1D-71EE52205CE9}"
 EndProject
@@ -13,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B6495E16-57C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0CA3A753-4D80-4A14-9D97-F549DB0E2559}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Tests.Unit", "test\Borzoo.Tests.Unit\Borzoo.Tests.Unit.csproj", "{AE6DA9C1-924F-4ED2-BC05-51026FA3B071}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web.Tests.Unit", "test\Borzoo.Web.Tests.Unit\Borzoo.Web.Tests.Unit.csproj", "{AE6DA9C1-924F-4ED2-BC05-51026FA3B071}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Tests.Integ", "test\Borzoo.Tests.Integ\Borzoo.Tests.Integ.csproj", "{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web.Tests.Integ", "test\Borzoo.Web.Tests.Integ\Borzoo.Web.Tests.Integ.csproj", "{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.SQLite.Tests", "test\Borzoo.Data.SQLite.Tests\Borzoo.Data.SQLite.Tests.csproj", "{A3B5B1DF-2227-4918-B180-9E882FA43547}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3B5B1DF-2227-4918-B180-9E882FA43547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3B5B1DF-2227-4918-B180-9E882FA43547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3B5B1DF-2227-4918-B180-9E882FA43547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3B5B1DF-2227-4918-B180-9E882FA43547}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +62,6 @@ Global
 		{14D0AD21-9750-430A-AF84-DB5380D059C0} = {B6495E16-57C5-4AF8-A5CB-8E03DC24A674}
 		{AE6DA9C1-924F-4ED2-BC05-51026FA3B071} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
 		{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
+		{A3B5B1DF-2227-4918-B180-9E882FA43547} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
 	EndGlobalSection
 EndGlobal
