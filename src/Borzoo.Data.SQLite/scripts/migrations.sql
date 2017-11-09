@@ -4,6 +4,7 @@
 CREATE TABLE IF NOT EXISTS user (
   id          INTEGER PRIMARY KEY,
   name        TEXT    NOT NULL,
+  passphrase  TEXT    NOT NULL,
   first_name  TEXT    NOT NULL,
   last_name   TEXT,
   joined_at   INTEGER NOT NULL DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)), -- Unix epoch time

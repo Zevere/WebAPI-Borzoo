@@ -8,5 +8,8 @@ namespace Borzoo.Data.Abstractions
         where TEntity : IEntity
     {
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        Task<TEntity> GetAsync(string id, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default);
     }
 }

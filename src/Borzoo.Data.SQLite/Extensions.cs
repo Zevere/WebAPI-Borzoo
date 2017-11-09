@@ -18,16 +18,7 @@ namespace Borzoo.Data.SQLite
             return (long) diff.TotalMilliseconds;
         }
 
-        public static string GetLastInsertedRowId(this SqliteConnection connection,
-            SqliteTransaction transaction = default)
-        {
-            var cmd = connection.CreateCommand();
-            if (transaction != null)
-            {
-                cmd.Transaction = transaction;
-            }
-            cmd.CommandText = "SELECT last_insert_rowid() AS id";
-            return cmd.ExecuteScalar().ToString();
-        }
+        public static DateTime FromUnixEpoch(this long epochTime)
+            => new DateTime(UnixEpochBase.Ticks, DateTimeKind.Utc).AddMilliseconds(epochTime);
     }
 }
