@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using System;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Microsoft.Data.Sqlite;
@@ -18,7 +18,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public async Task _0_Should_Add_User()
+        public void _0_Should_Add_User()
         {
             User user = new User
             {
@@ -28,7 +28,7 @@ namespace Borzoo.Data.SQLite.Tests
             };
 
             IEntityRepository<User> sut = new UserRepository(Connection);
-            User entity = await sut.AddAsync(user);
+            User entity = sut.AddAsync(user).Result;
 
             Assert.Same(user, entity);
             Assert.Equal(1.ToString(), entity.Id);
@@ -42,10 +42,10 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public async Task _1_Should_Get_User_By_Id()
+        public void _1_Should_Get_User_By_Id()
         {
             IEntityRepository<User> sut = new UserRepository(Connection);
-            User entity = await sut.GetAsync(_fixture.NewUser.Id);
+            User entity = sut.GetAsync(_fixture.NewUser.Id).Result;
 
             Assert.Equal(_fixture.NewUser.Id, entity.Id);
             Assert.Equal(_fixture.NewUser.DisplayId, entity.DisplayId);
@@ -57,6 +57,44 @@ namespace Borzoo.Data.SQLite.Tests
                 _fixture.NewUser.JoinedAt.Ticks + 100_000);
             Assert.Null(entity.ModifiedAt);
             Assert.False(entity.IsDeleted);
+        }
+
+        [Fact]
+        public void _2_Should_Throw_While_Getting_Non_Existing_User()
+        {
+            IEntityRepository<User> sut = new UserRepository(Connection);
+
+            Exception exception = Assert.ThrowsAny<Exception>(() =>
+                sut.GetAsync("2").Result
+            );
+
+            Assert.Equal("Not found!", exception.Message);
+        }
+
+        [Fact]
+        public void _3_Should_Update_User()
+        {
+            const string newFName = "Bob";
+            const string newLName = "Baker";
+            const string newDisplayId = "bobby2";
+            const string newPassphraseHash = "secret_passphrase2";
+
+            User user = new User
+            {
+                Id = _fixture.NewUser.Id,
+                FirstName = newFName,
+                LastName = newLName,
+                DisplayId = newDisplayId,
+                PassphraseHash = newPassphraseHash,
+                // ToDo: other values
+            };
+
+            IEntityRepository<User> sut = new UserRepository(Connection);
+            User updatedEntity = sut.UpdateAsync(user).Result;
+
+            Assert.Same(user, updatedEntity);
+            Assert.Equal(_fixture.NewUser.Id, updatedEntity.Id);
+            // ToDo: more asserts
         }
     }
 }

@@ -11,5 +11,7 @@ namespace Borzoo.Data.Abstractions
 
         Task<TEntity> GetAsync(string id, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default);
+
+        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
     }
 }

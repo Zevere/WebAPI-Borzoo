@@ -72,7 +72,7 @@ namespace Borzoo.Data.SQLite
             using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
             {
                 if (!(reader.HasRows && reader.Read()))
-                    throw new Exception("Not found!");
+                    throw new Exception("Not found!"); // ToDo: use " EntityNotFound : RepositoryException " class
 
                 entity = new User
                 {
@@ -90,6 +90,33 @@ namespace Borzoo.Data.SQLite
                     entity.ModifiedAt = long.Parse(modifiedAtValue).FromUnixEpoch();
                 }
             }
+
+            return Task.FromResult(entity);
+        }
+
+        public Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)
+        {
+            // ToDo: Set more columns
+            string sql =
+                "UPDATE user SET " +
+                "name = $name, passphrase = $passphrase, first_name = $fname, " +
+                "modified_at = $modified_at " +
+                "WHERE id = $id";
+
+            var cmd = Connection.CreateCommand();
+            cmd.CommandText = sql;
+
+            var modifiedTime = entity.ModifiedAt ?? DateTime.UtcNow;
+
+            cmd.Parameters.AddWithValue("$id", entity.Id);
+            cmd.Parameters.AddWithValue("$name", entity.DisplayId);
+            cmd.Parameters.AddWithValue("$passphrase", entity.PassphraseHash);
+            cmd.Parameters.AddWithValue("$fname", entity.FirstName);
+            cmd.Parameters.AddWithValue("$modified_at", modifiedTime.ToUnixEpoch());
+
+            cmd.ExecuteNonQuery();
+
+            entity.ModifiedAt = modifiedTime;
 
             return Task.FromResult(entity);
         }
