@@ -86,15 +86,36 @@ namespace Borzoo.Data.SQLite.Tests
                 LastName = newLName,
                 DisplayId = newDisplayId,
                 PassphraseHash = newPassphraseHash,
-                // ToDo: other values
+                JoinedAt = _fixture.NewUser.JoinedAt
             };
+            DateTime timeBeforeTestAction = DateTime.UtcNow;
 
             IEntityRepository<User> sut = new UserRepository(Connection);
             User updatedEntity = sut.UpdateAsync(user).Result;
 
             Assert.Same(user, updatedEntity);
             Assert.Equal(_fixture.NewUser.Id, updatedEntity.Id);
-            // ToDo: more asserts
+            Assert.Equal(newFName, updatedEntity.FirstName);
+            Assert.Equal(newLName, updatedEntity.LastName);
+            Assert.Equal(newDisplayId, updatedEntity.DisplayId);
+            Assert.Equal(newPassphraseHash, updatedEntity.PassphraseHash);
+            Assert.NotNull(updatedEntity.ModifiedAt);
+            Assert.True(updatedEntity.ModifiedAt > timeBeforeTestAction);
+            Assert.Equal(_fixture.NewUser.JoinedAt, updatedEntity.JoinedAt);
+        }
+
+        [Fact]
+        public void _4_Should_Not_Override_Modified_Date()
+        {
+            DateTime modificationDate = DateTime.Today.AddDays(-1);
+
+            User user = _fixture.NewUser;
+            user.ModifiedAt = modificationDate;
+
+            IEntityRepository<User> sut = new UserRepository(Connection);
+            User updatedEntity = sut.UpdateAsync(user).Result;
+
+            Assert.Equal(modificationDate, updatedEntity.ModifiedAt);
         }
     }
 }

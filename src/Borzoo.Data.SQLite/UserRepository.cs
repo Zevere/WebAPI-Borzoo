@@ -96,10 +96,12 @@ namespace Borzoo.Data.SQLite
 
         public Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)
         {
-            // ToDo: Set more columns
+            bool includesLastName = !string.IsNullOrWhiteSpace(entity.LastName);
+
             string sql =
                 "UPDATE user SET " +
                 "name = $name, passphrase = $passphrase, first_name = $fname, " +
+                (includesLastName ? "last_name = $lname, " : string.Empty) +
                 "modified_at = $modified_at " +
                 "WHERE id = $id";
 
@@ -113,6 +115,10 @@ namespace Borzoo.Data.SQLite
             cmd.Parameters.AddWithValue("$passphrase", entity.PassphraseHash);
             cmd.Parameters.AddWithValue("$fname", entity.FirstName);
             cmd.Parameters.AddWithValue("$modified_at", modifiedTime.ToUnixEpoch());
+            if (includesLastName)
+            {
+                cmd.Parameters.AddWithValue("$lname", entity.LastName);
+            }
 
             cmd.ExecuteNonQuery();
 
