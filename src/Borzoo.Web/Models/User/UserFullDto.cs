@@ -21,7 +21,7 @@ namespace Borzoo.Web.Models.User
         public string LastName { get; set; }
 
         [Required]
-        public DateTime JoinedAt { get; set; }
+        public DateTime JoinedAt { get; set; } // ToDo Define convertor to proper ISO datetiem JSON representation
 
         public static explicit operator UserFullDto(UserEntity entity) =>
             new UserFullDto

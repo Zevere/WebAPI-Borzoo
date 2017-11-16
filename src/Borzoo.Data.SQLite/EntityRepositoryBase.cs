@@ -26,6 +26,11 @@ namespace Borzoo.Data.SQLite
             _connection = connection;
         }
 
+        public void EnsureConnectinoOpened()
+        {
+            Connection.Open();
+        }
+        
         public void Dispose() => _connection?.Dispose();
     }
 }

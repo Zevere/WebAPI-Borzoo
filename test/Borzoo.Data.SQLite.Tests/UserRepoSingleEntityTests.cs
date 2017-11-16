@@ -62,13 +62,15 @@ namespace Borzoo.Data.SQLite.Tests
         [Fact]
         public void _2_Should_Throw_While_Getting_Non_Existing_User()
         {
+            const string id = "non-existing-id";
             IEntityRepository<User> sut = new UserRepository(Connection);
 
             Exception exception = Assert.ThrowsAny<Exception>(() =>
-                sut.GetAsync("2").Result
+                sut.GetAsync(id).Result
             );
 
-            Assert.Equal("Not found!", exception.Message);
+            Assert.IsType<EntityNotFoundException>(exception);
+            Assert.Contains(id, exception.Message);
         }
 
         [Fact]

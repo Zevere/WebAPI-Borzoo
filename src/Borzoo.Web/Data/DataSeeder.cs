@@ -21,13 +21,15 @@ namespace Borzoo.Web.Data
                 new User
                 {
                     DisplayId = "alice0",
-                    FirstName = "Alice"
+                    FirstName = "Alice",
+                    PassphraseHash = "secret_passphrase"
                 },
                 new User
                 {
                     DisplayId = "bobby",
                     FirstName = "Bob",
-                    LastName = "Boo"
+                    LastName = "Boo",
+                    PassphraseHash = "secret_passphrase2"
                 },
             };
 

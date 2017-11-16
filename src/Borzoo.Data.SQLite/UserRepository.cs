@@ -72,7 +72,9 @@ namespace Borzoo.Data.SQLite
             using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
             {
                 if (!(reader.HasRows && reader.Read()))
-                    throw new Exception("Not found!"); // ToDo: use " EntityNotFound : RepositoryException " class
+                {
+                    throw new EntityNotFoundException(id);
+                }
 
                 entity = new User
                 {

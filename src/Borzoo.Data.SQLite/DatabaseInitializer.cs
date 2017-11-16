@@ -3,6 +3,7 @@ using Microsoft.Data.Sqlite;
 
 namespace Borzoo.Data.SQLite
 {
+    // ToDo: might not be required
     public static class DatabaseInitializer
     {
         public static string ConnectionString;
@@ -36,5 +37,12 @@ namespace Borzoo.Data.SQLite
             cmd.ExecuteNonQuery();
             return conn;
         }
+
+        public static string GetDbFileConnectionString(string path) =>
+            "" + new SqliteConnectionStringBuilder
+            {
+                DataSource = path,
+                Mode = SqliteOpenMode.ReadWriteCreate,
+            };
     }
 }

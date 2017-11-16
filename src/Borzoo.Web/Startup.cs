@@ -22,8 +22,14 @@ namespace Borzoo.Web
         {
             #region SQLite
 
-            DatabaseInitializer.ConnectionString = Configuration["SQLite_Connection_String"] ?? "borzoo.db";
-            services.AddTransient<IEntityRepository<User>, UserRepository>();
+            string dbPath = Configuration["SQLite_Connection_String"] ?? "borzoo.db";
+            string connString = DatabaseInitializer.GetDbFileConnectionString(dbPath);
+            services.AddTransient<IEntityRepository<User>, UserRepository>(delegate
+            {
+                var userRepo = new UserRepository(connString);
+                userRepo.EnsureConnectinoOpened();
+                return userRepo;
+            });
 
             services.AddSingleton<DataSeeder>();
 
@@ -36,12 +42,11 @@ namespace Borzoo.Web
         {
             if (env.IsDevelopment())
             {
-                DatabaseInitializer.InitDatabase(Configuration["SQLite_Migrations_Script"]);
                 app.UseDeveloperExceptionPage();
             }
 
-//            var seeder = app.ApplicationServices.GetRequiredService<DataSeeder>();
-//            seeder.Seed().GetAwaiter().GetResult();
+            var seeder = app.ApplicationServices.GetRequiredService<DataSeeder>();
+            seeder.Seed().GetAwaiter().GetResult();
 
             app.UseMvc();
         }

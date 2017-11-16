@@ -20,10 +20,38 @@ namespace Borzoo.Web.Controllers
             _userRepo = userRepo;
         }
 
+        [Consumes(
+            Constants.ZVeerContentTypes.User.Full
+//            Constants.ZVeerContentTypes.User.Pretty // ToDo
+        )]
         [HttpGet("{userId}")]
-        public IActionResult Get(string userId)
+        public async Task<IActionResult> Get(string userId)
         {
-            return NoContent();
+            // ToDo check accept headers
+            IActionResult result = StatusCode((int) HttpStatusCode.NotImplemented);
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                result = BadRequest(); // ToDo use an error response generator helper class 
+            }
+            else
+            {
+                UserEntity user = null;
+                try
+                {
+                    user = await _userRepo.GetAsync(userId);
+                }
+                catch (EntityNotFoundException)
+                {
+                    result = NotFound(); // ToDo use error class
+                }
+
+                if (user != null)
+                {
+                    var dto = (UserFullDto) user;
+                    result = StatusCode((int) HttpStatusCode.OK, dto);
+                }
+            }
+            return result;
         }
 
         [HttpPost]
