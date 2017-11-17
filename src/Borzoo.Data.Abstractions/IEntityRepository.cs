@@ -9,7 +9,7 @@ namespace Borzoo.Data.Abstractions
     {
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 
-        Task<TEntity> GetAsync(string id, bool includeDeletedRecords = false,
+        Task<TEntity> GetByIdAsync(string id, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default);
 
         Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);

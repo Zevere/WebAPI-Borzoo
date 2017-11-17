@@ -24,7 +24,7 @@ namespace Borzoo.Web
 
             string dbPath = Configuration["SQLite_Connection_String"] ?? "borzoo.db";
             string connString = DatabaseInitializer.GetDbFileConnectionString(dbPath);
-            services.AddTransient<IEntityRepository<User>, UserRepository>(delegate
+            services.AddTransient<IUserRepository, UserRepository>(delegate
             {
                 var userRepo = new UserRepository(connString);
                 userRepo.EnsureConnectinoOpened();
@@ -46,7 +46,7 @@ namespace Borzoo.Web
             }
 
             var seeder = app.ApplicationServices.GetRequiredService<DataSeeder>();
-            seeder.Seed().GetAwaiter().GetResult();
+            seeder.SeedAsync().GetAwaiter().GetResult();
 
             app.UseMvc();
         }

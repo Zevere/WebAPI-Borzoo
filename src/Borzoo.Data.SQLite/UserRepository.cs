@@ -8,7 +8,7 @@ using Microsoft.Data.Sqlite;
 
 namespace Borzoo.Data.SQLite
 {
-    public class UserRepository : EntityRepositoryBase, IEntityRepository<User>
+    public class UserRepository : EntityRepositoryBase, IUserRepository
     {
         public UserRepository()
         {
@@ -51,7 +51,7 @@ namespace Borzoo.Data.SQLite
             return Task.FromResult(entity);
         }
 
-        public Task<User> GetAsync(string id, bool includeDeletedRecords = false,
+        public Task<User> GetByIdAsync(string id, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
             string sql = "SELECT name, passphrase, first_name, last_name, joined_at, modified_at, is_deleted " +
@@ -80,6 +80,51 @@ namespace Borzoo.Data.SQLite
                 {
                     Id = id,
                     DisplayId = reader["name"].ToString(),
+                    PassphraseHash = reader["passphrase"].ToString(),
+                    FirstName = reader["first_name"].ToString(),
+                    LastName = reader["last_name"] as string,
+                    JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch()
+                };
+
+                string modifiedAtValue = reader["modified_at"] as string;
+                if (modifiedAtValue != null)
+                {
+                    entity.ModifiedAt = long.Parse(modifiedAtValue).FromUnixEpoch();
+                }
+            }
+
+            return Task.FromResult(entity);
+        }
+
+        public Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default)
+        {
+            string sql = "SELECT id, passphrase, first_name, last_name, joined_at, modified_at, is_deleted " +
+                         "FROM user " +
+                         "WHERE UPPER(name) = $name ";
+
+            if (!includeDeletedRecords)
+            {
+                sql += "AND is_deleted IS NULL";
+            }
+
+            var cmd = Connection.CreateCommand();
+
+            cmd.CommandText = sql;
+            cmd.Parameters.AddWithValue("$name", name.ToUpper());
+
+            User entity;
+            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+            {
+                if (!(reader.HasRows && reader.Read()))
+                {
+                    throw new EntityNotFoundException("User Name", name);
+                }
+
+                entity = new User
+                {
+                    DisplayId = name.ToLower(),
+                    Id = reader["id"].ToString(),
                     PassphraseHash = reader["passphrase"].ToString(),
                     FirstName = reader["first_name"].ToString(),
                     LastName = reader["last_name"] as string,

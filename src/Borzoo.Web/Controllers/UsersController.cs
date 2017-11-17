@@ -13,9 +13,9 @@ namespace Borzoo.Web.Controllers
     [Route("/zv/[controller]")]
     public class UsersController : Controller
     {
-        private readonly IEntityRepository<UserEntity> _userRepo;
+        private readonly IUserRepository _userRepo;
 
-        public UsersController(IEntityRepository<UserEntity> userRepo)
+        public UsersController(IUserRepository userRepo)
         {
             _userRepo = userRepo;
         }
@@ -24,12 +24,12 @@ namespace Borzoo.Web.Controllers
             Constants.ZVeerContentTypes.User.Full
 //            Constants.ZVeerContentTypes.User.Pretty // ToDo
         )]
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> Get(string userId)
+        [HttpGet("{userName}")]
+        public async Task<IActionResult> Get(string userName)
         {
             // ToDo check accept headers
             IActionResult result = StatusCode((int) HttpStatusCode.NotImplemented);
-            if (string.IsNullOrWhiteSpace(userId))
+            if (string.IsNullOrWhiteSpace(userName))
             {
                 result = BadRequest(); // ToDo use an error response generator helper class 
             }
@@ -38,7 +38,7 @@ namespace Borzoo.Web.Controllers
                 UserEntity user = null;
                 try
                 {
-                    user = await _userRepo.GetAsync(userId);
+                    user = await _userRepo.GetByNameAsync(userName);
                 }
                 catch (EntityNotFoundException)
                 {

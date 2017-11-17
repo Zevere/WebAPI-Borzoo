@@ -7,15 +7,20 @@ namespace Borzoo.Web.Data
 {
     public class DataSeeder
     {
-        private readonly IEntityRepository<User> _useRepository;
+        private readonly IUserRepository _useRepo;
 
-        public DataSeeder(IEntityRepository<User> useRepository)
+        public DataSeeder(IUserRepository useRepo)
         {
-            _useRepository = useRepository;
+            _useRepo = useRepo;
         }
 
-        public async Task Seed(CancellationToken cancellationToken = default)
+        public async Task SeedAsync(CancellationToken cancellationToken = default)
         {
+            if (await IsAlreadySeededAsync())
+            {
+                return;
+            }
+
             User[] testUsers =
             {
                 new User
@@ -35,8 +40,23 @@ namespace Borzoo.Web.Data
 
             foreach (var user in testUsers)
             {
-                await _useRepository.AddAsync(user, cancellationToken);
+                await _useRepo.AddAsync(user, cancellationToken);
             }
+        }
+
+        private async Task<bool> IsAlreadySeededAsync()
+        {
+            bool userExists;
+            try
+            {
+                await _useRepo.GetByNameAsync("alICE0");
+                userExists = true;
+            }
+            catch (EntityNotFoundException)
+            {
+                userExists = false;
+            }
+            return userExists;
         }
     }
 }

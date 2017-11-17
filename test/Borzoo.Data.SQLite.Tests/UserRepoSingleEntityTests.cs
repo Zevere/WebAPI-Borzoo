@@ -45,7 +45,7 @@ namespace Borzoo.Data.SQLite.Tests
         public void _1_Should_Get_User_By_Id()
         {
             IEntityRepository<User> sut = new UserRepository(Connection);
-            User entity = sut.GetAsync(_fixture.NewUser.Id).Result;
+            User entity = sut.GetByIdAsync(_fixture.NewUser.Id).Result;
 
             Assert.Equal(_fixture.NewUser.Id, entity.Id);
             Assert.Equal(_fixture.NewUser.DisplayId, entity.DisplayId);
@@ -60,13 +60,33 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _2_Should_Throw_While_Getting_Non_Existing_User()
+        public void _2_Should_Get_User_By_Name()
+        {
+            string username = _fixture.NewUser.DisplayId.ToUpper();
+
+            IUserRepository sut = new UserRepository(Connection);
+            User entity = sut.GetByNameAsync(username).Result;
+
+            Assert.Equal(_fixture.NewUser.Id, entity.Id);
+            Assert.Equal(_fixture.NewUser.DisplayId, entity.DisplayId);
+            Assert.Equal(_fixture.NewUser.PassphraseHash, entity.PassphraseHash);
+            Assert.Equal(_fixture.NewUser.FirstName, entity.FirstName);
+            Assert.Equal(_fixture.NewUser.LastName, entity.LastName);
+            Assert.InRange(entity.JoinedAt.Ticks,
+                _fixture.NewUser.JoinedAt.Ticks - 100_000,
+                _fixture.NewUser.JoinedAt.Ticks + 100_000);
+            Assert.Null(entity.ModifiedAt);
+            Assert.False(entity.IsDeleted);
+        }
+
+        [Fact]
+        public void _3_Should_Throw_While_Getting_Non_Existing_User()
         {
             const string id = "non-existing-id";
             IEntityRepository<User> sut = new UserRepository(Connection);
 
             Exception exception = Assert.ThrowsAny<Exception>(() =>
-                sut.GetAsync(id).Result
+                sut.GetByIdAsync(id).Result
             );
 
             Assert.IsType<EntityNotFoundException>(exception);
@@ -74,7 +94,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _3_Should_Update_User()
+        public void _4_Should_Update_User()
         {
             const string newFName = "Bob";
             const string newLName = "Baker";
@@ -107,7 +127,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _4_Should_Not_Override_Modified_Date()
+        public void _5_Should_Not_Override_Modified_Date()
         {
             DateTime modificationDate = DateTime.Today.AddDays(-1);
 
