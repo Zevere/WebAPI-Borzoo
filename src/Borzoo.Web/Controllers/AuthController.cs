@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Web.Models.Login;
@@ -37,7 +38,7 @@ namespace Borzoo.Web.Controllers
             string token = alreadyHasToken ? user.Token : GenerateAlphaNumericString(100);
             await _userRepo.SetTokenForUserAsync(user.Id, token);
 
-            string encodedToken = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(token));
+            string encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
             var loginDto = new LoginDto(encodedToken);
 
             return new ObjectResult(loginDto)
@@ -48,6 +49,35 @@ namespace Borzoo.Web.Controllers
                     MediaTypeHeaderValue.Parse(Constants.ZevereContentTypes.Login.Token)
                 }
             };
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPost(Constants.ZevereRoutes.Logout)]
+        public async Task<IActionResult> Logout()
+        {
+            IActionResult result;
+//            string token = await HttpContext.GetTokenAsync("Bearer"); // ToDo: set auth scheme
+            string header = HttpContext.Request.Headers["Authorization"];
+            const string authTypeName = "Bearer ";
+            if (header?.StartsWith(authTypeName) == true)
+            {
+                string base64Token = header.Replace(authTypeName, string.Empty);
+                string token = Encoding.UTF8.GetString(Convert.FromBase64String(base64Token));
+                bool isRevoked = await _userRepo.RevokeTokenAsync(token);
+                if (isRevoked)
+                {
+                    result = NoContent();
+                }
+                else
+                {
+                    result = Unauthorized();
+                }
+            }
+            else
+            {
+                result = Unauthorized();
+            }
+            return result;
         }
 
         private string GenerateAlphaNumericString(int charCount)

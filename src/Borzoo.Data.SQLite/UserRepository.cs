@@ -295,5 +295,16 @@ namespace Borzoo.Data.SQLite
 
             return Task.CompletedTask;
         }
+
+        public Task<bool> RevokeTokenAsync(string token, CancellationToken cancellationToken = default)
+        {
+            var cmd = Connection.CreateCommand();
+            cmd.CommandText = "DELETE FROM user_login WHERE token = $token";
+            cmd.Parameters.AddWithValue("$token", token);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+
+            return Task.FromResult(rowsAffected == 1);
+        }
     }
 }

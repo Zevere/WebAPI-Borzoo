@@ -16,5 +16,7 @@ namespace Borzoo.Data.Abstractions
             CancellationToken cancellationToken = default);
 
         Task SetTokenForUserAsync(string userId, string token, CancellationToken cancellationToken = default);
+
+        Task<bool> RevokeTokenAsync(string token, CancellationToken cancellationToken = default);
     }
 }

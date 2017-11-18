@@ -268,5 +268,19 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Contains("Name", exception.Message);
             Assert.Contains(userName, exception.Message);
         }
+
+        [Fact]
+        public void _12_Should_Remove_User_Login()
+        {
+            string token = _fixture.NewUser.Token;
+
+            IUserRepository sut = new UserRepository(Connection);
+
+            bool isRevoked = sut.RevokeTokenAsync(token).Result;
+            bool isRevoked2 = sut.RevokeTokenAsync(token).Result;
+
+            Assert.True(isRevoked);
+            Assert.False(isRevoked2);
+        }
     }
 }
