@@ -86,8 +86,8 @@ namespace Borzoo.Data.SQLite
                     JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch()
                 };
 
-                string modifiedAtValue = reader["modified_at"] as string;
-                if (modifiedAtValue != null)
+                string modifiedAtValue = reader["modified_at"].ToString();
+                if (!string.IsNullOrWhiteSpace(modifiedAtValue))
                 {
                     entity.ModifiedAt = long.Parse(modifiedAtValue).FromUnixEpoch();
                 }
@@ -101,7 +101,7 @@ namespace Borzoo.Data.SQLite
         {
             string sql = "SELECT id, passphrase, first_name, last_name, joined_at, modified_at, is_deleted " +
                          "FROM user " +
-                         "WHERE UPPER(name) = $name ";
+                         "WHERE UPPER(name) = UPPER($name) ";
 
             if (!includeDeletedRecords)
             {
@@ -111,7 +111,7 @@ namespace Borzoo.Data.SQLite
             var cmd = Connection.CreateCommand();
 
             cmd.CommandText = sql;
-            cmd.Parameters.AddWithValue("$name", name.ToUpper());
+            cmd.Parameters.AddWithValue("$name", name);
 
             User entity;
             using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
@@ -131,8 +131,55 @@ namespace Borzoo.Data.SQLite
                     JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch()
                 };
 
-                string modifiedAtValue = reader["modified_at"] as string;
-                if (modifiedAtValue != null)
+                string modifiedAtValue = reader["modified_at"].ToString();
+                if (!string.IsNullOrWhiteSpace(modifiedAtValue))
+                {
+                    entity.ModifiedAt = long.Parse(modifiedAtValue).FromUnixEpoch();
+                }
+            }
+
+            return Task.FromResult(entity);
+        }
+
+        public Task<User> GetByTokenAsync(string token, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default)
+        {
+            string sql = "SELECT id, name, passphrase, first_name, last_name, joined_at, u.modified_at, is_deleted " +
+                         "FROM user u JOIN user_login l ON (u.id = l.user_id) " +
+                         "WHERE token = $token ";
+
+            if (!includeDeletedRecords)
+            {
+                sql += "AND is_deleted IS NULL";
+            }
+
+            var cmd = Connection.CreateCommand();
+
+            cmd.CommandText = sql;
+            cmd.Parameters.AddWithValue("$token", token);
+
+            User entity;
+            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+            {
+                if (!(reader.HasRows && reader.Read()))
+                {
+                    throw new EntityNotFoundException("Token", token);
+                }
+
+                entity = new User
+                {
+                    Id = reader["id"].ToString(),
+                    DisplayId = reader["name"].ToString().ToLower(),
+                    PassphraseHash = reader["passphrase"].ToString(),
+                    FirstName = reader["first_name"].ToString(),
+                    LastName = reader["last_name"] as string,
+                    Token = token,
+                    JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch(),
+                    IsDeleted = reader["is_deleted"] is string
+                };
+
+                string modifiedAtValue = reader["modified_at"].ToString();
+                if (!string.IsNullOrWhiteSpace(modifiedAtValue))
                 {
                     entity.ModifiedAt = long.Parse(modifiedAtValue).FromUnixEpoch();
                 }
@@ -172,6 +219,32 @@ namespace Borzoo.Data.SQLite
             entity.ModifiedAt = modifiedTime;
 
             return Task.FromResult(entity);
+        }
+
+        public Task SetTokenForUserAsync(string userId, string token, CancellationToken cancellationToken = default)
+        {
+            var cmd = Connection.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(user_id) FROM user_login WHERE user_id = $user_id";
+            cmd.Parameters.AddWithValue("$user_id", userId);
+            bool loginExists = int.Parse(cmd.ExecuteScalar().ToString()) == 1;
+
+            if (loginExists)
+            {
+                cmd.CommandText = "UPDATE user_login " +
+                                  "SET token = $token, modified_at = $modified_at " +
+                                  "WHERE user_id = $user_id";
+                cmd.Parameters.AddWithValue("$modified_at", DateTime.UtcNow.ToUnixEpoch());
+            }
+            else
+            {
+                cmd.CommandText = "INSERT INTO user_login(user_id, token) " +
+                                  "VALUES($user_id, $token)";
+            }
+            cmd.Parameters.AddWithValue("$token", token);
+
+            cmd.ExecuteNonQuery();
+
+            return Task.CompletedTask;
         }
     }
 }

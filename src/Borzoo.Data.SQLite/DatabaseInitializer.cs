@@ -8,21 +8,28 @@ namespace Borzoo.Data.SQLite
     {
         public static string ConnectionString;
 
-        public static void InitDatabase(string creationScriptFile) =>
-            InitDatabase(ConnectionString, creationScriptFile);
-
-        public static void InitDatabase(string connectionString, string creationScriptFile)
+        public static bool EnsureMigrationsApplied(string migrationsScriptFile)
         {
-            string sql = File.ReadAllText(creationScriptFile);
+            bool databaseMigrated;
+            string sql = File.ReadAllText(migrationsScriptFile);
 
-            using (var conn = new SqliteConnection(connectionString))
+            using (var conn = new SqliteConnection(ConnectionString))
             {
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = sql;
+                cmd.CommandText = "SELECT COUNT(tbl_name) FROM sqlite_master";
 
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                bool tablesExist = int.Parse(cmd.ExecuteScalar().ToString()) > 0;
+
+                if (!tablesExist)
+                {
+                    cmd.CommandText = sql;
+                    cmd.ExecuteNonQuery();
+                }
+
+                databaseMigrated = !tablesExist;
             }
+            return databaseMigrated;
         }
 
         public static SqliteConnection ConnectAndCreateDatabase(string connectionString, string creationScriptFile)

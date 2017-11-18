@@ -1,7 +1,10 @@
-﻿using System.Threading;
+﻿using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
+using Borzoo.Data.SQLite;
 
 namespace Borzoo.Web.Data
 {
@@ -16,10 +19,7 @@ namespace Borzoo.Web.Data
 
         public async Task SeedAsync(CancellationToken cancellationToken = default)
         {
-            if (await IsAlreadySeededAsync())
-            {
-                return;
-            }
+            ApplyMigrations();
 
             User[] testUsers =
             {
@@ -57,6 +57,13 @@ namespace Borzoo.Web.Data
                 userExists = false;
             }
             return userExists;
+        }
+
+        private void ApplyMigrations()
+        {
+            string migrationsSqlFile = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
+                "Borzoo.Data.SQLite", "scripts", "migrations.sql");
+            DatabaseInitializer.EnsureMigrationsApplied(migrationsSqlFile);
         }
     }
 }

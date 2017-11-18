@@ -24,6 +24,8 @@ namespace Borzoo.Web
 
             string dbPath = Configuration["SQLite_Connection_String"] ?? "borzoo.db";
             string connString = DatabaseInitializer.GetDbFileConnectionString(dbPath);
+            DatabaseInitializer.ConnectionString = connString;
+
             services.AddTransient<IUserRepository, UserRepository>(delegate
             {
                 var userRepo = new UserRepository(connString);

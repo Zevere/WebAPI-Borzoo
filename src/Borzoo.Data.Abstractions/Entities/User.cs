@@ -18,6 +18,8 @@ namespace Borzoo.Data.Abstractions.Entities
         [Required]
         public string PassphraseHash { get; set; }
 
+        public string Token { get; set; }
+        
         [Required]
         public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
 

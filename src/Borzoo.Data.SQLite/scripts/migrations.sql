@@ -12,4 +12,16 @@ CREATE TABLE IF NOT EXISTS user (
   is_deleted  INTEGER -- Non-NULL values indicate Deleted
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_user_name ON user(name);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_name
+  ON user (name);
+
+CREATE TABLE IF NOT EXISTS user_login (
+  user_id    INTEGER NOT NULL,
+  token      TEXT    NOT NULL,
+  created_at   INTEGER NOT NULL DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)), -- Unix epoch time
+  modified_at INTEGER, -- Unix epoch time
+  FOREIGN KEY (user_id) REFERENCES user (id)
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_login_user_id
+  ON user_login (user_id);
