@@ -18,7 +18,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _0_Should_Add_User()
+        public void _00_Should_Add_User()
         {
             User user = new User
             {
@@ -42,7 +42,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _1_Should_Get_User_By_Id()
+        public void _01_Should_Get_User_By_Id()
         {
             IEntityRepository<User> sut = new UserRepository(Connection);
             User entity = sut.GetByIdAsync(_fixture.NewUser.Id).Result;
@@ -60,7 +60,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _2_Should_Get_User_By_Name()
+        public void _02_Should_Get_User_By_Name()
         {
             string username = _fixture.NewUser.DisplayId.ToUpper();
 
@@ -80,7 +80,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _3_Should_Throw_While_Getting_Non_Existing_User()
+        public void _03_Should_Throw_While_Getting_Non_Existing_User()
         {
             const string id = "non-existing-id";
             IEntityRepository<User> sut = new UserRepository(Connection);
@@ -94,7 +94,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _4_Should_Update_User()
+        public void _04_Should_Update_User()
         {
             const string newFName = "Bob";
             const string newLName = "Baker";
@@ -133,7 +133,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _5_Should_Not_Override_Modified_Date()
+        public void _05_Should_Not_Override_Modified_Date()
         {
             DateTime modificationDate = DateTime.Today.AddDays(-1);
 
@@ -147,7 +147,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _6_Should_Create_And_Update_Login_For_User()
+        public void _06_Should_Create_And_Update_Login_For_User()
         {
             const string token = "test-token";
             const string token2 = "another-test-token";
@@ -161,7 +161,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _7_Should_Get_User_By_Token()
+        public void _07_Should_Get_User_By_Token()
         {
             string token = _fixture.NewUser.Token;
 
@@ -193,7 +193,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [Fact]
-        public void _8_Should_Throw_While_Get_User_With_Non_Existing_Token()
+        public void _08_Should_Throw_While_Get_User_With_Non_Existing_Token()
         {
             const string token = "non-existing-token";
 
@@ -205,6 +205,68 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.IsType<EntityNotFoundException>(exception);
             Assert.Contains("Token", exception.Message);
             Assert.Contains(token, exception.Message);
+        }
+
+        [Fact]
+        public void _09_Should_Get_User_By_Pass_Login()
+        {
+            string userName = _fixture.NewUser.DisplayId.ToUpper();
+            string pass = _fixture.NewUser.PassphraseHash;
+
+            IUserRepository sut = new UserRepository(Connection);
+            User user = sut.GetByPassphraseLoginAsync(userName, pass).Result;
+
+            Assert.Equal(_fixture.NewUser.Id, user.Id);
+            Assert.Equal(userName, user.DisplayId);
+            Assert.Equal(pass, user.PassphraseHash);
+            Assert.Equal(_fixture.NewUser.FirstName, user.FirstName);
+            Assert.Equal(_fixture.NewUser.LastName, user.LastName);
+            Assert.Equal(_fixture.NewUser.Token, user.Token);
+            Assert.InRange(user.JoinedAt.Ticks,
+                _fixture.NewUser.JoinedAt.Ticks - 100_000,
+                _fixture.NewUser.JoinedAt.Ticks + 100_000);
+            if (user.ModifiedAt is null)
+            {
+                Assert.Equal(_fixture.NewUser.ModifiedAt, user.ModifiedAt);
+            }
+            else
+            {
+                // ReSharper disable once PossibleInvalidOperationException
+                Assert.InRange(user.ModifiedAt.Value.Ticks,
+                    _fixture.NewUser.ModifiedAt.Value.Ticks - 100_000,
+                    _fixture.NewUser.ModifiedAt.Value.Ticks + 100_000);
+            }
+            Assert.Equal(_fixture.NewUser.IsDeleted, user.IsDeleted);
+        }
+
+        [Fact]
+        public void _10_Should_Throw_While_Get_User_By_Wrong_Name()
+        {
+            const string userName = "non-existing-user-name";
+
+            IUserRepository sut = new UserRepository(Connection);
+            Exception exception = Assert.ThrowsAny<Exception>(() =>
+                sut.GetByPassphraseLoginAsync(userName, "secret-passpharse").Result
+            );
+
+            Assert.IsType<EntityNotFoundException>(exception);
+            Assert.Contains("Name", exception.Message);
+            Assert.Contains(userName, exception.Message);
+        }
+
+        [Fact]
+        public void _11_Should_Throw_While_Get_User_By_Wrong_Pass()
+        {
+            string userName = _fixture.NewUser.DisplayId;
+
+            IUserRepository sut = new UserRepository(Connection);
+            Exception exception = Assert.ThrowsAny<Exception>(() =>
+                sut.GetByPassphraseLoginAsync(userName, "wrong-secret-passpharse").Result
+            );
+
+            Assert.IsType<EntityNotFoundException>(exception);
+            Assert.Contains("Name", exception.Message);
+            Assert.Contains(userName, exception.Message);
         }
     }
 }

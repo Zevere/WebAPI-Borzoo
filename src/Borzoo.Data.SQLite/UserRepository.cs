@@ -145,7 +145,7 @@ namespace Borzoo.Data.SQLite
             CancellationToken cancellationToken = default)
         {
             string sql = "SELECT id, name, passphrase, first_name, last_name, joined_at, u.modified_at, is_deleted " +
-                         "FROM user u JOIN user_login l ON (u.id = l.user_id) " +
+                         "FROM user u LEFT OUTER JOIN user_login l ON (u.id = l.user_id) " +
                          "WHERE token = $token ";
 
             if (!includeDeletedRecords)
@@ -174,6 +174,55 @@ namespace Borzoo.Data.SQLite
                     FirstName = reader["first_name"].ToString(),
                     LastName = reader["last_name"] as string,
                     Token = token,
+                    JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch(),
+                    IsDeleted = reader["is_deleted"] is string
+                };
+
+                string modifiedAtValue = reader["modified_at"].ToString();
+                if (!string.IsNullOrWhiteSpace(modifiedAtValue))
+                {
+                    entity.ModifiedAt = long.Parse(modifiedAtValue).FromUnixEpoch();
+                }
+            }
+
+            return Task.FromResult(entity);
+        }
+
+        public Task<User> GetByPassphraseLoginAsync(string userName, string passphrase,
+            bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default)
+        {
+            string sql = "SELECT id, first_name, last_name, joined_at, u.modified_at, is_deleted, token " +
+                         "FROM user u LEFT OUTER JOIN user_login l ON (u.id = l.user_id) " +
+                         "WHERE UPPER(name) = UPPER($name) AND passphrase = $passphrase ";
+
+            if (!includeDeletedRecords)
+            {
+                sql += "AND is_deleted IS NULL";
+            }
+
+            var cmd = Connection.CreateCommand();
+
+            cmd.CommandText = sql;
+            cmd.Parameters.AddWithValue("$name", userName);
+            cmd.Parameters.AddWithValue("$passphrase", passphrase);
+
+            User entity;
+            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+            {
+                if (!(reader.HasRows && reader.Read()))
+                {
+                    throw new EntityNotFoundException("Name", userName);
+                }
+
+                entity = new User
+                {
+                    Id = reader["id"].ToString(),
+                    DisplayId = userName,
+                    PassphraseHash = passphrase,
+                    FirstName = reader["first_name"].ToString(),
+                    LastName = reader["last_name"] as string,
+                    Token = reader["token"] as string,
                     JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch(),
                     IsDeleted = reader["is_deleted"] is string
                 };

@@ -12,6 +12,9 @@ namespace Borzoo.Data.Abstractions
         Task<User> GetByTokenAsync(string token, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default);
 
+        Task<User> GetByPassphraseLoginAsync(string userName, string passphrase, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default);
+
         Task SetTokenForUserAsync(string userId, string token, CancellationToken cancellationToken = default);
     }
 }

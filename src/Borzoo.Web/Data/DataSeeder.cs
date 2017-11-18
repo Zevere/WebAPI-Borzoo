@@ -21,6 +21,11 @@ namespace Borzoo.Web.Data
         {
             ApplyMigrations();
 
+            if (IsAlreadySeeded())
+            {
+                return;
+            }
+
             User[] testUsers =
             {
                 new User
@@ -44,12 +49,12 @@ namespace Borzoo.Web.Data
             }
         }
 
-        private async Task<bool> IsAlreadySeededAsync()
+        private bool IsAlreadySeeded()
         {
             bool userExists;
             try
             {
-                await _useRepo.GetByNameAsync("alICE0");
+                _useRepo.GetByNameAsync("alICE0").GetAwaiter().GetResult();
                 userExists = true;
             }
             catch (EntityNotFoundException)

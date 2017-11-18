@@ -28,9 +28,9 @@ namespace Borzoo.Web.Tests.Integ
                 Passphrase = "secretpassphrase",
             };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, Constants.ZVeerRoutes.Users)
+            var request = new HttpRequestMessage(HttpMethod.Post, Constants.ZevereRoutes.Users)
             {
-                Headers = {Accept = {new MediaTypeWithQualityHeaderValue(Constants.ZVeerContentTypes.User.Full)}},
+                Headers = {Accept = {new MediaTypeWithQualityHeaderValue(Constants.ZevereContentTypes.User.Full)}},
                 Content = new StringContent(
                     JsonConvert.SerializeObject(userCreationDto),
                     Encoding.UTF8, "application/vnd.zv.user.creation+json"
@@ -59,7 +59,7 @@ namespace Borzoo.Web.Tests.Integ
             };
 
             var result = await _client.PostAsync(
-                Constants.ZVeerRoutes.Users,
+                Constants.ZevereRoutes.Users,
                 new StringContent(JsonConvert.SerializeObject(userCreationDto),
                     Encoding.UTF8, "application/json")
             );
