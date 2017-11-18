@@ -56,9 +56,9 @@ namespace Borzoo.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             IActionResult result;
-//            string token = await HttpContext.GetTokenAsync("Bearer"); // ToDo: set auth scheme
+//            string token = await HttpContext.GetTokenAsync("Basic"); // ToDo: set auth scheme
             string header = HttpContext.Request.Headers["Authorization"];
-            const string authTypeName = "Bearer ";
+            const string authTypeName = "Basic ";
             if (header?.StartsWith(authTypeName) == true)
             {
                 string base64Token = header.Replace(authTypeName, string.Empty);
