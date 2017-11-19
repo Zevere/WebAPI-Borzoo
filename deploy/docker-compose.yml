@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+
+  borzoo.web:
+    container_name: borzoo.web
+    build:
+      context: ../src/Borzoo.Web
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ../src/Borzoo.Data.SQLite/scripts/migrations.sql:/app/data/migrations.sql:ro
+    networks:
+      - borzoo
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    links:
+      - borzoo.web
+    networks:
+      - borzoo
+
+networks: 
+  borzoo:
+    driver: bridge

@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Borzoo.Data.Abstractions;
+﻿using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
 
@@ -17,9 +13,9 @@ namespace Borzoo.Web.Data
             _useRepo = useRepo;
         }
 
-        public async Task SeedAsync(CancellationToken cancellationToken = default)
+        public void SeedData(string migrationsSqlFile)
         {
-            ApplyMigrations();
+            ApplyMigrations(migrationsSqlFile);
 
             if (IsAlreadySeeded())
             {
@@ -45,7 +41,7 @@ namespace Borzoo.Web.Data
 
             foreach (var user in testUsers)
             {
-                await _useRepo.AddAsync(user, cancellationToken);
+                _useRepo.AddAsync(user).GetAwaiter().GetResult();
             }
         }
 
@@ -64,10 +60,8 @@ namespace Borzoo.Web.Data
             return userExists;
         }
 
-        private void ApplyMigrations()
+        private void ApplyMigrations(string migrationsSqlFile)
         {
-            string migrationsSqlFile = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..",
-                "Borzoo.Data.SQLite", "scripts", "migrations.sql");
             DatabaseInitializer.EnsureMigrationsApplied(migrationsSqlFile);
         }
     }

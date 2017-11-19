@@ -1,11 +1,12 @@
-﻿using Borzoo.Data.Abstractions;
-using Borzoo.Data.Abstractions.Entities;
+﻿using System.Linq;
+using Borzoo.Data.Abstractions;
 using Borzoo.Data.SQLite;
 using Borzoo.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Borzoo.Web
 {
@@ -22,7 +23,11 @@ namespace Borzoo.Web
         {
             #region SQLite
 
-            string dbPath = Configuration["SQLite_Connection_String"] ?? "borzoo.db";
+            string dbPath = Configuration["SQLite_Db_Path"];
+            if (string.IsNullOrWhiteSpace(dbPath))
+            {
+                dbPath = "borzoo.db";
+            }
             string connString = DatabaseInitializer.GetDbFileConnectionString(dbPath);
             DatabaseInitializer.ConnectionString = connString;
 
@@ -40,15 +45,19 @@ namespace Borzoo.Web
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger,
+            DataSeeder seeder)
+        {          
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            var seeder = app.ApplicationServices.GetRequiredService<DataSeeder>();
-            seeder.SeedAsync().GetAwaiter().GetResult();
+            
+            if (new[] {"Development", "Staging"}.Contains(env.EnvironmentName))
+            {
+                logger.LogInformation("SQLite Connection String: " + DatabaseInitializer.ConnectionString);
+                seeder.SeedData(Configuration["SQLite_Migrations_Script"]);
+            }
 
             app.UseMvc();
         }

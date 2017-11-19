@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+
+  borzoo.web:
+    container_name: borzoo.web
+    image: poulad/borzoo
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - SQLite_Db_Path=/app/data/borzoo.db
+    networks:
+      - borzoo
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - '80:80'
+    volumes:
+      - /var/app/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    links:
+      - borzoo.web
+    networks:
+      - borzoo
+
+networks: 
+  borzoo:
+    driver: bridge
