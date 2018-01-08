@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Web.Models.Login;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -53,31 +55,15 @@ namespace Borzoo.Web.Controllers
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPost(Constants.ZevereRoutes.Logout)]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
-            IActionResult result;
-//            string token = await HttpContext.GetTokenAsync("Basic"); // ToDo: set auth scheme
-            string header = HttpContext.Request.Headers["Authorization"];
-            const string authTypeName = "Basic ";
-            if (header?.StartsWith(authTypeName) == true)
-            {
-                string base64Token = header.Replace(authTypeName, string.Empty);
-                string token = Encoding.UTF8.GetString(Convert.FromBase64String(base64Token));
-                bool isRevoked = await _userRepo.RevokeTokenAsync(token);
-                if (isRevoked)
-                {
-                    result = NoContent();
-                }
-                else
-                {
-                    result = Unauthorized();
-                }
-            }
-            else
-            {
-                result = Unauthorized();
-            }
-            return result;
+            string token = User.FindFirstValue("token");
+
+            bool isRevoked = await _userRepo.RevokeTokenAsync(token);
+            return isRevoked
+                ? NoContent()
+                : Unauthorized() as IActionResult;
         }
 
         private string GenerateAlphaNumericString(int charCount)
@@ -100,6 +86,7 @@ namespace Borzoo.Web.Controllers
                             c = (char) rnd.Next(97, 123);
                             break;
                     }
+
                     return c;
                 });
             return string.Join(string.Empty, chars);
