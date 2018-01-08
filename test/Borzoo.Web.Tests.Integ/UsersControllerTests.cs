@@ -66,5 +66,35 @@ namespace Borzoo.Web.Tests.Integ
 
             Assert.Equal(HttpStatusCode.UnsupportedMediaType, result.StatusCode);
         }
+
+        [Fact]
+        public async Task Should_Respond204_For_Existing_User()
+        {
+            var req = new HttpRequestMessage(
+                HttpMethod.Head,
+                Constants.ZevereRoutes.User.Replace(Constants.ZevereRoutes.PathParameters.UserId, "aliCE0")
+            );
+
+            var result = await _client.SendAsync(req);
+            string respContent = await result.Content.ReadAsStringAsync();
+
+            Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
+            Assert.Empty(respContent);
+        }
+
+        [Fact]
+        public async Task Should_Respond404_For_NonExisting_User()
+        {
+            var req = new HttpRequestMessage(
+                HttpMethod.Head,
+                Constants.ZevereRoutes.User.Replace(Constants.ZevereRoutes.PathParameters.UserId, "abc")
+            );
+
+            var result = await _client.SendAsync(req);
+            string respContent = await result.Content.ReadAsStringAsync();
+
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Empty(respContent);
+        }
     }
 }

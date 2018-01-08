@@ -21,6 +21,31 @@ namespace Borzoo.Web.Controllers
             _userRepo = userRepo;
         }
 
+        [HttpHead("{userName}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Head(string userName)
+        {
+            IActionResult result;
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                result = BadRequest(); // ToDo use an error response generator helper class 
+            }
+            else
+            {
+                try
+                {
+                    await _userRepo.GetByNameAsync(userName);
+                    result = NoContent();
+                }
+                catch (EntityNotFoundException)
+                {
+                    result = NotFound(); // ToDo use error class
+                }
+            }
+
+            return result;
+        }
+
         [Consumes(
             Constants.ZevereContentTypes.User.Full
 //            Constants.ZVeerContentTypes.User.Pretty // ToDo
@@ -52,6 +77,7 @@ namespace Borzoo.Web.Controllers
                     result = StatusCode((int) HttpStatusCode.OK, dto);
                 }
             }
+
             return result;
         }
 
