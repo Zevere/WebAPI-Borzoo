@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Web.Models;
 using Borzoo.Web.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -46,36 +48,49 @@ namespace Borzoo.Web.Controllers
             return result;
         }
 
-        [Consumes(
-            Constants.ZevereContentTypes.User.Full
-//            Constants.ZVeerContentTypes.User.Pretty // ToDo
+        [Produces(
+            Constants.ZevereContentTypes.User.Full,
+            Constants.ZevereContentTypes.User.Pretty // ToDo
         )]
         [HttpGet("{userName}")]
+        [Authorize]
         public async Task<IActionResult> Get(string userName)
         {
             // ToDo check accept headers
-            IActionResult result = StatusCode((int) HttpStatusCode.NotImplemented);
             if (string.IsNullOrWhiteSpace(userName))
+                return BadRequest(); // ToDo use an error response generator helper class
+            if (!User.Identity.Name.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                return Unauthorized();
+
+            IActionResult result = default;
+            UserEntity user;
+            try
             {
-                result = BadRequest(); // ToDo use an error response generator helper class 
+                user = await _userRepo.GetByNameAsync(userName);
             }
-            else
+            catch (EntityNotFoundException)
             {
-                UserEntity user = null;
-                try
+                user = default;
+                result = NotFound(); // ToDo use error class
+            }
+
+            if (user != null)
+            {
+                UserDtoBase dto;
+                string acceptType = Request.Headers["accept"].SingleOrDefault();
+                switch (acceptType)
                 {
-                    user = await _userRepo.GetByNameAsync(userName);
-                }
-                catch (EntityNotFoundException)
-                {
-                    result = NotFound(); // ToDo use error class
+                    case Constants.ZevereContentTypes.User.Full:
+                        dto = (UserFullDto) user;
+                        break;
+                    case Constants.ZevereContentTypes.User.Pretty:
+                        dto = (UserPrettyDto) user;
+                        break;
+                    default:
+                        throw new InvalidOperationException("Invalid Accept type");
                 }
 
-                if (user != null)
-                {
-                    var dto = (UserFullDto) user;
-                    result = StatusCode((int) HttpStatusCode.OK, dto);
-                }
+                result = StatusCode((int) HttpStatusCode.OK, dto);
             }
 
             return result;

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Borzoo.Web.Models.Login;
 using Borzoo.Web.Models.User;
 using Newtonsoft.Json;
 using Xunit;
@@ -95,6 +96,65 @@ namespace Borzoo.Web.Tests.Integ
 
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
             Assert.Empty(respContent);
+        }
+
+        [Fact]
+        public async Task Should_Get_User_Pretty()
+        {
+            var login = await _client.PostAsync("/zv/login", new StringContent(
+                @"{""user_name"":""BObby"",""passphrase"":""secret_passphrase2""}", Encoding.UTF8,
+                "application/vnd.zv.login.creation+json"
+            ));
+            string loginResp = await login.Content.ReadAsStringAsync();
+            string token = JsonConvert.DeserializeObject<LoginDto>(loginResp).Token;
+
+            var req = new HttpRequestMessage(HttpMethod.Get, "zv/users/bobby")
+            {
+                Headers =
+                {
+                    {"Accept", "application/vnd.zv.user.pretty+json"},
+                    {"Authorization", $"Basic {token}"}
+                }
+            };
+
+            var result = await _client.SendAsync(req);
+            string respContent = await result.Content.ReadAsStringAsync();
+            dynamic userPretty = JsonConvert.DeserializeObject(respContent);
+
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("bobby", (string) userPretty.id);
+            Assert.Equal("Bob Boo", (string) userPretty.display_name);
+            Assert.True(0 < (int) userPretty.days_joined);
+        }
+
+        [Fact]
+        public async Task Should_Get_User_Full()
+        {
+            var login = await _client.PostAsync("/zv/login", new StringContent(
+                @"{""user_name"":""BObby"",""passphrase"":""secret_passphrase2""}", Encoding.UTF8,
+                "application/vnd.zv.login.creation+json"
+            ));
+            string loginResp = await login.Content.ReadAsStringAsync();
+            string token = JsonConvert.DeserializeObject<LoginDto>(loginResp).Token;
+
+            var req = new HttpRequestMessage(HttpMethod.Get, "zv/users/bobby")
+            {
+                Headers =
+                {
+                    {"Authorization", $"Basic {token}"},
+                    {"Accept", "application/vnd.zv.user.full+json"},
+                }
+            };
+
+            var result = await _client.SendAsync(req);
+            string respContent = await result.Content.ReadAsStringAsync();
+            dynamic dto = JsonConvert.DeserializeObject(respContent);
+
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal("bobby", (string) dto.id);
+            Assert.Equal("Bob", (string) dto.first_name);
+            Assert.Equal("Boo", (string) dto.last_name);
+            Assert.NotEmpty((string) dto.joined_at);
         }
     }
 }

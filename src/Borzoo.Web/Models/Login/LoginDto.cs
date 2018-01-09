@@ -4,12 +4,12 @@ using Newtonsoft.Json.Serialization;
 
 namespace Borzoo.Web.Models.Login
 {
-    [JsonObject(
-        MemberSerialization.OptOut,
-        NamingStrategyType = typeof(SnakeCaseNamingStrategy)
-    )]
+    [JsonObject(MemberSerialization.OptOut, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class LoginDto
     {
+        [Required]
+        public string Token { get; set; }
+
         public LoginDto()
         {
         }
@@ -18,8 +18,5 @@ namespace Borzoo.Web.Models.Login
         {
             Token = token;
         }
-        
-        [Required]
-        public string Token { get; set; }
     }
 }

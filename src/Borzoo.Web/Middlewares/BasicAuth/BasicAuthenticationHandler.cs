@@ -53,12 +53,15 @@ namespace Borzoo.Web.Middlewares.BasicAuth
 
             try
             {
-                await _userRepo.GetByTokenAsync(token);
+                var user = await _userRepo.GetByTokenAsync(token);
 
                 var ticket = new AuthenticationTicket(
                     new ClaimsPrincipal(new[]
                     {
-                        new ClaimsIdentity(new[] {new Claim("token", token)})
+                        new ClaimsIdentity(
+                            new BasicAuthIdentity(user.DisplayId),
+                            new[] {new Claim("token", token),}
+                        )
                     }),
                     Scheme
                 );
