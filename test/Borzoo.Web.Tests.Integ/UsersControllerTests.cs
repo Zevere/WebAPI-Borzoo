@@ -156,5 +156,35 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal("Boo", (string) dto.last_name);
             Assert.NotEmpty((string) dto.joined_at);
         }
+        
+        [Fact]
+        public async Task Should_Update_User_FirstName()
+        {
+            var login = await _client.PostAsync("/zv/login", new StringContent(
+                @"{""user_name"":""BObby"",""passphrase"":""secret_passphrase2""}", Encoding.UTF8,
+                "application/vnd.zv.login.creation+json"
+            ));
+            string loginResp = await login.Content.ReadAsStringAsync();
+            string token = JsonConvert.DeserializeObject<LoginDto>(loginResp).Token;
+
+            var req = new HttpRequestMessage(new HttpMethod("PATCH"), "zv/users/bobby")
+            {
+                Content = new StringContent(@"{""first_name"":""bbb""}", Encoding.UTF8, "application/json"),
+                Headers =
+                {
+                    {"Authorization", $"Basic {token}"},
+                    {"Accept", "application/vnd.zv.user.pretty+json"},
+                }
+            };
+
+            var result = await _client.SendAsync(req);
+            string respContent = await result.Content.ReadAsStringAsync();
+            dynamic dto = JsonConvert.DeserializeObject(respContent);
+
+            Assert.Equal(HttpStatusCode.Accepted, result.StatusCode);
+            Assert.Equal("bobby", (string) dto.id);
+            Assert.Equal("bbb Boo", (string) dto.display_name);
+            Assert.NotEmpty((string) dto.days_joined);
+        }
     }
 }

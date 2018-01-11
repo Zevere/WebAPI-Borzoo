@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json.Linq;
 using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Web.Controllers
@@ -50,17 +51,16 @@ namespace Borzoo.Web.Controllers
 
         [Produces(
             Constants.ZevereContentTypes.User.Full,
-            Constants.ZevereContentTypes.User.Pretty // ToDo
+            Constants.ZevereContentTypes.User.Pretty
         )]
         [HttpGet("{userName}")]
         [Authorize]
         public async Task<IActionResult> Get(string userName)
         {
-            // ToDo check accept headers
             if (string.IsNullOrWhiteSpace(userName))
                 return BadRequest(); // ToDo use an error response generator helper class
             if (!User.Identity.Name.Equals(userName, StringComparison.OrdinalIgnoreCase))
-                return Unauthorized();
+                return Forbid();
 
             IActionResult result = default;
             UserEntity user;
@@ -125,9 +125,48 @@ namespace Borzoo.Web.Controllers
         }
 
         [HttpPatch("{userName}")]
-        public IActionResult Patch(string userName)
+        [Authorize]
+        [Consumes("application/json")]
+        [Produces(
+            Constants.ZevereContentTypes.Empty,
+            Constants.ZevereContentTypes.User.Pretty,
+            Constants.ZevereContentTypes.User.Full
+        )]
+        public async Task<IActionResult> Patch([FromRoute] string userName, [FromBody] JObject patch)
         {
-            return StatusCode((int) HttpStatusCode.NotImplemented);
+            if (string.IsNullOrWhiteSpace(userName))
+                return BadRequest(); // ToDo use an error response generator helper class
+            if (!User.Identity.Name.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+            if (patch is default)
+                return BadRequest();
+
+            string[] properties = {"first_name", "last_name"};
+            if (properties.All(p => patch[p]?.Value<string>() is default))
+                return BadRequest();
+            string fName = patch["first_name"]?.Value<string>();
+            string lName = patch["last_name"]?.Value<string>();
+
+            if (new[] {fName, lName}.All(string.IsNullOrWhiteSpace))
+                return BadRequest();
+
+            var user = await _userRepo.GetByNameAsync(userName);
+            user.FirstName = string.IsNullOrWhiteSpace(fName) ? user.FirstName : fName;
+            user.LastName = string.IsNullOrWhiteSpace(lName) ? user.LastName : lName;
+            await _userRepo.UpdateAsync(user);
+
+            string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
+            switch (contentType)
+            {
+                case Constants.ZevereContentTypes.Empty:
+                    return NoContent();
+                case Constants.ZevereContentTypes.User.Pretty:
+                    return Accepted((UserPrettyDto) user);
+                case Constants.ZevereContentTypes.User.Full:
+                    return Accepted((UserFullDto) user);
+                default:
+                    return BadRequest();
+            }
         }
 
         [HttpDelete("{userName}")]

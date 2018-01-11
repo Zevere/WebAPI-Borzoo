@@ -28,22 +28,24 @@
 
         public static class ZevereContentTypes
         {
-            private const string BaseTypeName = "application/vnd.zv.";
+            private const string BaseZevereTypeName = "application/vnd.zv.";
+
+            public const string Empty = BaseZevereTypeName + "empty";
 
             public static class Login
             {
-                public const string Creation = BaseTypeName + "login.creation+json";
+                public const string Creation = BaseZevereTypeName + "login.creation+json";
 
-                public const string Token = BaseTypeName + "login.token+json";
+                public const string Token = BaseZevereTypeName + "login.token+json";
             }
 
             public static class User
             {
-                public const string Full = BaseTypeName + "user.full+json";
+                public const string Full = BaseZevereTypeName + "user.full+json";
 
-                public const string Pretty = BaseTypeName + "user.pretty+json";
+                public const string Pretty = BaseZevereTypeName + "user.pretty+json";
 
-                public const string Creation = BaseTypeName + "user.creation+json";
+                public const string Creation = BaseZevereTypeName + "user.creation+json";
             }
         }
     }
