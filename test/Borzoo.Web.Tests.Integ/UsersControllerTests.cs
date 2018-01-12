@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Borzoo.Web.Models.Login;
 using Borzoo.Web.Models.User;
+using Borzoo.Web.Tests.Integ.Framework;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace Borzoo.Web.Tests.Integ
 {
+    [Collection("User Controller")]
+    [TestCaseOrderer(TestConstants.TestCaseOrderer, TestConstants.AssemblyName)]
     public class UsersControllerTests : IClassFixture<TestHostFixture<Startup>>
     {
         private readonly HttpClient _client;
@@ -19,7 +22,7 @@ namespace Borzoo.Web.Tests.Integ
             _client = fixture.Client;
         }
 
-        [Fact]
+        [OrderedFact]
         public async Task Should_Create_User()
         {
             var userCreationDto = new UserCreationRequest
@@ -31,14 +34,13 @@ namespace Borzoo.Web.Tests.Integ
 
             var request = new HttpRequestMessage(HttpMethod.Post, Constants.ZevereRoutes.Users)
             {
-                Headers = {Accept = {new MediaTypeWithQualityHeaderValue(Constants.ZevereContentTypes.User.Full)}},
+                Headers = {{"Accept", Constants.ZevereContentTypes.User.Full}},
                 Content = new StringContent(
                     JsonConvert.SerializeObject(userCreationDto),
                     Encoding.UTF8, "application/vnd.zv.user.creation+json"
                 ),
             };
             var response = await _client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
 
             var responsePayloadText = await response.Content.ReadAsStringAsync();
             var userFullRepresentation = JsonConvert.DeserializeObject<UserFullDto>(responsePayloadText);
@@ -49,7 +51,7 @@ namespace Borzoo.Web.Tests.Integ
             Assert.NotEmpty(userFullRepresentation.Id);
         }
 
-        [Fact]
+        [OrderedFact]
         public async Task Should_Reject_Unsupported_Media_Types()
         {
             var userCreationDto = new UserCreationRequest
@@ -68,7 +70,7 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal(HttpStatusCode.UnsupportedMediaType, result.StatusCode);
         }
 
-        [Fact]
+        [OrderedFact]
         public async Task Should_Respond204_For_Existing_User()
         {
             var req = new HttpRequestMessage(
@@ -83,7 +85,7 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Empty(respContent);
         }
 
-        [Fact]
+        [OrderedFact]
         public async Task Should_Respond404_For_NonExisting_User()
         {
             var req = new HttpRequestMessage(
@@ -98,7 +100,7 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Empty(respContent);
         }
 
-        [Fact]
+        [OrderedFact]
         public async Task Should_Get_User_Pretty()
         {
             var login = await _client.PostAsync("/zv/login", new StringContent(
@@ -124,10 +126,10 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal("bobby", (string) userPretty.id);
             Assert.Equal("Bob Boo", (string) userPretty.display_name);
-            Assert.True(0 < (int) userPretty.days_joined);
+            Assert.True(0 <= (int) userPretty.days_joined);
         }
 
-        [Fact]
+        [OrderedFact]
         public async Task Should_Get_User_Full()
         {
             var login = await _client.PostAsync("/zv/login", new StringContent(
@@ -156,8 +158,8 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal("Boo", (string) dto.last_name);
             Assert.NotEmpty((string) dto.joined_at);
         }
-        
-        [Fact]
+
+        [OrderedFact]
         public async Task Should_Update_User_FirstName()
         {
             var login = await _client.PostAsync("/zv/login", new StringContent(
@@ -185,6 +187,26 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal("bobby", (string) dto.id);
             Assert.Equal("bbb Boo", (string) dto.display_name);
             Assert.NotEmpty((string) dto.days_joined);
+        }
+
+        [OrderedFact]
+        public async Task Should_Delete_User()
+        {
+            var login = await _client.PostAsync("/zv/login", new StringContent(
+                @"{""user_name"":""BObby"",""passphrase"":""secret_passphrase2""}", Encoding.UTF8,
+                "application/vnd.zv.login.creation+json"
+            ));
+            string loginResp = await login.Content.ReadAsStringAsync();
+            string token = JsonConvert.DeserializeObject<LoginDto>(loginResp).Token;
+
+            var req = new HttpRequestMessage(HttpMethod.Delete, "zv/users/bobby")
+            {
+                Headers = {{"Authorization", $"Basic {token}"}}
+            };
+
+            var result = await _client.SendAsync(req);
+
+            Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
         }
     }
 }

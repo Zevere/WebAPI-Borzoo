@@ -48,6 +48,7 @@ namespace Borzoo.Data.SQLite
                 entity.Id = cmd.ExecuteScalar().ToString();
                 tnx.Commit();
             }
+
             return Task.FromResult(entity);
         }
 
@@ -83,7 +84,8 @@ namespace Borzoo.Data.SQLite
                     PassphraseHash = reader["passphrase"].ToString(),
                     FirstName = reader["first_name"].ToString(),
                     LastName = reader["last_name"] as string,
-                    JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch()
+                    JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch(),
+                    IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
                 };
 
                 string modifiedAtValue = reader["modified_at"].ToString();
@@ -128,7 +130,8 @@ namespace Borzoo.Data.SQLite
                     PassphraseHash = reader["passphrase"].ToString(),
                     FirstName = reader["first_name"].ToString(),
                     LastName = reader["last_name"] as string,
-                    JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch()
+                    JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch(),
+                    IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
                 };
 
                 string modifiedAtValue = reader["modified_at"].ToString();
@@ -175,7 +178,7 @@ namespace Borzoo.Data.SQLite
                     LastName = reader["last_name"] as string,
                     Token = token,
                     JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch(),
-                    IsDeleted = reader["is_deleted"] is string
+                    IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
                 };
 
                 string modifiedAtValue = reader["modified_at"].ToString();
@@ -224,7 +227,7 @@ namespace Borzoo.Data.SQLite
                     LastName = reader["last_name"] as string,
                     Token = reader["token"] as string,
                     JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixEpoch(),
-                    IsDeleted = reader["is_deleted"] is string
+                    IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
                 };
 
                 string modifiedAtValue = reader["modified_at"].ToString();
@@ -289,6 +292,7 @@ namespace Borzoo.Data.SQLite
                 cmd.CommandText = "INSERT INTO user_login(user_id, token) " +
                                   "VALUES($user_id, $token)";
             }
+
             cmd.Parameters.AddWithValue("$token", token);
 
             cmd.ExecuteNonQuery();
@@ -305,6 +309,26 @@ namespace Borzoo.Data.SQLite
             int rowsAffected = cmd.ExecuteNonQuery();
 
             return Task.FromResult(rowsAffected == 1);
+        }
+
+        public Task DeleteAsync(string id, bool hardDelete = false, CancellationToken cancellationToken = default)
+        {
+            using (var cmd = Connection.CreateCommand())
+            {
+                cmd.CommandText = (hardDelete ? "DELETE FROM user" : "UPDATE user SET is_deleted = 1") +
+                                  " WHERE id = $id";
+                cmd.Parameters.AddWithValue("$id", id.ToLower());
+                int count = cmd.ExecuteNonQuery();
+                if (count is default)
+                {
+                    throw new EntityNotFoundException(id);
+                }
+
+                cmd.CommandText = "DELETE FROM user_login WHERE user_id = $id";
+                cmd.ExecuteNonQuery();
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

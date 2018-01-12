@@ -99,9 +99,8 @@ namespace Borzoo.Web.Controllers
         [HttpPost]
         [Consumes(Constants.ZevereContentTypes.User.Creation)]
         [ProducesResponseType(typeof(UserFullDto), StatusCodes.Status201Created)]
-//        [ProducesResponseType(typeof(UserPrettyDto), (int) HttpStatusCode.Created)] // ToDo
+        [ProducesResponseType(typeof(UserPrettyDto), (int) HttpStatusCode.Created)]
         [ProducesResponseType(typeof(EmptyContentDto), StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Post([FromBody] UserCreationRequest model)
         {
             if (model is null || !TryValidateModel(model))
@@ -109,18 +108,21 @@ namespace Borzoo.Web.Controllers
                 return StatusCode((int) HttpStatusCode.BadRequest);
             }
 
-            var entity = (UserEntity) model;
+            var user = (UserEntity) model;
 
-            await _userRepo.AddAsync(entity);
+            await _userRepo.AddAsync(user);
 
-            bool hasAcceptHeader = HttpContext.Request.Headers.TryGetValue("ACCEPT", out StringValues vals);
-            if (hasAcceptHeader && vals.First().Equals(Constants.ZevereContentTypes.User.Full))
+            string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
+            switch (contentType)
             {
-                return StatusCode((int) HttpStatusCode.Created, (UserFullDto) entity);
-            }
-            else
-            {
-                return StatusCode((int) HttpStatusCode.NotImplemented);
+                case Constants.ZevereContentTypes.Empty:
+                    return NoContent();
+                case Constants.ZevereContentTypes.User.Pretty:
+                    return Created($"{user.DisplayId}", (UserPrettyDto) user);
+                case Constants.ZevereContentTypes.User.Full:
+                    return Created($"{user.DisplayId}", (UserFullDto) user);
+                default:
+                    return BadRequest();
             }
         }
 
@@ -170,9 +172,18 @@ namespace Borzoo.Web.Controllers
         }
 
         [HttpDelete("{userName}")]
-        public IActionResult Delete(string userName)
+        [Authorize]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        public async Task<IActionResult> Delete(string userName)
         {
-            return StatusCode((int) HttpStatusCode.NotImplemented);
+            if (string.IsNullOrWhiteSpace(userName))
+                return BadRequest(); // ToDo use an error response generator helper class
+            if (!User.Identity.Name.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+
+            var user = await _userRepo.GetByNameAsync(userName);
+            await _userRepo.DeleteAsync(user.Id);
+            return NoContent();
         }
     }
 }

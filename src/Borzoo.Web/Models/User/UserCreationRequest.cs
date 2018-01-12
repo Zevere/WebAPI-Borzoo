@@ -5,10 +5,7 @@ using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Web.Models.User
 {
-    [JsonObject(
-        MemberSerialization.OptOut,
-        NamingStrategyType = typeof(SnakeCaseNamingStrategy)
-    )]
+    [JsonObject(MemberSerialization.OptOut, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class UserCreationRequest : UserDtoBase
     {
         [Required]
@@ -26,15 +23,15 @@ namespace Borzoo.Web.Models.User
         [MinLength(1)]
         public string LastName { get; set; }
 
-        public static explicit operator UserEntity(UserCreationRequest requestModel)
-        {
-            return new UserEntity
-            {
-                DisplayId = requestModel.Name,
-                FirstName = requestModel.FirstName,
-                LastName = requestModel.LastName,
-                PassphraseHash = requestModel.Passphrase
-            };
-        }
+        public static explicit operator UserEntity(UserCreationRequest requestModel) =>
+            requestModel is default
+                ? default
+                : new UserEntity
+                {
+                    DisplayId = requestModel.Name,
+                    FirstName = requestModel.FirstName,
+                    LastName = requestModel.LastName,
+                    PassphraseHash = requestModel.Passphrase
+                };
     }
 }

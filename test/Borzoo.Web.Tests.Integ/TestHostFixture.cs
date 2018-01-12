@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -16,6 +17,8 @@ namespace Borzoo.Web.Tests.Integ
         public HttpClient Client { get; }
 
         private readonly TestServer _server;
+
+        private readonly string _testDbPath;
 
         public TestHostFixture()
             : this(Path.Combine("src"))
@@ -36,6 +39,8 @@ namespace Borzoo.Web.Tests.Integ
 
             _server = new TestServer(builder);
 
+            _testDbPath = _server.Host.Services.GetRequiredService<IConfiguration>()["SQLite_Db_Path"];
+
             Client = _server.CreateClient();
             Client.BaseAddress = new Uri("http://localhost");
         }
@@ -47,7 +52,7 @@ namespace Borzoo.Web.Tests.Integ
                 .AddJsonFile("appsettings.Test.json")
                 .Build();
         }
-        
+
         private static void InitializeServices(IServiceCollection services)
         {
             var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
@@ -86,6 +91,7 @@ namespace Borzoo.Web.Tests.Integ
 
         public void Dispose()
         {
+            File.Delete(_testDbPath);
             Client.Dispose();
             _server.Dispose();
         }

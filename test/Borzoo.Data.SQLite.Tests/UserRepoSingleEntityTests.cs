@@ -1,4 +1,5 @@
 using System;
+using System.Data.Common;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Microsoft.Data.Sqlite;
@@ -189,6 +190,7 @@ namespace Borzoo.Data.SQLite.Tests
                     _fixture.NewUser.ModifiedAt.Value.Ticks - 100_000,
                     _fixture.NewUser.ModifiedAt.Value.Ticks + 100_000);
             }
+
             Assert.Equal(_fixture.NewUser.IsDeleted, user.IsDeleted);
         }
 
@@ -236,6 +238,7 @@ namespace Borzoo.Data.SQLite.Tests
                     _fixture.NewUser.ModifiedAt.Value.Ticks - 100_000,
                     _fixture.NewUser.ModifiedAt.Value.Ticks + 100_000);
             }
+
             Assert.Equal(_fixture.NewUser.IsDeleted, user.IsDeleted);
         }
 
@@ -281,6 +284,42 @@ namespace Borzoo.Data.SQLite.Tests
 
             Assert.True(isRevoked);
             Assert.False(isRevoked2);
+        }
+
+        [Fact]
+        public void _13_Should_Delete_User()
+        {
+            string userId = _fixture.NewUser.Id;
+
+            IUserRepository sut = new UserRepository(Connection);
+
+            sut.DeleteAsync(userId).Wait();
+        }
+
+        [Fact]
+        public void _14_Should_Get_SoftDeleted_User()
+        {
+            string userId = _fixture.NewUser.Id;
+
+            IUserRepository sut = new UserRepository(Connection);
+
+            var user = sut.GetByIdAsync(userId, true).Result;
+
+            Assert.Equal(userId, user.Id);
+            Assert.True(user.IsDeleted);
+        }
+
+        [Fact]
+        public void _15_Should_Throw_While_Deleting_NonExisting_User()
+        {
+            const string id = "non-existing-user";
+            IUserRepository sut = new UserRepository(Connection);
+
+            var exception = Assert.Throws<EntityNotFoundException>(
+                () => sut.DeleteAsync(id).Wait()
+            );
+
+            Assert.Contains(id, exception.Message);
         }
     }
 }
