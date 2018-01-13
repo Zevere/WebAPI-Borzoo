@@ -2,7 +2,7 @@
 using System.IO;
 using Microsoft.Data.Sqlite;
 
-namespace Borzoo.Data.SQLite.Tests
+namespace Borzoo.Data.SQLite.Tests.Framework
 {
     public static class Helpers
     {

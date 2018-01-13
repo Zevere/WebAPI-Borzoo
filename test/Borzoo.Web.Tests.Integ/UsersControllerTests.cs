@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Borzoo.Web.Models.Login;
@@ -11,8 +10,6 @@ using Xunit;
 
 namespace Borzoo.Web.Tests.Integ
 {
-    [Collection("User Controller")]
-    [TestCaseOrderer(TestConstants.TestCaseOrderer, TestConstants.AssemblyName)]
     public class UsersControllerTests : IClassFixture<TestHostFixture<Startup>>
     {
         private readonly HttpClient _client;

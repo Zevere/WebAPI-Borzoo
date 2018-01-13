@@ -21,9 +21,9 @@
 
             public const string User = Users + "/" + PathParameters.UserId;
 
-            public const string UserTasks = Users + "/" + PathParameters.UserId + "/tasks";
+            public const string Tasks = Users + "/" + PathParameters.UserId + "/tasks";
 
-            public const string Task = UserTasks + "/" + PathParameters.TaskId;
+            public const string Task = Tasks + "/" + PathParameters.TaskId;
         }
 
         public static class ZevereContentTypes
@@ -47,7 +47,7 @@
 
                 public const string Creation = BaseZevereTypeName + "user.creation+json";
             }
-            
+
             public static class Task
             {
                 public const string Full = BaseZevereTypeName + "task.full+json";

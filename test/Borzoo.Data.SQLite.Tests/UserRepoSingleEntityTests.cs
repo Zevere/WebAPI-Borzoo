@@ -1,5 +1,4 @@
 using System;
-using System.Data.Common;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite.Tests.Framework;
@@ -8,13 +7,13 @@ using Xunit;
 
 namespace Borzoo.Data.SQLite.Tests
 {
-    public class UserRepoTests : IClassFixture<UserRepoFixture>
+    public class UserRepoSingleEntityTests : IClassFixture<UserRepoSingleEntityTests.Fixture>
     {
         private SqliteConnection Connection => _fixture.Connection;
 
-        private readonly UserRepoFixture _fixture;
+        private readonly Fixture _fixture;
 
-        public UserRepoTests(UserRepoFixture fixture)
+        public UserRepoSingleEntityTests(Fixture fixture)
         {
             _fixture = fixture;
         }
@@ -321,6 +320,16 @@ namespace Borzoo.Data.SQLite.Tests
             );
 
             Assert.Contains(id, exception.Message);
+        }
+
+        public class Fixture : FixtureBase
+        {
+            public User NewUser { get; set; }
+
+            public Fixture()
+                : base(nameof(UserRepoSingleEntityTests))
+            {
+            }
         }
     }
 }

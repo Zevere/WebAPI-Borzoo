@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -30,10 +31,14 @@ namespace Borzoo.Web.Controllers
             var result = EnsureSameAuthorizedUser(userName);
             if (result != null)
                 return result;
-
             if (dto is default || !TryValidateModel(dto))
-            {
                 return StatusCode((int) HttpStatusCode.BadRequest);
+            if (dto.DueBy != default)
+            {
+                dto.DueBy = dto.DueBy.ToUniversalTime();
+                result = ValidateDueDate(dto.DueBy);
+                if (result != null)
+                    return result;
             }
 
             var task = (UserTask) dto;
@@ -41,7 +46,29 @@ namespace Borzoo.Web.Controllers
             _taskRepo.UserName = userName;
             await _taskRepo.AddAsync(task);
 
-            return NoContent();
+            string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
+            switch (contentType)
+            {
+                case Constants.ZevereContentTypes.Empty:
+                    return NoContent();
+                case Constants.ZevereContentTypes.Task.Pretty:
+                    return Created($"{task.Id}", (TaskPrettyDto) task);
+                case Constants.ZevereContentTypes.Task.Full:
+                    return Created($"{task.Id}", (TaskFullDto) task);
+                default:
+                    return BadRequest();
+            }
+        }
+
+        private IActionResult ValidateDueDate(DateTime due)
+        {
+            var now = DateTime.UtcNow;
+            if (!(now < due && (due - now).TotalSeconds > 60))
+            {
+                return BadRequest();
+            }
+
+            return default;
         }
 
         private IActionResult EnsureSameAuthorizedUser(string userName)

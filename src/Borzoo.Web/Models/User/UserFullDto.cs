@@ -6,22 +6,23 @@ using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Web.Models.User
 {
-    [JsonObject(
-        MemberSerialization.OptOut,
-        NamingStrategyType = typeof(SnakeCaseNamingStrategy)
-    )]
+    [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class UserFullDto : UserDtoBase
     {
         [Required]
+        [JsonProperty(Required = Required.Always)]
         public string Id { get; set; }
 
         [Required]
+        [JsonProperty(Required = Required.Always)]
         public string FirstName { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string LastName { get; set; }
 
         [Required]
-        public DateTime JoinedAt { get; set; } // ToDo Define convertor to proper ISO datetiem JSON representation
+        [JsonProperty(Required = Required.Always)]
+        public DateTime JoinedAt { get; set; }
 
         public static explicit operator UserFullDto(UserEntity entity) =>
             new UserFullDto

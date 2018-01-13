@@ -1,0 +1,10 @@
+version: CI-Build-{build}
+image: Visual Studio 2017
+before_build:
+  - nuget restore Borzoo.sln
+build:
+  project: Borzoo.sln
+  verbosity: normal
+test:
+  assemblies:
+    - '**\*.Tests.*.dll'

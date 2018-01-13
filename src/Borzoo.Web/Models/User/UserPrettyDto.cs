@@ -6,16 +6,19 @@ using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Web.Models.User
 {
-    [JsonObject(MemberSerialization.OptOut, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class UserPrettyDto : UserDtoBase
     {
         [Required]
+        [JsonProperty(Required = Required.Always)]
         public string Id { get; set; }
 
         [Required]
+        [JsonProperty(Required = Required.Always)]
         public string DisplayName { get; set; }
 
         [Required]
+        [JsonProperty(Required = Required.Always)]
         public int DaysJoined { get; set; }
 
         public static explicit operator UserPrettyDto(UserEntity entity) =>
