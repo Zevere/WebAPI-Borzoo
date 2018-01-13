@@ -2,6 +2,7 @@ using System;
 using System.Data.Common;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
+using Borzoo.Data.SQLite.Tests.Framework;
 using Microsoft.Data.Sqlite;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace Borzoo.Data.SQLite.Tests
             _fixture = fixture;
         }
 
-        [Fact]
+        [OrderedFact]
         public void _00_Should_Add_User()
         {
             User user = new User
@@ -42,7 +43,7 @@ namespace Borzoo.Data.SQLite.Tests
             _fixture.NewUser = entity;
         }
 
-        [Fact]
+        [OrderedFact]
         public void _01_Should_Get_User_By_Id()
         {
             IEntityRepository<User> sut = new UserRepository(Connection);
@@ -60,7 +61,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.False(entity.IsDeleted);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _02_Should_Get_User_By_Name()
         {
             string username = _fixture.NewUser.DisplayId.ToUpper();
@@ -80,7 +81,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.False(entity.IsDeleted);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _03_Should_Throw_While_Getting_Non_Existing_User()
         {
             const string id = "non-existing-id";
@@ -94,7 +95,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Contains(id, exception.Message);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _04_Should_Update_User()
         {
             const string newFName = "Bob";
@@ -133,7 +134,7 @@ namespace Borzoo.Data.SQLite.Tests
             _fixture.NewUser.ModifiedAt = updatedEntity.ModifiedAt;
         }
 
-        [Fact]
+        [OrderedFact]
         public void _05_Should_Not_Override_Modified_Date()
         {
             DateTime modificationDate = DateTime.Today.AddDays(-1);
@@ -147,7 +148,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Equal(modificationDate, updatedEntity.ModifiedAt);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _06_Should_Create_And_Update_Login_For_User()
         {
             const string token = "test-token";
@@ -161,7 +162,7 @@ namespace Borzoo.Data.SQLite.Tests
             _fixture.NewUser.Token = token2;
         }
 
-        [Fact]
+        [OrderedFact]
         public void _07_Should_Get_User_By_Token()
         {
             string token = _fixture.NewUser.Token;
@@ -194,7 +195,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Equal(_fixture.NewUser.IsDeleted, user.IsDeleted);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _08_Should_Throw_While_Get_User_With_Non_Existing_Token()
         {
             const string token = "non-existing-token";
@@ -209,7 +210,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Contains(token, exception.Message);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _09_Should_Get_User_By_Pass_Login()
         {
             string userName = _fixture.NewUser.DisplayId.ToUpper();
@@ -242,7 +243,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Equal(_fixture.NewUser.IsDeleted, user.IsDeleted);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _10_Should_Throw_While_Get_User_By_Wrong_Name()
         {
             const string userName = "non-existing-user-name";
@@ -257,7 +258,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Contains(userName, exception.Message);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _11_Should_Throw_While_Get_User_By_Wrong_Pass()
         {
             string userName = _fixture.NewUser.DisplayId;
@@ -272,7 +273,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Contains(userName, exception.Message);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _12_Should_Remove_User_Login()
         {
             string token = _fixture.NewUser.Token;
@@ -286,7 +287,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.False(isRevoked2);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _13_Should_Delete_User()
         {
             string userId = _fixture.NewUser.Id;
@@ -296,7 +297,7 @@ namespace Borzoo.Data.SQLite.Tests
             sut.DeleteAsync(userId).Wait();
         }
 
-        [Fact]
+        [OrderedFact]
         public void _14_Should_Get_SoftDeleted_User()
         {
             string userId = _fixture.NewUser.Id;
@@ -309,7 +310,7 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.True(user.IsDeleted);
         }
 
-        [Fact]
+        [OrderedFact]
         public void _15_Should_Throw_While_Deleting_NonExisting_User()
         {
             const string id = "non-existing-user";

@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Data.Sqlite;
 
 namespace Borzoo.Data.SQLite
 {
@@ -7,7 +6,7 @@ namespace Borzoo.Data.SQLite
     {
         private static readonly DateTime UnixEpochBase = new DateTime(1970, 1, 1);
 
-        public static long ToUnixEpoch(this DateTime dateTime)
+        public static long ToUnixTime(this DateTime dateTime)
         {
             var diff = dateTime - UnixEpochBase;
             if (diff.Milliseconds < 0)
@@ -18,7 +17,7 @@ namespace Borzoo.Data.SQLite
             return (long) diff.TotalMilliseconds;
         }
 
-        public static DateTime FromUnixEpoch(this long epochTime)
+        public static DateTime FromUnixTime(this long epochTime)
             => new DateTime(UnixEpochBase.Ticks, DateTimeKind.Utc).AddMilliseconds(epochTime);
     }
 }

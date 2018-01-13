@@ -25,7 +25,7 @@ namespace Borzoo.Web.Tests.Integ
         [OrderedFact]
         public async Task Should_Create_User()
         {
-            var userCreationDto = new UserCreationRequest
+            var userCreationDto = new UserCreationDto
             {
                 Name = "username",
                 FirstName = "1st name",
@@ -54,7 +54,7 @@ namespace Borzoo.Web.Tests.Integ
         [OrderedFact]
         public async Task Should_Reject_Unsupported_Media_Types()
         {
-            var userCreationDto = new UserCreationRequest
+            var userCreationDto = new UserCreationDto
             {
                 Name = "username",
                 FirstName = "1st name",

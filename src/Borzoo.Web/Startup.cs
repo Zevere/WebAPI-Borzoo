@@ -60,6 +60,12 @@ namespace Borzoo.Web
                 userRepo.EnsureConnectinoOpened();
                 return userRepo;
             });
+            services.AddTransient<ITaskRepository, TaskRepository>(delegate
+            {
+                var taskRepo = new TaskRepository(connString);
+                taskRepo.EnsureConnectinoOpened();
+                return taskRepo;
+            });
 
             services.AddSingleton<DataSeeder>();
 

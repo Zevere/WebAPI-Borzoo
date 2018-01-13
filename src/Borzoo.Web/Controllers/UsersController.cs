@@ -99,9 +99,9 @@ namespace Borzoo.Web.Controllers
         [HttpPost]
         [Consumes(Constants.ZevereContentTypes.User.Creation)]
         [ProducesResponseType(typeof(UserFullDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(UserPrettyDto), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(UserPrettyDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(EmptyContentDto), StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Post([FromBody] UserCreationRequest model)
+        public async Task<IActionResult> Post([FromBody] UserCreationDto model)
         {
             if (model is null || !TryValidateModel(model))
             {

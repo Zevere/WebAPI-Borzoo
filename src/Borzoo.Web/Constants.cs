@@ -47,6 +47,15 @@
 
                 public const string Creation = BaseZevereTypeName + "user.creation+json";
             }
+            
+            public static class Task
+            {
+                public const string Full = BaseZevereTypeName + "task.full+json";
+
+                public const string Pretty = BaseZevereTypeName + "task.pretty+json";
+
+                public const string Creation = BaseZevereTypeName + "task.creation+json";
+            }
         }
     }
 }

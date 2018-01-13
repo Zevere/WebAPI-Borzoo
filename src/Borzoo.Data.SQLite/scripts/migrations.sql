@@ -15,13 +15,25 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_user_name
   ON user (name);
 
-CREATE TABLE IF NOT EXISTS user_login (
-  user_id    INTEGER NOT NULL,
-  token      TEXT    NOT NULL,
-  created_at   INTEGER NOT NULL DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)), -- Unix epoch time
+CREATE TABLE IF NOT EXISTS login (
+  user_id     INTEGER NOT NULL,
+  token       TEXT    NOT NULL,
+  created_at  INTEGER NOT NULL DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)), -- Unix epoch time
   modified_at INTEGER, -- Unix epoch time
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_user_login_user_id
-  ON user_login (user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_login_user_id
+  ON login (user_id);
+
+CREATE TABLE IF NOT EXISTS task (
+  id            INTEGER PRIMARY KEY,
+  user_id       INTEGER NOT NULL,
+  title         TEXT    NOT NULL,
+  description   TEXT,
+  due           INTEGER, -- Unix epoch time
+  created_at    INTEGER NOT NULL DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)), -- Unix epoch time
+  modified_at   INTEGER, -- Unix epoch time
+  is_deleted    INTEGER, -- Non-NULL values indicate Deleted
+  FOREIGN KEY (user_id) REFERENCES user (id)
+);
