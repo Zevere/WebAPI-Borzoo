@@ -29,6 +29,7 @@ namespace Borzoo.Data.SQLite
 
                 databaseMigrated = !tablesExist;
             }
+
             return databaseMigrated;
         }
 
@@ -48,7 +49,7 @@ namespace Borzoo.Data.SQLite
         public static string GetDbFileConnectionString(string path) =>
             "" + new SqliteConnectionStringBuilder
             {
-                DataSource = path,
+                DataSource = Path.GetFullPath(path),
                 Mode = SqliteOpenMode.ReadWriteCreate,
             };
     }

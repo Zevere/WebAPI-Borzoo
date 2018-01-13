@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Borzoo.Web.Tests.Integ
+namespace Borzoo.Web.Tests.Integ.Framework
 {
     public class TestHostFixture<TStartup> : IDisposable
     {
@@ -20,6 +20,8 @@ namespace Borzoo.Web.Tests.Integ
 
         private readonly string _testDbPath;
 
+        private readonly string _contentRoot;
+
         public TestHostFixture()
             : this(Path.Combine("src"))
         {
@@ -28,10 +30,10 @@ namespace Borzoo.Web.Tests.Integ
         private TestHostFixture(string relativeTargetProjectParentDir)
         {
             var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
-            string contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
+            _contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var builder = new WebHostBuilder()
-                .UseContentRoot(contentRoot)
+                .UseContentRoot(_contentRoot)
                 .ConfigureServices(InitializeServices)
                 .UseEnvironment("Development")
                 .UseConfiguration(BuildConfiguration())
@@ -45,11 +47,20 @@ namespace Borzoo.Web.Tests.Integ
             Client.BaseAddress = new Uri("http://localhost");
         }
 
-        private static IConfigurationRoot BuildConfiguration()
+        private IConfigurationRoot BuildConfiguration()
         {
+            string migrationsFile = Path.GetFullPath(Path.Combine(
+                _contentRoot, "..", "Borzoo.Data.SQLite", "scripts", "migrations.sql"
+            ));
+            KeyValuePair<string, string>[] settings =
+            {
+                new KeyValuePair<string, string>("SQLite_Db_Path", "test.db"),
+                new KeyValuePair<string, string>("SQLite_Migrations_Script", migrationsFile),
+            };
+
             return new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.Test.json")
+                .AddInMemoryCollection(settings)
                 .Build();
         }
 
@@ -72,7 +83,7 @@ namespace Borzoo.Web.Tests.Integ
             var directoryInfo = new DirectoryInfo(applicationBasePath);
             do
             {
-                directoryInfo = directoryInfo.Parent;
+                directoryInfo = directoryInfo.Parent ?? throw new DirectoryNotFoundException();
 
                 var projectDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo.FullName, projectRelativePath));
                 if (projectDirectoryInfo.Exists)
