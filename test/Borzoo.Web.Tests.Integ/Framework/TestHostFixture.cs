@@ -18,7 +18,7 @@ namespace Borzoo.Web.Tests.Integ.Framework
 
         private readonly TestServer _server;
 
-        private readonly string _testDbPath;
+        private string _testDbPath;
 
         private readonly string _contentRoot;
 
@@ -41,20 +41,19 @@ namespace Borzoo.Web.Tests.Integ.Framework
 
             _server = new TestServer(builder);
 
-            _testDbPath = _server.Host.Services.GetRequiredService<IConfiguration>()["SQLite_Db_Path"];
-
             Client = _server.CreateClient();
             Client.BaseAddress = new Uri("http://localhost");
         }
 
         private IConfigurationRoot BuildConfiguration()
         {
+            _testDbPath = Path.GetTempFileName();
             string migrationsFile = Path.GetFullPath(Path.Combine(
                 _contentRoot, "..", "Borzoo.Data.SQLite", "scripts", "migrations.sql"
             ));
             KeyValuePair<string, string>[] settings =
             {
-                new KeyValuePair<string, string>("SQLite_Db_Path", "test.db"),
+                new KeyValuePair<string, string>("SQLite_Db_Path", _testDbPath),
                 new KeyValuePair<string, string>("SQLite_Migrations_Script", migrationsFile),
             };
 
@@ -102,7 +101,15 @@ namespace Borzoo.Web.Tests.Integ.Framework
 
         public void Dispose()
         {
-            File.Delete(_testDbPath);
+            try
+            {
+                File.Delete(_testDbPath);
+            }
+            catch (IOException)
+            {
+                Console.WriteLine($@"Unable to delete database file ""{_testDbPath}""");
+            }
+
             Client.Dispose();
             _server.Dispose();
         }

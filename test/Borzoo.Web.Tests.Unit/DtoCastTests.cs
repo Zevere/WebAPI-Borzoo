@@ -23,7 +23,7 @@ namespace Borzoo.Web.Tests.Unit
 
             Assert.Equal(id, taskPrettyDto.Id);
             Assert.Equal(title, taskPrettyDto.Title);
-            Assert.Equal(false, taskPrettyDto.IsDue);
+            Assert.False(taskPrettyDto.IsDue);
             Assert.Equal("a few seconds", taskPrettyDto.DueIn);
             Assert.Null(taskPrettyDto.Description);
         }
@@ -44,7 +44,7 @@ namespace Borzoo.Web.Tests.Unit
 
             Assert.Equal(id, taskPrettyDto.Id);
             Assert.Equal(title, taskPrettyDto.Title);
-            Assert.Equal(true, taskPrettyDto.IsDue);
+            Assert.True(taskPrettyDto.IsDue);
             Assert.Null(taskPrettyDto.DueIn);
             Assert.Null(taskPrettyDto.Description);
         }
@@ -65,7 +65,7 @@ namespace Borzoo.Web.Tests.Unit
 
             Assert.Equal(id, taskPrettyDto.Id);
             Assert.Equal(title, taskPrettyDto.Title);
-            Assert.Equal(false, taskPrettyDto.IsDue);
+            Assert.False(taskPrettyDto.IsDue);
             Assert.Equal("1 day, 7 hours", taskPrettyDto.DueIn);
             Assert.Null(taskPrettyDto.Description);
         }
