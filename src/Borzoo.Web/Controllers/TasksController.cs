@@ -97,6 +97,41 @@ namespace Borzoo.Web.Controllers
             }
         }
 
+        [HttpGet("{taskName}")]
+        [ProducesResponseType(typeof(TaskPrettyDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TaskFullDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTask([FromRoute] string userName, [FromRoute] string taskName)
+        {
+            IActionResult result = EnsureAuthorizedUser(userName);
+            if (result != null)
+                return result;
+
+            if (!Regex.IsMatch(taskName, Constants.Regexes.TaskId))
+                return NotFound();
+
+            UserTask task;
+            try
+            {
+                task = await _taskRepo.GetByNameAsync(taskName);
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound();
+            }
+
+            string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
+            switch (contentType)
+            {
+                case Constants.ZevereContentTypes.Task.Pretty:
+                    return Ok((TaskPrettyDto) task);
+                case Constants.ZevereContentTypes.Task.Full:
+                    return Ok((TaskFullDto) task);
+                default:
+                    return BadRequest();
+            }
+        }
+
         [HttpHead("{taskName}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
