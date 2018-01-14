@@ -19,6 +19,7 @@ namespace Borzoo.Web.Models.Task
         public string Title { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [MinLength(1)]
         public string Description { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

@@ -54,6 +54,8 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Null(task.Description);
             Assert.Null(task.Due);
             Assert.Null(task.ModifiedAt);
+
+            _fixture.Task = task;
         }
 
         [OrderedFact]
@@ -71,8 +73,30 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Contains("UNIQUE constraint failed", exception.Message);
         }
 
+        [OrderedFact]
+        public async Task Should_Get_Task_Name()
+        {
+            ITaskRepository sut = new TaskRepository(Connection) {UserName = "bobby"};
+
+            var task = await sut.GetByNameAsync(_fixture.Task.Name);
+
+            Assert.Equal(_fixture.Task.Id, task.Id);
+            Assert.Equal(_fixture.Task.Name, task.Name);
+            Assert.Equal(_fixture.Task.Title, task.Title);
+            Assert.InRange(task.CreatedAt,
+                _fixture.Task.CreatedAt.AddSeconds(-1),
+                _fixture.Task.CreatedAt.AddSeconds(1)
+            );
+            Assert.False(task.IsDeleted);
+            Assert.Null(task.Description);
+            Assert.Null(task.Due);
+            Assert.Null(task.ModifiedAt);
+        }
+
         public class Fixture : FixtureBase
         {
+            public UserTask Task { get; set; }
+
             public Fixture()
                 : base(nameof(TaskRepoSingleEntityTests))
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
@@ -88,9 +89,9 @@ namespace Borzoo.Data.SQLite
             CancellationToken cancellationToken = default)
         {
             EnsureUserId();
-            string sql = "SELECT id, name, title, description, due, created_at, modified_at, is_deleted " +
+            string sql = "SELECT id, title, description, due, created_at, modified_at, is_deleted " +
                          "FROM task " +
-                         "WHERE LOWER(name) = LOWER($name) ";
+                         "WHERE LOWER(name) = LOWER($name) AND user_id = $user_id ";
 
             if (!includeDeletedRecords)
             {
@@ -102,6 +103,7 @@ namespace Borzoo.Data.SQLite
             {
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue("$name", name);
+                cmd.Parameters.AddWithValue("$user_id", UserId);
                 using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                 {
                     if (!(reader.HasRows && reader.Read()))
@@ -118,7 +120,10 @@ namespace Borzoo.Data.SQLite
                         CreatedAt = long.Parse(reader["created_at"].ToString()).FromUnixTime(),
                         IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
                     };
-
+                    
+                    if (string.IsNullOrWhiteSpace(entity.Description))
+                        entity.Description = default;
+                    
                     string dueValue = reader["due"].ToString();
                     if (!string.IsNullOrWhiteSpace(dueValue))
                         entity.Due = long.Parse(dueValue).FromUnixTime();
@@ -135,7 +140,55 @@ namespace Borzoo.Data.SQLite
         public Task<UserTask[]> GetUserTasksAsync(bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            EnsureUserId();
+            string sql = "SELECT id, name, title, description, due, created_at, modified_at, is_deleted " +
+                         "FROM task " +
+                         "WHERE user_id = $user_id ";
+
+            if (!includeDeletedRecords)
+            {
+                sql += "AND is_deleted IS NULL";
+            }
+
+            UserTask[] tasks;
+            using (var cmd = Connection.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("$user_id", UserId);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var list = new List<UserTask>();
+                    while (reader.Read())
+                    {
+                        var t = new UserTask
+                        {
+                            Id = reader["id"].ToString(),
+                            Name = reader["name"].ToString(),
+                            Title = reader["title"].ToString(),
+                            Description = reader["description"].ToString(),
+                            CreatedAt = long.Parse(reader["created_at"].ToString()).FromUnixTime(),
+                            IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
+                        };
+
+                        if (string.IsNullOrWhiteSpace(t.Description))
+                            t.Description = default;
+
+                        string dueValue = reader["due"].ToString();
+                        if (!string.IsNullOrWhiteSpace(dueValue))
+                            t.Due = long.Parse(dueValue).FromUnixTime();
+
+                        string modifiedAtValue = reader["modified_at"].ToString();
+                        if (!string.IsNullOrWhiteSpace(modifiedAtValue))
+                            t.ModifiedAt = long.Parse(modifiedAtValue).FromUnixTime();
+
+                        list.Add(t);
+                    }
+
+                    tasks = list.ToArray();
+                }
+            }
+
+            return Task.FromResult(tasks);
         }
 
         public Task<UserTask> GetByIdAsync(string id, bool includeDeletedRecords,

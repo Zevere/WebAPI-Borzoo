@@ -26,6 +26,8 @@ namespace Borzoo.Web.Controllers
 
         [HttpPost]
         [Consumes(Constants.ZevereContentTypes.Task.Creation)]
+        [ProducesResponseType(typeof(TaskPrettyDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(TaskFullDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(EmptyContentDto), StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Post([FromRoute] string userName, [FromBody] TaskCreationDto dto)
         {
@@ -67,6 +69,29 @@ namespace Borzoo.Web.Controllers
                     return Created($"{task.Id}", (TaskPrettyDto) task);
                 case Constants.ZevereContentTypes.Task.Full:
                     return Created($"{task.Id}", (TaskFullDto) task);
+                default:
+                    return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(TaskPrettyDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TaskFullDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllTasks([FromRoute] string userName)
+        {
+            var result = EnsureAuthorizedUser(userName);
+            if (result != null)
+                return result;
+
+            var tasks = await _taskRepo.GetUserTasksAsync();
+
+            string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
+            switch (contentType)
+            {
+                case Constants.ZevereContentTypes.Task.Pretty:
+                    return Ok(tasks.Select(t => (TaskPrettyDto) t));
+                case Constants.ZevereContentTypes.Task.Full:
+                    return Ok(tasks.Select(t => (TaskFullDto) t));
                 default:
                     return BadRequest();
             }

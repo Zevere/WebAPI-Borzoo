@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -163,6 +164,31 @@ namespace Borzoo.Web.Tests.Integ
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             Assert.Empty(content);
+        }
+
+        [OrderedFact]
+        public async Task Should_Get_Tasks_FullDto()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/zv/users/{_fixture.UserName}/tasks")
+            {
+                Headers =
+                {
+                    {"Authorization", "Basic " + _fixture.AuthToken},
+                    {"Accept", "application/vnd.zv.task.full+json"}
+                }
+            };
+            var response = await Client.SendAsync(request);
+
+            var payload = await response.Content.ReadAsStringAsync();
+            var tasks = JsonConvert.DeserializeObject<TaskFullDto[]>(payload);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(tasks);
+            var _ = tasks.Single(t => t.Id == _fixture.TaskId);
+            Assert.Collection(tasks,
+                dto => Assert.NotEmpty(dto.Id),
+                dto => Assert.NotEmpty(dto.Title)
+            );
         }
 
         public class Fixture : AuthorizedClientFixtureBase
