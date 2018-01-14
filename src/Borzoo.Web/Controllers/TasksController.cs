@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
@@ -28,7 +29,7 @@ namespace Borzoo.Web.Controllers
         [ProducesResponseType(typeof(EmptyContentDto), StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Post([FromRoute] string userName, [FromBody] TaskCreationDto dto)
         {
-            var result = EnsureSameAuthorizedUser(userName);
+            var result = EnsureAuthorizedUser(userName);
             if (result != null)
                 return result;
             if (dto is default || !TryValidateModel(dto))
@@ -41,9 +42,20 @@ namespace Borzoo.Web.Controllers
                     return result;
             }
 
+            if (dto.Id != default)
+            {
+                try
+                {
+                    await _taskRepo.GetByNameAsync(dto.Id);
+                    return StatusCode(StatusCodes.Status409Conflict);
+                }
+                catch (EntityNotFoundException)
+                {
+                }
+            }
+
             var task = (UserTask) dto;
 
-            _taskRepo.UserName = userName;
             await _taskRepo.AddAsync(task);
 
             string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
@@ -60,6 +72,31 @@ namespace Borzoo.Web.Controllers
             }
         }
 
+        [HttpHead("{taskName}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Head([FromRoute] string userName, [FromRoute] string taskName)
+        {
+            IActionResult result = EnsureAuthorizedUser(userName);
+            if (result != null)
+                return result;
+
+            if (!Regex.IsMatch(taskName, Constants.Regexes.TaskId))
+                return NotFound();
+
+            try
+            {
+                await _taskRepo.GetByNameAsync(taskName);
+                result = NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                result = NotFound(); // ToDo use error class
+            }
+
+            return result;
+        }
+
         private IActionResult ValidateDueDate(DateTime due)
         {
             var now = DateTime.UtcNow;
@@ -71,12 +108,14 @@ namespace Borzoo.Web.Controllers
             return default;
         }
 
-        private IActionResult EnsureSameAuthorizedUser(string userName)
+        private IActionResult EnsureAuthorizedUser(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName))
                 return BadRequest(); // ToDo use an error response generator helper class
             if (!User.Identity.Name.Equals(userName, StringComparison.OrdinalIgnoreCase))
                 return Forbid();
+
+            _taskRepo.UserName = userName;
             return default;
         }
     }

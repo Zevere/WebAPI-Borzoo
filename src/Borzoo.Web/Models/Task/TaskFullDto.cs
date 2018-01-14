@@ -32,7 +32,7 @@ namespace Borzoo.Web.Models.Task
         public static explicit operator TaskFullDto(UserTask entity) =>
             new TaskFullDto
             {
-                Id = entity.Id,
+                Id = entity.Name,
                 Title = entity.Title,
                 Description = entity.Description,
                 CreatedAt = entity.CreatedAt,

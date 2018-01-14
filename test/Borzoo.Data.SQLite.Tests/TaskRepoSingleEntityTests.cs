@@ -36,18 +36,39 @@ namespace Borzoo.Data.SQLite.Tests
         public async Task Should_Add_New_Task()
         {
             const string taskTitle = "Task 1";
+            const string taskName = "test_name";
 
             ITaskRepository sut = new TaskRepository(Connection) {UserName = "bobby"};
 
-            var task = await sut.AddAsync(new UserTask(taskTitle));
+            var task = await sut.AddAsync(new UserTask
+            {
+                Name = taskName,
+                Title = taskTitle,
+            });
 
             Assert.Equal("1", task.Id);
+            Assert.Equal(taskName, task.Name);
             Assert.Equal(taskTitle, task.Title);
             Assert.InRange(task.CreatedAt, DateTime.UtcNow.AddSeconds(-10), DateTime.UtcNow.AddSeconds(10));
             Assert.False(task.IsDeleted);
             Assert.Null(task.Description);
             Assert.Null(task.Due);
             Assert.Null(task.ModifiedAt);
+        }
+
+        [OrderedFact]
+        public async Task Should_Throw_Adding_Same_Task_Name()
+        {
+            var task = new UserTask
+            {
+                Name = "test_name",
+                Title = "title",
+            };
+            ITaskRepository sut = new TaskRepository(Connection) {UserName = "bobby"};
+
+            var exception = await Assert.ThrowsAsync<SqliteException>(() => sut.AddAsync(task));
+
+            Assert.Contains("UNIQUE constraint failed", exception.Message);
         }
 
         public class Fixture : FixtureBase

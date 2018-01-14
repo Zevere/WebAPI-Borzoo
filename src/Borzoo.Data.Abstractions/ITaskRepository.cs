@@ -10,6 +10,9 @@ namespace Borzoo.Data.Abstractions
 
         string UserId { get; }
 
+        Task<UserTask> GetByNameAsync(string name, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default);
+
         Task<UserTask[]> GetUserTasksAsync(bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default);
     }

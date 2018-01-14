@@ -8,6 +8,9 @@ namespace Borzoo.Data.Abstractions.Entities
         public string Id { get; set; }
 
         [Required]
+        public string Name { get; set; }
+
+        [Required]
         [StringLength(14)]
         public string Title { get; set; }
 
@@ -22,14 +25,5 @@ namespace Borzoo.Data.Abstractions.Entities
         public DateTime? ModifiedAt { get; set; }
 
         public bool IsDeleted { get; set; }
-
-        public UserTask()
-        {
-        }
-
-        public UserTask(string title)
-        {
-            Title = title;
-        }
     }
 }

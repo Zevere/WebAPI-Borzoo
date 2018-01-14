@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -46,11 +47,11 @@ namespace Borzoo.Data.SQLite
             bool hasDescription = !string.IsNullOrWhiteSpace(task.Description);
             bool hasDueDate = task.Due != default;
 
-            string sql = "INSERT INTO task(user_id, title, created_at" +
+            string sql = "INSERT INTO task(user_id, name, title, created_at" +
                          (hasDescription ? ", description" : string.Empty) +
                          (hasDueDate ? ", due" : string.Empty) +
                          ")" +
-                         "VALUES ($user_id, $title, $created_at" +
+                         "VALUES ($user_id, $name, $title, $created_at" +
                          (hasDescription ? ", $description" : string.Empty) +
                          (hasDueDate ? ", $due" : string.Empty) +
                          ");" +
@@ -63,6 +64,7 @@ namespace Borzoo.Data.SQLite
                     cmd.Transaction = tnx;
                     cmd.CommandText = sql;
                     cmd.Parameters.AddWithValue("$user_id", UserId);
+                    cmd.Parameters.AddWithValue("$name", task.Name.ToLower());
                     cmd.Parameters.AddWithValue("$title", task.Title);
                     cmd.Parameters.AddWithValue("$created_at", task.CreatedAt.ToUnixTime());
                     if (hasDescription)
@@ -80,6 +82,54 @@ namespace Borzoo.Data.SQLite
             }
 
             return Task.FromResult(task);
+        }
+
+        public Task<UserTask> GetByNameAsync(string name, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default)
+        {
+            EnsureUserId();
+            string sql = "SELECT id, name, title, description, due, created_at, modified_at, is_deleted " +
+                         "FROM task " +
+                         "WHERE LOWER(name) = LOWER($name) ";
+
+            if (!includeDeletedRecords)
+            {
+                sql += "AND is_deleted IS NULL";
+            }
+
+            UserTask entity;
+            using (var cmd = Connection.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("$name", name);
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+                {
+                    if (!(reader.HasRows && reader.Read()))
+                    {
+                        throw new EntityNotFoundException(nameof(name), name);
+                    }
+
+                    entity = new UserTask
+                    {
+                        Id = reader["id"].ToString(),
+                        Name = name.ToLower(),
+                        Title = reader["title"].ToString(),
+                        Description = reader["description"].ToString(),
+                        CreatedAt = long.Parse(reader["created_at"].ToString()).FromUnixTime(),
+                        IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
+                    };
+
+                    string dueValue = reader["due"].ToString();
+                    if (!string.IsNullOrWhiteSpace(dueValue))
+                        entity.Due = long.Parse(dueValue).FromUnixTime();
+
+                    string modifiedAtValue = reader["modified_at"].ToString();
+                    if (!string.IsNullOrWhiteSpace(modifiedAtValue))
+                        entity.ModifiedAt = long.Parse(modifiedAtValue).FromUnixTime();
+                }
+            }
+
+            return Task.FromResult(entity);
         }
 
         public Task<UserTask[]> GetUserTasksAsync(bool includeDeletedRecords = false,

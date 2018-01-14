@@ -28,6 +28,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_login_user_id
 
 CREATE TABLE IF NOT EXISTS task (
   id            INTEGER PRIMARY KEY,
+  name          TEXT    NOT NULL,
   user_id       INTEGER NOT NULL,
   title         TEXT    NOT NULL,
   description   TEXT,
@@ -37,3 +38,6 @@ CREATE TABLE IF NOT EXISTS task (
   is_deleted    INTEGER, -- Non-NULL values indicate Deleted
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_task_userId_name
+  ON task (user_id, name);

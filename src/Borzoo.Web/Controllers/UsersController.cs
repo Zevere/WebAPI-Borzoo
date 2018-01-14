@@ -26,6 +26,7 @@ namespace Borzoo.Web.Controllers
 
         [HttpHead("{userName}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Head(string userName)
         {
             IActionResult result;

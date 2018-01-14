@@ -57,5 +57,10 @@
                 public const string Creation = BaseZevereTypeName + "task.creation+json";
             }
         }
+
+        public static class Regexes
+        {
+            public const string TaskId = @"^(?:[a-z]|[A-Z]|\d|_|\.|-)+$";
+        }
     }
 }

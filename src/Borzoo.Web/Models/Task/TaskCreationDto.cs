@@ -9,6 +9,10 @@ namespace Borzoo.Web.Models.Task
     [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class TaskCreationDto : TaskDtoBase
     {
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [RegularExpression(Constants.Regexes.TaskId)]
+        public string Id { get; set; }
+
         [Required]
         [MaxLength(140)]
         [JsonProperty(Required = Required.Always)]
@@ -27,6 +31,7 @@ namespace Borzoo.Web.Models.Task
 
             var task = new UserTask
             {
+                Name = dto.Id ?? Guid.NewGuid().ToString(),
                 Title = dto.Title,
                 Description = dto.Description,
             };

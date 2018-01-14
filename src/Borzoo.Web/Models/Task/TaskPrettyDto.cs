@@ -66,7 +66,7 @@ namespace Borzoo.Web.Models.Task
 
             return new TaskPrettyDto
             {
-                Id = entity.Id,
+                Id = entity.Name,
                 Title = entity.Title,
                 Description = entity.Description,
                 IsDue = isDue,
