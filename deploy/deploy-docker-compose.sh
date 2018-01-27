@@ -25,5 +25,13 @@ dotnet publish --configuration Release --output "$publish_path"
 say "Docker compose up"
 cd "$repo_path/deploy"
 docker-compose rm -f
+
+cp -v \
+    "$repo_path/src/Borzoo.Data.SQLite/scripts/migrations.sql" \
+    "$repo_path/deploy/Borzoo.Web.Dockerfile" \
+    "$repo_path/src/Borzoo.Web/bin/publish/"
 docker-compose build --force-rm --no-cache
-docker-compose up 
+rm -v "$repo_path/src/Borzoo.Web/bin/publish/Borzoo.Web.Dockerfile" "$repo_path/src/Borzoo.Web/bin/publish/migrations.sql"
+
+docker-compose up -d
+docker-compose logs --follow
