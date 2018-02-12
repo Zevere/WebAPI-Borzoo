@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Microsoft.Data.Sqlite;
+using SQLitePCL;
 
 namespace Borzoo.Data.SQLite
 {
@@ -26,7 +27,6 @@ namespace Borzoo.Data.SQLite
 
         public Task<User> AddAsync(User entity, CancellationToken cancellationToken = default)
         {
-            // ToDo throw DuplicateKeyException if duplicate key
             bool hasLastName = !string.IsNullOrWhiteSpace(entity.LastName);
             string sql =
                 $"INSERT INTO user(name, passphrase, first_name, joined_at {(hasLastName ? ", last_name" : "")} ) " +
@@ -46,7 +46,16 @@ namespace Borzoo.Data.SQLite
                 if (hasLastName)
                     cmd.Parameters.AddWithValue("$lname", entity.LastName);
 
-                entity.Id = cmd.ExecuteScalar().ToString();
+                try
+                {
+                    entity.Id = cmd.ExecuteScalar().ToString();
+                }
+                catch (SqliteException e) when
+                (e.SqliteErrorCode == raw.SQLITE_CONSTRAINT &&
+                 e.Message.Contains("user.name"))
+                {
+                    throw new DuplicateKeyException("name");
+                }
 
                 if (cancellationToken.IsCancellationRequested)
                     throw new TaskCanceledException();

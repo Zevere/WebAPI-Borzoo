@@ -33,7 +33,15 @@ namespace Borzoo.Data.Mongo.Tests
 
             var entity = await repo.AddAsync(user);
 
+            Assert.Same(user, entity);
             Assert.True(ObjectId.TryParse(entity.Id, out var _));
+            Assert.Equal(17, entity.PassphraseHash.Length);
+            Assert.NotEmpty(entity.DisplayId);
+            Assert.Null(entity.LastName);
+            Assert.False(entity.IsDeleted);
+            Assert.Null(entity.ModifiedAt);
+
+            _fixture.NewUser = entity;
         }
 
         [OrderedFact]
@@ -44,7 +52,7 @@ namespace Borzoo.Data.Mongo.Tests
             User user = new User
             {
                 FirstName = "Al",
-                DisplayId = "alice0",
+                DisplayId = _fixture.NewUser.DisplayId,
                 PassphraseHash = "a new passphrase"
             };
 
@@ -57,6 +65,8 @@ namespace Borzoo.Data.Mongo.Tests
 
         public class Fixture : FixtureBase<User>
         {
+            public User NewUser { get; set; }
+
             public Fixture()
                 : base(MongoConstants.Collections.Users.Name)
             {

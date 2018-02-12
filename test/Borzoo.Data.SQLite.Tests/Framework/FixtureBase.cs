@@ -8,9 +8,9 @@ namespace Borzoo.Data.SQLite.Tests.Framework
     {
         public SqliteConnection Connection { get; }
 
-        protected FixtureBase(string collectionName)
+        protected FixtureBase(string databaseName)
         {
-            Connection = Helpers.CreateInMemoryDatabase(collectionName);
+            Connection = Helpers.CreateInMemoryDatabase(databaseName);
         }
 
         public void Dispose()

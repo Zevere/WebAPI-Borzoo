@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite.Tests.Framework;
@@ -19,7 +20,7 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [OrderedFact]
-        public void _00_Should_Add_User()
+        public async Task Should_Add_User()
         {
             User user = new User
             {
@@ -29,7 +30,7 @@ namespace Borzoo.Data.SQLite.Tests
             };
 
             IEntityRepository<User> sut = new UserRepository(Connection);
-            User entity = sut.AddAsync(user).Result;
+            User entity = await sut.AddAsync(user);
 
             Assert.Same(user, entity);
             Assert.Equal(1.ToString(), entity.Id);
@@ -40,6 +41,25 @@ namespace Borzoo.Data.SQLite.Tests
             Assert.Null(entity.ModifiedAt);
 
             _fixture.NewUser = entity;
+        }
+
+        [OrderedFact]
+        public async Task Should_Throw_While_Adding_User_Duplicate_Name()
+        {
+            IUserRepository repo = new UserRepository(Connection);
+
+            User user = new User
+            {
+                FirstName = "Al",
+                DisplayId = _fixture.NewUser.DisplayId,
+                PassphraseHash = "a new passphrase"
+            };
+
+            var e = await Assert.ThrowsAsync<DuplicateKeyException>(() =>
+                repo.AddAsync(user)
+            );
+
+            Assert.Equal("name", e.Key);
         }
 
         [OrderedFact]
