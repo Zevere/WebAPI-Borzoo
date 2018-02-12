@@ -3,21 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web", "src\Borzoo.Web\Borzoo.Web.csproj", "{869E9A44-6733-4394-BB67-A647477186BC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B6495E16-57C5-4AF8-A5CB-8E03DC24A674}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.Abstractions", "src\Borzoo.Data.Abstractions\Borzoo.Data.Abstractions.csproj", "{DC301BFC-D34A-44E8-8B1D-71EE52205CE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.SQLite", "src\Borzoo.Data.SQLite\Borzoo.Data.SQLite.csproj", "{14D0AD21-9750-430A-AF84-DB5380D059C0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B6495E16-57C5-4AF8-A5CB-8E03DC24A674}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.Mongo", "src\Borzoo.Data.Mongo\Borzoo.Data.Mongo.csproj", "{ECAD558B-EB3B-4EFB-8D9E-4D8916FADE82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web", "src\Borzoo.Web\Borzoo.Web.csproj", "{869E9A44-6733-4394-BB67-A647477186BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0CA3A753-4D80-4A14-9D97-F549DB0E2559}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.SQLite.Tests", "test\Borzoo.Data.SQLite.Tests\Borzoo.Data.SQLite.Tests.csproj", "{A3B5B1DF-2227-4918-B180-9E882FA43547}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.Mongo.Tests", "test\Borzoo.Data.Mongo.Tests\Borzoo.Data.Mongo.Tests.csproj", "{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web.Tests.Unit", "test\Borzoo.Web.Tests.Unit\Borzoo.Web.Tests.Unit.csproj", "{AE6DA9C1-924F-4ED2-BC05-51026FA3B071}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web.Tests.Integ", "test\Borzoo.Web.Tests.Integ\Borzoo.Web.Tests.Integ.csproj", "{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.SQLite.Tests", "test\Borzoo.Data.SQLite.Tests\Borzoo.Data.SQLite.Tests.csproj", "{A3B5B1DF-2227-4918-B180-9E882FA43547}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +53,14 @@ Global
 		{A3B5B1DF-2227-4918-B180-9E882FA43547}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3B5B1DF-2227-4918-B180-9E882FA43547}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3B5B1DF-2227-4918-B180-9E882FA43547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECAD558B-EB3B-4EFB-8D9E-4D8916FADE82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECAD558B-EB3B-4EFB-8D9E-4D8916FADE82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECAD558B-EB3B-4EFB-8D9E-4D8916FADE82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECAD558B-EB3B-4EFB-8D9E-4D8916FADE82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,5 +75,7 @@ Global
 		{AE6DA9C1-924F-4ED2-BC05-51026FA3B071} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
 		{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
 		{A3B5B1DF-2227-4918-B180-9E882FA43547} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
+		{ECAD558B-EB3B-4EFB-8D9E-4D8916FADE82} = {B6495E16-57C5-4AF8-A5CB-8E03DC24A674}
+		{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
 	EndGlobalSection
 EndGlobal

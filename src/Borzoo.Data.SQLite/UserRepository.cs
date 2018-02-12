@@ -26,6 +26,7 @@ namespace Borzoo.Data.SQLite
 
         public Task<User> AddAsync(User entity, CancellationToken cancellationToken = default)
         {
+            // ToDo throw DuplicateKeyException if duplicate key
             bool hasLastName = !string.IsNullOrWhiteSpace(entity.LastName);
             string sql =
                 $"INSERT INTO user(name, passphrase, first_name, joined_at {(hasLastName ? ", last_name" : "")} ) " +

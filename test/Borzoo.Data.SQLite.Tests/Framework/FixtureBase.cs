@@ -8,7 +8,7 @@ namespace Borzoo.Data.SQLite.Tests.Framework
     {
         public SqliteConnection Connection { get; }
 
-        public FixtureBase(string collectionName)
+        protected FixtureBase(string collectionName)
         {
             Connection = Helpers.CreateInMemoryDatabase(collectionName);
         }
