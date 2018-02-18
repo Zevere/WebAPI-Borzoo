@@ -6,6 +6,7 @@ using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Web.Models.User
 {
+    [Obsolete]
     [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class UserFullDto : UserDtoBase
     {

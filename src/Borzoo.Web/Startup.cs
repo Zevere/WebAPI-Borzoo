@@ -1,9 +1,12 @@
 ﻿using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.SQLite;
 using Borzoo.Web.Data;
+using Borzoo.Web.GraphQL;
 using Borzoo.Web.Middlewares.BasicAuth;
+using Borzoo.Web.Middlewares.GraphQL;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -47,29 +50,13 @@ namespace Borzoo.Web
 
             string dbPath = Configuration["SQLite_Db_Path"];
             if (string.IsNullOrWhiteSpace(dbPath))
-            {
                 dbPath = "borzoo.db";
-            }
 
-            string connString = DatabaseInitializer.GetDbFileConnectionString(dbPath);
-            DatabaseInitializer.ConnectionString = connString;
-
-            services.AddTransient<IUserRepository, UserRepository>(delegate
-            {
-                var userRepo = new UserRepository(connString);
-                userRepo.EnsureConnectinoOpened();
-                return userRepo;
-            });
-            services.AddTransient<ITaskRepository, TaskRepository>(delegate
-            {
-                var taskRepo = new TaskRepository(connString);
-                taskRepo.EnsureConnectinoOpened();
-                return taskRepo;
-            });
-
-            services.AddSingleton<DataSeeder>();
+            services.AddSQLite(dbPath);
 
             #endregion
+
+            services.AddGraphQL();
 
             services.AddMvc();
         }
@@ -91,6 +78,17 @@ namespace Borzoo.Web
             app.UseAuthentication();
 
             app.UseMvc();
+
+            app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings
+            {
+                Path = "/zv/graphql"
+            });
+
+            app.Run(context =>
+            {
+                context.Response.Redirect("https://github.com/Zevere");
+                return Task.CompletedTask;
+            });
         }
     }
 }
