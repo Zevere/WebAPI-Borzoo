@@ -62,6 +62,24 @@ namespace Borzoo.Data.Mongo.Tests
 
             Assert.Equal("name", e.Key);
         }
+        
+        [OrderedFact]
+        public async Task Should_Get_User_By_Id()
+        {
+            IEntityRepository<User> sut = new UserRepository(UsersCollection);
+            User entity = await sut.GetByIdAsync(_fixture.NewUser.Id);
+
+            Assert.Equal(_fixture.NewUser.Id, entity.Id);
+            Assert.Equal(_fixture.NewUser.DisplayId, entity.DisplayId);
+            Assert.Equal(_fixture.NewUser.PassphraseHash, entity.PassphraseHash);
+            Assert.Equal(_fixture.NewUser.FirstName, entity.FirstName);
+            Assert.Equal(_fixture.NewUser.LastName, entity.LastName);
+            Assert.InRange(entity.JoinedAt.Ticks,
+                _fixture.NewUser.JoinedAt.Ticks - 100_000,
+                _fixture.NewUser.JoinedAt.Ticks + 100_000);
+            Assert.Null(entity.ModifiedAt);
+            Assert.False(entity.IsDeleted);
+        }
 
         public class Fixture : FixtureBase<User>
         {

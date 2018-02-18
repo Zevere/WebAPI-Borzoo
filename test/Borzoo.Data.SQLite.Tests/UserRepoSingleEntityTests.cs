@@ -63,10 +63,10 @@ namespace Borzoo.Data.SQLite.Tests
         }
 
         [OrderedFact]
-        public void _01_Should_Get_User_By_Id()
+        public async Task Should_Get_User_By_Id()
         {
             IEntityRepository<User> sut = new UserRepository(Connection);
-            User entity = sut.GetByIdAsync(_fixture.NewUser.Id).Result;
+            User entity = await sut.GetByIdAsync(_fixture.NewUser.Id.ToUpper());
 
             Assert.Equal(_fixture.NewUser.Id, entity.Id);
             Assert.Equal(_fixture.NewUser.DisplayId, entity.DisplayId);

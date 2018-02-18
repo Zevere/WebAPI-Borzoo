@@ -4,7 +4,13 @@ services:
   - docker
 language: csharp
 mono: none
-dotnet: 2.0.0
-script: source test/test.sh
+dotnet: 2.1.4
+script: >
+  bash scripts/build/build.sh &&
+  bash scripts/test/test.sh &&
+  bash scripts/deploy/travis-ci/deploy-staging.sh
 notifications:
   email: false
+# env:
+  # BORZOO_DOCKER_HOST: 'example.org:1234'
+  # BORZOO_DOCKER_CERTS: '{ "ca":"", "cert":"", "key":"" }'

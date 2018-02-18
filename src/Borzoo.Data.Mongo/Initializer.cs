@@ -12,13 +12,16 @@ namespace Borzoo.Data.Mongo
         public static async Task CreateSchemaAsync(IMongoDatabase database,
             CancellationToken cancellationToken = default)
         {
-            await database.CreateCollectionAsync(MongoConstants.Collections.Users.Name, default, cancellationToken);
-            var usersCollection = database.GetCollection<User>(MongoConstants.Collections.Users.Name);
-            var key = Builders<User>.IndexKeys.Ascending("name");
-            await usersCollection.Indexes.CreateOneAsync(key,
-                new CreateIndexOptions {Name = MongoConstants.Collections.Users.Indexes.Username, Unique = true},
-                cancellationToken
-            );
+            // Users Collection
+            {
+                await database.CreateCollectionAsync(MongoConstants.Collections.Users.Name, default, cancellationToken);
+                var usersCollection = database.GetCollection<User>(MongoConstants.Collections.Users.Name);
+                var key = Builders<User>.IndexKeys.Ascending("name");
+                await usersCollection.Indexes.CreateOneAsync(key,
+                    new CreateIndexOptions {Name = MongoConstants.Collections.Users.Indexes.Username, Unique = true},
+                    cancellationToken
+                );
+            }
         }
 
         public static void RegisterClassMaps()

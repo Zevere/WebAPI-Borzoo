@@ -18,4 +18,7 @@
     <ProjectReference Include="..\Borzoo.Data.SQLite\Borzoo.Data.SQLite.csproj" />
     <ProjectReference Include="..\Borzoo.Data.SQLite\Borzoo.Data.SQLite.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+  </ItemGroup>
 </Project>

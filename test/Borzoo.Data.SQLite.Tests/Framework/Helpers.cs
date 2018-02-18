@@ -8,13 +8,18 @@ namespace Borzoo.Data.SQLite.Tests.Framework
     {
         public static SqliteConnection CreateInMemoryDatabase(string uniqueDbName)
         {
-            string migrationsSql = Environment.GetEnvironmentVariable("SQLite_Migrations_Script");
-            if (string.IsNullOrWhiteSpace(migrationsSql))
+            string migrationsSql;
+            string envVar = Environment.GetEnvironmentVariable("SQLite_Migrations_Script");
+            if (string.IsNullOrWhiteSpace(envVar))
             {
                 migrationsSql = Path.Combine(
                     AppContext.BaseDirectory, "..", "..", "..", "..", "..",
                     "src", "Borzoo.Data.SQLite", "scripts", "migrations.sql"
-                );
+                ); 
+            }
+            else
+            {
+                migrationsSql = Path.GetFullPath(envVar);
             }
 
             return DatabaseInitializer.ConnectAndCreateDatabase(

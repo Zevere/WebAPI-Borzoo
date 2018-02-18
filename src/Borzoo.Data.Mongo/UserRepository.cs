@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -34,10 +36,18 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public Task<User> GetByIdAsync(string id, bool includeDeletedRecords = false,
+        public async Task<User> GetByIdAsync(string id, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+            User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
+            
+            if (entity is default)
+            {
+                throw new EntityNotFoundException(id);
+            }
+            
+            return entity;
         }
 
         public Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)

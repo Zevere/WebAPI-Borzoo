@@ -271,3 +271,6 @@ appsettings.*.json
 
 # SQLite Database files
 **/*.db
+
+# Deployments files
+docker-certs/
