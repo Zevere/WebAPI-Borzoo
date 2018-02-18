@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Borzoo.Data.Abstractions;
 using Borzoo.Data.SQLite;
 using Borzoo.Web.Data;
 using Borzoo.Web.GraphQL;
@@ -77,13 +76,12 @@ namespace Borzoo.Web
 
             app.UseAuthentication();
 
+            app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings { Path = "/graphql" });
+            
+            app.UseGraphiQl("/graphql");
+            
             app.UseMvc();
-
-            app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings
-            {
-                Path = "/zv/graphql"
-            });
-
+            
             app.Run(context =>
             {
                 context.Response.Redirect("https://github.com/Zevere");

@@ -78,8 +78,6 @@ namespace Borzoo.Web.Middlewares.GraphQL
             string json = _writer.Write(result);
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = result.Errors?.Any() == true ? 400 : 200;
-
             await context.Response.WriteAsync(json)
                 .ConfigureAwait(false);
         }
