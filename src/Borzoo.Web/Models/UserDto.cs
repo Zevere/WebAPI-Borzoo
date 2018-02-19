@@ -1,9 +1,9 @@
 ﻿using System;
 using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
-namespace Borzoo.Web.Models.User
+namespace Borzoo.Web.Models
 {
-    public class User
+    public class UserDto
     {
         public string Id;
 
@@ -17,8 +17,8 @@ namespace Borzoo.Web.Models.User
 
         public DateTime JoinedAt;
 
-        public static explicit operator User(UserEntity entity) =>
-            new User
+        public static explicit operator UserDto(UserEntity entity) =>
+            new UserDto
             {
                 Id = entity.DisplayId,
                 FirstName = entity.FirstName,

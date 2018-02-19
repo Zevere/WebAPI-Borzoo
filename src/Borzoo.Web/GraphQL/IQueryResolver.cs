@@ -1,11 +1,14 @@
 ﻿using System.Threading.Tasks;
+using Borzoo.Web.Models;
 using Borzoo.Web.Models.User;
 using GraphQL.Types;
 
-namespace Borzoo.Web.Data
+namespace Borzoo.Web.GraphQL
 {
     public interface IQueryResolver
     {
-        Task<User> ResolveUserAsync(ResolveFieldContext<object> context);
+        Task<UserDto> GetUserAsync(ResolveFieldContext<object> context);
+        
+        Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context);
     }
 }

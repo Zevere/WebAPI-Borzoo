@@ -12,7 +12,7 @@ namespace Borzoo.Web.GraphQL
             Field<UserType>("user",
                 "User",
                 new QueryArguments(new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "id"}),
-                resolver.ResolveUserAsync
+                resolver.GetUserAsync
             );
         }
     }

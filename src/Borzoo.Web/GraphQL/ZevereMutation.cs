@@ -1,5 +1,4 @@
-﻿using Borzoo.Web.Data;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 
 namespace Borzoo.Web.GraphQL
 {
@@ -12,7 +11,7 @@ namespace Borzoo.Web.GraphQL
             Field<UserType>("CreateUser", "Create a new user", new QueryArguments(
                     new QueryArgument<NonNullGraphType<UserInput>> {Name = "user"}
                 ),
-                resolver.ResolveUserAsync
+                resolver.CreateUserAsync
             );
         }
     }

@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
-using Borzoo.Web.GraphQL;
+using Borzoo.Web.Models;
 using Borzoo.Web.Models.User;
 using GraphQL.Types;
 using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
-namespace Borzoo.Web.Data
+namespace Borzoo.Web.GraphQL
 {
     public class QueryResolver : IQueryResolver
     {
@@ -16,7 +16,7 @@ namespace Borzoo.Web.Data
             _userRepo = userRepo;
         }
 
-        public async Task<User> ResolveUserAsync(ResolveFieldContext<object> context)
+        public async Task<UserDto> GetUserAsync(ResolveFieldContext<object> context)
         {
             string username = context.GetArgument<string>("id");
             UserEntity entity;
@@ -33,8 +33,30 @@ namespace Borzoo.Web.Data
                 context.Errors.Add(err);
                 return default;
             }
-            
-            return (User) entity;
+
+            return (UserDto) entity;
+        }
+
+        public async Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context)
+        {
+            var dto = context.GetArgument<UserCreationDto>("user");
+
+            var entity = (UserEntity) dto;
+            try
+            {
+                await _userRepo.AddAsync(entity, context.CancellationToken);
+            }
+            catch (DuplicateKeyException)
+            {
+                var err = new Error("duplicate key")
+                {
+                    Path = new[] {"user"}
+                };
+                context.Errors.Add(err);
+                return default;
+            }
+
+            return (UserDto) entity;
         }
     }
 }

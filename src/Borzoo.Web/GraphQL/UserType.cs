@@ -1,8 +1,9 @@
-﻿using GraphQL.Types;
+﻿using Borzoo.Web.Models;
+using GraphQL.Types;
 
 namespace Borzoo.Web.GraphQL
 {
-    public class UserType : ObjectGraphType<Models.User.User>
+    public class UserType : ObjectGraphType<UserDto>
     {
         public UserType()
         {

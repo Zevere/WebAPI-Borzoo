@@ -1,19 +1,21 @@
-﻿using GraphQL.Types;
+﻿using Borzoo.Web.Models.User;
+using GraphQL.Types;
 
 namespace Borzoo.Web.GraphQL
 {
-    public class UserInput : InputObjectGraphType
+    public class UserInput : InputObjectGraphType<UserCreationDto>
     {
         public UserInput()
         {
             Name = "UserInput";
             Description = "Input for creating a new user or organization";
 
-            Field<NonNullGraphType<StringGraphType>>("name", "The desired user name");
-            Field<NonNullGraphType<StringGraphType>>("passphrase", "Passphrase as clear text");
-            Field<NonNullGraphType<StringGraphType>>("firstName", "User's first name");
-            Field<StringGraphType>("lastName", "User's last name");
-            Field<ListGraphType<StringGraphType>>("members", "If organization user, user ID of team members");
+            Field(_ => _.Name).Description("The desired user name");
+            Field(_ => _.FirstName).Description("User's first name");
+            Field(_ => _.Passphrase).Description("Passphrase as clear text");
+
+            Field(_ => _.LastName, true).Description("User's last name");
+            Field(_ => _.Members, true).Description("If organization user, user ID of team members");
         }
     }
 }
