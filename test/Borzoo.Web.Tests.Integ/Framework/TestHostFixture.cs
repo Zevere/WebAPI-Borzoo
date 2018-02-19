@@ -53,8 +53,9 @@ namespace Borzoo.Web.Tests.Integ.Framework
             ));
             KeyValuePair<string, string>[] settings =
             {
-                new KeyValuePair<string, string>("SQLite_Db_Path", _testDbPath),
-                new KeyValuePair<string, string>("SQLite_Migrations_Script", migrationsFile),
+                new KeyValuePair<string, string>("data:use", "sqlite"),
+                new KeyValuePair<string, string>("data:sqlite:db", _testDbPath),
+                new KeyValuePair<string, string>("data:sqlite:migrations", migrationsFile),
             };
 
             return new ConfigurationBuilder()

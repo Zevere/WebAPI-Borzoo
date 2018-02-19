@@ -24,7 +24,7 @@ namespace Borzoo.Web.Tests.Integ
         {
             string userQuery = @"{ user(id: \""bobby\"") { id firstName lastName joinedAt } }";
 
-            var resp = await _client.PostAsync("zv/graphql", new StringContent(
+            var resp = await _client.PostAsync("/graphql", new StringContent(
                 $@"{{ ""query"": ""{userQuery}"" }}", Encoding.UTF8, "application/json"
             ));
 

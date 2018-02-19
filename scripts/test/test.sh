@@ -8,7 +8,9 @@ source "$script_path/../.logging.sh"
 say "Run SQLite tests"
 export SQLite_Migrations_Script="$root_dir/src/Borzoo.Data.SQLite/scripts/migrations.sql"
 cd "$root_dir/test/Borzoo.Data.SQLite.Tests"
-dotnet xunit -configuration Release -nobuild -stoponfail -verbose
+dotnet test --list-tests --no-build
+dotnet test -c Release --no-build
+# dotnet xunit -configuration Release -nobuild -stoponfail -verbose
 unset SQLite_Migrations_Script
 
 
@@ -26,5 +28,6 @@ dotnet xunit -configuration Release -nobuild -stoponfail -verbose
 
 say "Run integration tests"
 cd "$root_dir/test/Borzoo.Web.Tests.Integ"
-say "### Skipping integrations tests"
+dotnet test --list-tests --no-build
+dotnet test -c Release --no-build
 # dotnet xunit -configuration Release -nobuild -stoponfail -verbose
