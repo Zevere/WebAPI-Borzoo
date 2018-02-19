@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Borzoo.Data.SQLite;
 using Borzoo.Web.Data;
 using Borzoo.Web.GraphQL;
 using Borzoo.Web.Middlewares.BasicAuth;
@@ -28,6 +27,23 @@ namespace Borzoo.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Database
+
+            string dataStore = Configuration["data:use"];
+            if (dataStore == "sqlite")
+            {
+                string dbFile = Configuration["data:sqlite:db"];
+                if (string.IsNullOrWhiteSpace(dbFile)) dbFile = "borzoo.db";
+                services.AddSQLite(dbFile);
+            }
+            else if (dataStore == "mongo")
+            {
+                string connStr = Configuration["data:mongo:connection"];
+                services.AddMongo(connStr);
+            }
+
+            #endregion
+            
             #region Auth
 
             services.AddAuthentication("Basic")
@@ -45,43 +61,32 @@ namespace Borzoo.Web
 
             #endregion
 
-            #region SQLite
-
-            string dbPath = Configuration["SQLite_Db_Path"];
-            if (string.IsNullOrWhiteSpace(dbPath))
-                dbPath = "borzoo.db";
-
-            services.AddSQLite(dbPath);
-
-            #endregion
-
             services.AddGraphQL();
 
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger,
-            DataSeeder seeder)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            logger.LogInformation($@"Using database ""{Configuration["data:use"]}"".");
             if (new[] {"Development", "Staging"}.Contains(env.EnvironmentName))
             {
-                logger.LogInformation("SQLite Connection String: " + DatabaseInitializer.ConnectionString);
-                seeder.SeedData(Configuration["SQLite_Migrations_Script"]);
+                app.SeedData(Configuration.GetSection("data"));
             }
 
             app.UseAuthentication();
 
-            app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings { Path = "/graphql" });
-            
+            app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings {Path = "/graphql"});
+
             app.UseGraphiQl("/graphql");
-            
+
             app.UseMvc();
-            
+
             app.Run(context =>
             {
                 context.Response.Redirect("https://github.com/Zevere");

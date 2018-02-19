@@ -1,13 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Borzoo.Data.Mongo
 {
@@ -39,14 +36,34 @@ namespace Borzoo.Data.Mongo
         public async Task<User> GetByIdAsync(string id, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+            var filter = Builders<User>.Filter.Eq(u => u.Id, id.ToLower());
             User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
-            
+
             if (entity is default)
             {
                 throw new EntityNotFoundException(id);
             }
-            
+
+            return entity;
+        }
+
+        public async Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default)
+        {
+            // ToDo inclue deleted
+            name = name.ToLower();
+            User entity = await _collection
+                .AsQueryable()
+                .SingleOrDefaultAsync(
+                    u => u.DisplayId.ToLower().Contains(name),
+                    cancellationToken
+                );
+
+            if (entity is default)
+            {
+                throw new EntityNotFoundException("User Name", name);
+            }
+
             return entity;
         }
 
@@ -56,12 +73,6 @@ namespace Borzoo.Data.Mongo
         }
 
         public Task DeleteAsync(string id, bool hardDelete = false, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

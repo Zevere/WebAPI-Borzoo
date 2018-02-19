@@ -1,4 +1,5 @@
 ﻿using System;
+using GraphQL;
 using GraphQL.Types;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,11 +12,12 @@ namespace Borzoo.Web.GraphQL
         public ZevereSchema(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            base.ResolveType = ResolveType;
-            Query = _serviceProvider.GetRequiredService<UserQuery>();
+            DependencyResolver = new FuncDependencyResolver(ResolveType);
+            Query = _serviceProvider.GetRequiredService<ZevereQuery>();
+            Mutation = _serviceProvider.GetRequiredService<ZevereMutation>();
         }
 
-        private IGraphType ResolveType(Type type) =>
-            _serviceProvider.GetRequiredService(type) as IGraphType;
+        private object ResolveType(Type type) =>
+            _serviceProvider.GetRequiredService(type);
     }
 }

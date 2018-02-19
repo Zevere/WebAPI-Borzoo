@@ -1,10 +1,11 @@
 ﻿using Borzoo.Data.Abstractions;
 using Borzoo.Data.SQLite;
 using Microsoft.Extensions.DependencyInjection;
+using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Web.Data
 {
-    public static class Extensions
+    public static class SQLiteExtensions
     {
         public static IServiceCollection AddSQLite(this IServiceCollection services, string dbFile)
         {
@@ -23,8 +24,6 @@ namespace Borzoo.Web.Data
                 taskRepo.EnsureConnectinoOpened();
                 return taskRepo;
             });
-
-            services.AddSingleton<DataSeeder>();
 
             return services;
         }

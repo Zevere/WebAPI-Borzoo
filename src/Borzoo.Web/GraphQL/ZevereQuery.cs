@@ -3,11 +3,11 @@ using GraphQL.Types;
 
 namespace Borzoo.Web.GraphQL
 {
-    public class UserQuery : ObjectGraphType
+    public class ZevereQuery : ObjectGraphType
     {
-        public UserQuery(IQueryResolver resolver)
+        public ZevereQuery(IQueryResolver resolver)
         {
-            Name = nameof(UserQuery);
+            Name = nameof(ZevereQuery);
 
             Field<UserType>("user",
                 "User",

@@ -5,7 +5,7 @@ using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
 namespace Borzoo.Web.Models.User
 {
-    [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class UserCreationDto : UserDtoBase
     {
         [Required]
@@ -26,6 +26,10 @@ namespace Borzoo.Web.Models.User
         [MinLength(1)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string LastName { get; set; }
+
+        [MinLength(1)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string[] Members { get; set; }
 
         public static explicit operator UserEntity(UserCreationDto dtoModel) =>
             dtoModel is default

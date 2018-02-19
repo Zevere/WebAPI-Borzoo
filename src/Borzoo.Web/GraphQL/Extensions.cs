@@ -16,8 +16,10 @@ namespace Borzoo.Web.GraphQL
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
             services.AddSingleton<UserType>();
+            services.AddSingleton<UserInput>();
 
-            services.AddSingleton<UserQuery>();
+            services.AddSingleton<ZevereQuery>();
+            services.AddSingleton<ZevereMutation>();
             services.AddSingleton<ISchema, ZevereSchema>();
             
             return services;

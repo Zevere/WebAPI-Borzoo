@@ -15,7 +15,7 @@ namespace Borzoo.Web.GraphQL
             Field(_ => _.FirstName)
                 .Description("First name");
             
-            Field(_ => _.LastName)
+            Field(_ => _.LastName, true)
                 .Description("Last name");
             
             Field(_ => _.DisplayName)
