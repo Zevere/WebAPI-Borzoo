@@ -4,12 +4,9 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="GraphQL" Version="2.0.0-alpha-851"/>
+    </ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\Borzoo.Data.Abstractions\Borzoo.Data.Abstractions.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.0"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Scripts"/>
     </ItemGroup>
 </Project>

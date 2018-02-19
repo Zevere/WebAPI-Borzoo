@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Borzoo.Web.Data;
-using Borzoo.Web.GraphQL;
+using Borzoo.Web.Helpers;
 using Borzoo.Web.Middlewares.BasicAuth;
 using Borzoo.Web.Middlewares.GraphQL;
 using Microsoft.AspNetCore.Authentication;

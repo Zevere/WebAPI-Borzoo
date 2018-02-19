@@ -15,8 +15,8 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Borzoo.GraphQL\Borzoo.GraphQL.csproj" />
     <ProjectReference Include="..\Borzoo.Data.Mongo\Borzoo.Data.Mongo.csproj" />
-    <ProjectReference Include="..\Borzoo.Data.SQLite\Borzoo.Data.SQLite.csproj" />
     <ProjectReference Include="..\Borzoo.Data.SQLite\Borzoo.Data.SQLite.csproj" />
   </ItemGroup>
   <ItemGroup>
