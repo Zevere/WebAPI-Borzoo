@@ -5,7 +5,7 @@ using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Borzoo.Data.Tests.Common
+namespace Borzoo.Data.Tests.Common.Framework
 {
     public class TestCaseOrderer : ITestCaseOrderer
     {

@@ -67,9 +67,26 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)
+        public async Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var filter = Builders<User>.Filter.Eq(u => u.Id, entity.Id);
+            var updates = Builders<User>.Update.Combine(
+                Builders<User>.Update.Set(u => u.DisplayId, entity.DisplayId.ToLower()),
+                Builders<User>.Update.Set(u => u.PassphraseHash, entity.PassphraseHash),
+                Builders<User>.Update.Set(u => u.FirstName, entity.FirstName),
+                Builders<User>.Update.Set(u => u.ModifiedAt, entity.ModifiedAt?.ToUniversalTime() ?? DateTime.UtcNow),
+                Builders<User>.Update.Set(u => u.LastName, entity.LastName)
+            );
+
+            var updatedEntity = await _collection.FindOneAndUpdateAsync(filter, updates,
+                new FindOneAndUpdateOptions<User>
+                {
+                    ReturnDocument = ReturnDocument.After
+                }, cancellationToken);
+
+            updatedEntity.CopyTo(entity);
+
+            return entity;
         }
 
         public Task DeleteAsync(string id, bool hardDelete = false, CancellationToken cancellationToken = default)

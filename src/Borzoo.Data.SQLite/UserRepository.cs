@@ -281,7 +281,7 @@ namespace Borzoo.Data.SQLite
 
             cmd.ExecuteNonQuery();
 
-            entity.ModifiedAt = modifiedTime;
+            entity.ModifiedAt = modifiedTime.ToUniversalTime();
 
             return Task.FromResult(entity);
         }
