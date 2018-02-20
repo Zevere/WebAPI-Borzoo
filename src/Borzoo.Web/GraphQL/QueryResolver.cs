@@ -1,10 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
+using Borzoo.GraphQL;
 using Borzoo.GraphQL.Models;
 using GraphQL.Types;
 
-namespace Borzoo.GraphQL
+namespace Borzoo.Web.GraphQL
 {
     public class QueryResolver : IQueryResolver
     {
@@ -44,6 +48,11 @@ namespace Borzoo.GraphQL
             try
             {
                 await _userRepo.AddAsync(entity, context.CancellationToken);
+
+                string token = GenerateAlphaNumericString(100);
+                await _userRepo.SetTokenForUserAsync(entity.Id, token, context.CancellationToken);
+                string encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
+                entity.Token = encodedToken;
             }
             catch (DuplicateKeyException)
             {
@@ -56,6 +65,32 @@ namespace Borzoo.GraphQL
             }
 
             return (UserDto) entity;
+        }
+
+        private string GenerateAlphaNumericString(int charCount)
+        {
+            var rnd = new Random(DateTime.UtcNow.Millisecond);
+            var chars = Enumerable.Range(0, charCount)
+                .Select(_ =>
+                {
+                    char c = default;
+                    int charType = rnd.Next() % 3;
+                    switch (charType)
+                    {
+                        case 0: // Number
+                            c = (char) rnd.Next(48, 50);
+                            break;
+                        case 1: // Upper-Case Letter
+                            c = (char) rnd.Next(65, 91);
+                            break;
+                        case 2: // Lower-Case Letter
+                            c = (char) rnd.Next(97, 123);
+                            break;
+                    }
+
+                    return c;
+                });
+            return string.Join(string.Empty, chars);
         }
     }
 }

@@ -94,10 +94,18 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public Task<User> GetByTokenAsync(string token, bool includeDeletedRecords = false,
+        public async Task<User> GetByTokenAsync(string token, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var filter = Builders<User>.Filter.Eq(u => u.Token, token);
+            User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
+
+            if (entity is default)
+            {
+                throw new EntityNotFoundException("token", token);
+            }
+
+            return entity;
         }
 
         public Task<User> GetByPassphraseLoginAsync(string userName, string passphrase,
@@ -107,9 +115,12 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public Task SetTokenForUserAsync(string userId, string token, CancellationToken cancellationToken = default)
+        public async Task SetTokenForUserAsync(string userId, string token,
+            CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+            var update = Builders<User>.Update.Set(u => u.Token, token);
+            await _collection.FindOneAndUpdateAsync(filter, update, cancellationToken: cancellationToken);
         }
 
         public Task<bool> RevokeTokenAsync(string token, CancellationToken cancellationToken = default)

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Tests.Common.Framework;
+using Borzoo.Data.Tests.Common.Helpers;
 using Xunit;
 
 namespace Borzoo.Data.Tests.Common
@@ -75,9 +76,7 @@ namespace Borzoo.Data.Tests.Common
             Assert.Equal(Fixture.NewUser.PassphraseHash, entity.PassphraseHash);
             Assert.Equal(Fixture.NewUser.FirstName, entity.FirstName);
             Assert.Equal(Fixture.NewUser.LastName, entity.LastName);
-            Assert.InRange(entity.JoinedAt.Ticks,
-                Fixture.NewUser.JoinedAt.Ticks - 100_000,
-                Fixture.NewUser.JoinedAt.Ticks + 100_000);
+            Assert.Equal(entity.JoinedAt, Fixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
             Assert.Null(entity.ModifiedAt);
             Assert.False(entity.IsDeleted);
         }
@@ -95,9 +94,7 @@ namespace Borzoo.Data.Tests.Common
             Assert.Equal(Fixture.NewUser.PassphraseHash, entity.PassphraseHash);
             Assert.Equal(Fixture.NewUser.FirstName, entity.FirstName);
             Assert.Equal(Fixture.NewUser.LastName, entity.LastName);
-            Assert.InRange(entity.JoinedAt.Ticks,
-                Fixture.NewUser.JoinedAt.Ticks - 100_000,
-                Fixture.NewUser.JoinedAt.Ticks + 100_000);
+            Assert.Equal(entity.JoinedAt, Fixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
             Assert.Null(entity.ModifiedAt);
             Assert.False(entity.IsDeleted);
         }
@@ -146,9 +143,7 @@ namespace Borzoo.Data.Tests.Common
             Assert.Equal(newPassphraseHash, updatedEntity.PassphraseHash);
             Assert.NotNull(updatedEntity.ModifiedAt);
             Assert.True(updatedEntity.ModifiedAt > timeBeforeTestAction);
-            Assert.InRange(updatedEntity.JoinedAt.Ticks,
-                Fixture.NewUser.JoinedAt.Ticks - 100_000,
-                Fixture.NewUser.JoinedAt.Ticks + 100_000);
+            Assert.Equal(updatedEntity.JoinedAt, Fixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
 
             updatedEntity.CopyTo(Fixture.NewUser);
         }
@@ -164,11 +159,55 @@ namespace Borzoo.Data.Tests.Common
             IEntityRepository<User> sut = CreateUserRepository();
             User updatedEntity = await sut.UpdateAsync(user);
 
-            Assert.Equal(modificationDate.ToUniversalTime(), updatedEntity.ModifiedAt);
-//            Assert.InRange(modificationDate.ToUniversalTime().Ticks,
-//                updatedEntity.ModifiedAt.Value.Ticks - 100_000,
-//                updatedEntity.ModifiedAt.Value.Ticks + 100_000
-//            );
+            Assert.Equal(modificationDate.ToUniversalTime(), updatedEntity.ModifiedAt,
+                new NullableDateTimeEqualityComparer());
+
+            updatedEntity.CopyTo(Fixture.NewUser);
+        }
+
+        [OrderedFact]
+        public async Task Should_Set_User_Token()
+        {
+            const string token = "api_token";
+
+            IUserRepository sut = CreateUserRepository();
+
+            await sut.SetTokenForUserAsync(Fixture.NewUser.Id, token);
+
+            Fixture.NewUser.Token = token;
+        }
+
+        [OrderedFact]
+        public async Task Should_Get_User_By_Token()
+        {
+            IUserRepository sut = CreateUserRepository();
+
+            User entity = await sut.GetByTokenAsync(Fixture.NewUser.Token);
+
+            Assert.Equal(Fixture.NewUser.Token, entity.Token);
+
+            Assert.Equal(Fixture.NewUser.Id, entity.Id);
+            Assert.Equal(Fixture.NewUser.DisplayId, entity.DisplayId);
+            Assert.Equal(Fixture.NewUser.PassphraseHash, entity.PassphraseHash);
+            Assert.Equal(Fixture.NewUser.FirstName, entity.FirstName);
+            Assert.Equal(Fixture.NewUser.LastName, entity.LastName);
+            Assert.Equal(Fixture.NewUser.JoinedAt, entity.JoinedAt, new DateTimeEqualityComparer());
+            Assert.NotNull(entity.ModifiedAt);
+            Assert.False(entity.IsDeleted);
+
+            entity.CopyTo(Fixture.NewUser);
+        }
+
+        [OrderedFact]
+        public async Task Should_Throw_Getting_User_By_Invalid_Token()
+        {
+            IUserRepository sut = CreateUserRepository();
+
+            var exception = await Assert.ThrowsAsync<EntityNotFoundException>(() =>
+                sut.GetByTokenAsync("invalid_token")
+            );
+
+            Assert.Contains("token", exception.Message);
         }
     }
 }

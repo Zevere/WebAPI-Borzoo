@@ -1,8 +1,11 @@
 ﻿using System;
-using UserEntity = Borzoo.Data.Abstractions.Entities.User;
+using Borzoo.Data.Abstractions.Entities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Borzoo.GraphQL.Models
 {
+    [JsonObject(MemberSerialization.Fields, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class UserDto
     {
         public string Id;
@@ -11,19 +14,19 @@ namespace Borzoo.GraphQL.Models
 
         public string LastName;
 
-        public string DisplayName;
+        public string Token;
 
         public int DaysJoined;
 
         public DateTime JoinedAt;
 
-        public static explicit operator UserDto(UserEntity entity) =>
+        public static explicit operator UserDto(User entity) =>
             new UserDto
             {
                 Id = entity.DisplayId,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
-                DisplayName = $"{entity.FirstName} {entity.LastName}".Trim(),
+                Token = entity.Token,
                 DaysJoined = (DateTime.UtcNow - entity.JoinedAt).Days,
                 JoinedAt = entity.JoinedAt
             };
