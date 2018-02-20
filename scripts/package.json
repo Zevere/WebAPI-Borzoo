@@ -1,0 +1,17 @@
+{
+  "name": "borzoo-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "npm run build && npm run test && npm run deploy",
+    "build": "node build/build.js",
+    "test": "node test/test.js",
+    "deploy": "node deploy/travis-ci/deploy-staging.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.3.1",
+    "shelljs": "^0.8.1"
+  }
+}
