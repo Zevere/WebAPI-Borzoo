@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Borzoo.Tests.Framework;
 using Borzoo.Web.Models.Task;
 using Borzoo.Web.Tests.Integ.Framework;
 using Newtonsoft.Json;

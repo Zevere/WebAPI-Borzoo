@@ -3,8 +3,8 @@ using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo;
 using Borzoo.Data.Tests.Common;
-using Borzoo.Data.Tests.Common.Framework;
 using Borzoo.Data.Tests.Mongo.Framework;
+using Borzoo.Tests.Framework;
 using MongoDB.Bson;
 using Xunit;
 

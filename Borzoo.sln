@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web", "src\Borzoo.We
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0CA3A753-4D80-4A14-9D97-F549DB0E2559}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Tests.Framework", "test\Borzoo.Tests.Framework\Borzoo.Tests.Framework.csproj", "{F4EAAF80-B82E-48F6-A304-31FDF2796442}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.Tests.Common", "test\Borzoo.Data.Tests.Common\Borzoo.Data.Tests.Common.csproj", "{6C0B27CB-3C9A-43AB-ADB2-AEDD1599BF72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Data.Tests.SQLite", "test\Borzoo.Data.Tests.SQLite\Borzoo.Data.Tests.SQLite.csproj", "{A3B5B1DF-2227-4918-B180-9E882FA43547}"
@@ -73,6 +75,10 @@ Global
 		{6C0B27CB-3C9A-43AB-ADB2-AEDD1599BF72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C0B27CB-3C9A-43AB-ADB2-AEDD1599BF72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C0B27CB-3C9A-43AB-ADB2-AEDD1599BF72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4EAAF80-B82E-48F6-A304-31FDF2796442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4EAAF80-B82E-48F6-A304-31FDF2796442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4EAAF80-B82E-48F6-A304-31FDF2796442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4EAAF80-B82E-48F6-A304-31FDF2796442}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,5 +97,6 @@ Global
 		{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
 		{87D33427-1A66-450A-9D01-82A601C54D20} = {B6495E16-57C5-4AF8-A5CB-8E03DC24A674}
 		{6C0B27CB-3C9A-43AB-ADB2-AEDD1599BF72} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
+		{F4EAAF80-B82E-48F6-A304-31FDF2796442} = {0CA3A753-4D80-4A14-9D97-F549DB0E2559}
 	EndGlobalSection
 EndGlobal

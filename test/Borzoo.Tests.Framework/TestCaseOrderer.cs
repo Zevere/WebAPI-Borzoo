@@ -5,7 +5,7 @@ using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Borzoo.Web.Tests.Integ.Framework
+namespace Borzoo.Tests.Framework
 {
     public class TestCaseOrderer : ITestCaseOrderer
     {
@@ -18,7 +18,7 @@ namespace Borzoo.Web.Tests.Integ.Framework
                     Attrib = tc.TestMethod.Method
                                  .ToRuntimeMethod()
                                  .GetCustomAttribute<OrderedFactAttribute>() ?? throw new
-                                 Exception($"All test cases must have {nameof(OrderedFactAttribute)} attribute.")
+                                 Exception($@"Test case ""{tc.DisplayName}"" doesn't have {nameof(OrderedFactAttribute)}.")
                 })
                 .OrderBy(x => x.Attrib.LineNumber)
                 .Select(x => x.TestCase);

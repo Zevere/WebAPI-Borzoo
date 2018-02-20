@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using Xunit;
 
-namespace Borzoo.Web.Tests.Integ.Framework
+namespace Borzoo.Tests.Framework
 {
     public class OrderedFactAttribute : FactAttribute
     {
-        internal int LineNumber { get; }
+        public int LineNumber { get; }
 
         public OrderedFactAttribute(
             [CallerLineNumber] int line = default

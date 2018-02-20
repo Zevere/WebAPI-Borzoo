@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Borzoo.Data.Tests.Common.Helpers
+namespace Borzoo.Tests.Framework
 {
     public class DateTimeEqualityComparer : IEqualityComparer<DateTime>
     {

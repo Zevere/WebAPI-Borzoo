@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Borzoo.Web.Tests.Integ.Framework
 {
@@ -25,6 +29,26 @@ namespace Borzoo.Web.Tests.Integ.Framework
         public TestHostFixture()
             : this(Path.Combine("src"))
         {
+        }
+
+        public async Task<HttpResponseMessage> SendGraphQLQuery(
+            string query,
+            string variables = default,
+            string operationName = default,
+            CancellationToken cancellationToken = default
+        )
+        {
+            string payload = JsonConvert.SerializeObject(new
+            {
+                query,
+                variables,
+                operationName
+            }, new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Ignore});
+
+            var resp = await Client.PostAsync("/graphql", new StringContent(
+                payload, Encoding.UTF8, "application/json"
+            ), cancellationToken);
+            return resp;
         }
 
         private TestHostFixture(string relativeTargetProjectParentDir)

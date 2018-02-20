@@ -1,5 +1,6 @@
 using System;
 using Borzoo.Data.Abstractions.Entities;
+using Borzoo.Tests.Framework;
 using Borzoo.Web.Models.Task;
 using Xunit;
 
@@ -7,7 +8,7 @@ namespace Borzoo.Web.Tests.Unit
 {
     public class DtoCastTests
     {
-        [Fact]
+        [OrderedFact]
         public void Should_Cast_TaskPrettyDto()
         {
             const string id = "id";
@@ -31,7 +32,7 @@ namespace Borzoo.Web.Tests.Unit
             Assert.Null(taskPrettyDto.Description);
         }
 
-        [Fact]
+        [OrderedFact]
         public void Should_Cast_TaskPrettyDto_Due_Task()
         {
             const string id = "id";
@@ -55,7 +56,7 @@ namespace Borzoo.Web.Tests.Unit
             Assert.Null(taskPrettyDto.Description);
         }
 
-        [Fact]
+        [OrderedFact]
         public void Should_Cast_TaskPrettyDto_Due_In_Days()
         {
             const string id = "id";
