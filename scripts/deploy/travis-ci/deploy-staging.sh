@@ -9,7 +9,7 @@ then
   say "Skip deployment for pull request"
   exit
 fi
-if [ "$TRAVIS_BRANCH" != "dev" ]
+if [ "$TRAVIS_BRANCH" != "develop" ]
 then
   say "Skip deployment from branch $TRAVIS_BRANCH"
   exit

@@ -11,10 +11,10 @@ install:
   - cd ..
 script:
   - node scripts/build/build.js
-  - node scripts/test/test.js
+  # - node scripts/test/test.js
 deploy:
   provider: script
-  script: bash deploy/travis-ci/deploy-staging.sh
+  script: bash scripts/deploy/travis-ci/deploy-staging.sh
   on:
     branch: develop
 notifications:
