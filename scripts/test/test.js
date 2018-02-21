@@ -1,11 +1,13 @@
 const $ = require('shelljs');
 const fs = require('fs');
+const path = require('path');
 const {
     logStep,
     logInfo
 } = require('../logging');
 
-const rootDir = `${__dirname}/../..`
+const rootDir = path.resolve(`${__dirname}/../..`)
+$.config.fatal = true
 $.cd(rootDir)
 
 logStep('Test')

@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "npm run build && npm run test && npm run deploy",
+    "start": "npm run build && npm run test && npm run predeploy:staging && npm run deploy",
     "build": "node build/build.js",
     "test": "node test/test.js",
-    "deploy": "node deploy/travis-ci/deploy-staging.js"
+    "predeploy:staging": "node deploy/travis-ci/predeploy-staging.js",
+    "deploy": "node deploy/deploy-docker-compose.js"
   },
   "author": "",
   "license": "ISC",

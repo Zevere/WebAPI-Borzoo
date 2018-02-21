@@ -11,14 +11,19 @@ install:
   - cd ..
 script:
   - node scripts/build/build.js
-  # - node scripts/test/test.js
+  - node scripts/test/test.js
 deploy:
   provider: script
-  script: bash scripts/deploy/travis-ci/deploy-staging.sh
+  script: node scripts/deploy/travis-ci/predeploy-staging.js && node scripts/deploy/deploy-docker-compose.js
   on:
     branch: develop
 notifications:
   email: false
-# env:
-  # BORZOO_DOCKER_HOST: 'example.org:1234'
-  # BORZOO_DOCKER_CERTS: '{ "ca":"", "cert":"", "key":"" }'
+
+# Web Interface settings:
+
+## Disable "Build pushed pull requests"
+
+## Environment Variables:
+#### BORZOO_DOCKER_HOST: 'example.org:1234'
+#### BORZOO_DOCKER_CERTS: '{ "ca":"", "cert":"", "key":"" }'
