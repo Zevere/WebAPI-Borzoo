@@ -23,7 +23,7 @@ namespace Borzoo.GraphQL.Models
         public static explicit operator UserDto(User entity) =>
             new UserDto
             {
-                Id = entity.DisplayId,
+                Id = entity.DisplayId?.ToLower(),
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Token = entity.Token,

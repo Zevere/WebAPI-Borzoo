@@ -4,7 +4,7 @@
     {
         public static class Database
         {
-            public const string Test = "borzoo_test";
+            public const string Test = "borzoo-test-mongo";
         }
 
         public static class Collections

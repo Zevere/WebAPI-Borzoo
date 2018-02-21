@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
 
 namespace Borzoo.Web.Tests.Integ.Framework
@@ -22,18 +23,42 @@ namespace Borzoo.Web.Tests.Integ.Framework
 
         private readonly TestServer _server;
 
-        private string _testDbPath;
+        private readonly string _webAppContentRoot;
 
-        private readonly string _contentRoot;
+        private readonly string _testAppContentRoot;
+
+        private string _testSQLiteDb;
 
         public TestHostFixture()
-            : this(Path.Combine("src"))
         {
+            _testAppContentRoot = Path.GetFullPath(Path.Combine(
+                Assembly.GetExecutingAssembly().Location, "..", "..", "..", "..")
+            );
+            _webAppContentRoot = Path.GetFullPath(Path.Combine(
+                Assembly.GetExecutingAssembly().Location, "..", "..", "..", "..", "..", "..", "src",
+                "Borzoo.Web"
+            ));
+
+            var configuration = BuildConfiguration();
+            var builder = new WebHostBuilder()
+                .UseContentRoot(_webAppContentRoot)
+                .ConfigureServices(InitializeServices)
+                .UseEnvironment("Staging")
+                .UseConfiguration(configuration)
+                .UseStartup(typeof(TStartup));
+
+            _server = new TestServer(builder);
+
+            Client = _server.CreateClient();
+            Client.BaseAddress = new Uri("http://localhost");
+
+            if (configuration["data:use"] == "mongo")
+                DataInitializer.InitMongoDb(configuration["data:mongo:connection"]).GetAwaiter().GetResult();
         }
 
         public async Task<HttpResponseMessage> SendGraphQLQuery(
             string query,
-            string variables = default,
+            object variables = default,
             string operationName = default,
             CancellationToken cancellationToken = default
         )
@@ -51,41 +76,23 @@ namespace Borzoo.Web.Tests.Integ.Framework
             return resp;
         }
 
-        private TestHostFixture(string relativeTargetProjectParentDir)
-        {
-            var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
-            _contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
-
-            var builder = new WebHostBuilder()
-                .UseContentRoot(_contentRoot)
-                .ConfigureServices(InitializeServices)
-                .UseEnvironment("Development")
-                .UseConfiguration(BuildConfiguration())
-                .UseStartup(typeof(TStartup));
-
-            _server = new TestServer(builder);
-
-            Client = _server.CreateClient();
-            Client.BaseAddress = new Uri("http://localhost");
-        }
-
         private IConfigurationRoot BuildConfiguration()
         {
-            _testDbPath = Path.GetTempFileName();
-            string migrationsFile = Path.GetFullPath(Path.Combine(
-                _contentRoot, "..", "Borzoo.Data.SQLite", "scripts", "migrations.sql"
-            ));
-            KeyValuePair<string, string>[] settings =
-            {
-                new KeyValuePair<string, string>("data:use", "sqlite"),
-                new KeyValuePair<string, string>("data:sqlite:db", _testDbPath),
-                new KeyValuePair<string, string>("data:sqlite:migrations", migrationsFile),
-            };
-
-            return new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddInMemoryCollection(settings)
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(_webAppContentRoot)
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile(new PhysicalFileProvider(_testAppContentRoot), "appsettings.Staging.json", true, false)
                 .Build();
+
+            if (configuration["data:use"] == "sqlite")
+            {
+                _testSQLiteDb = Path.GetTempFileName();
+                configuration["data:sqlite:db"] = _testSQLiteDb;
+                configuration["data:sqlite:migrations"] =
+                    Path.GetFullPath(Path.Combine(_webAppContentRoot, configuration["data:sqlite:migrations"]));
+            }
+
+            return configuration;
         }
 
         private static void InitializeServices(IServiceCollection services)
@@ -99,40 +106,18 @@ namespace Borzoo.Web.Tests.Integ.Framework
             services.AddSingleton(manager);
         }
 
-        private static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
-        {
-            var projectName = startupAssembly.GetName().Name;
-            var applicationBasePath = AppContext.BaseDirectory;
-
-            var directoryInfo = new DirectoryInfo(applicationBasePath);
-            do
-            {
-                directoryInfo = directoryInfo.Parent ?? throw new DirectoryNotFoundException();
-
-                var projectDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo.FullName, projectRelativePath));
-                if (projectDirectoryInfo.Exists)
-                {
-                    var projectFileInfo = new FileInfo(Path.Combine(projectDirectoryInfo.FullName, projectName,
-                        $"{projectName}.csproj"));
-                    if (projectFileInfo.Exists)
-                    {
-                        return Path.Combine(projectDirectoryInfo.FullName, projectName);
-                    }
-                }
-            } while (directoryInfo.Parent != null);
-
-            throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");
-        }
-
         public void Dispose()
         {
-            try
+            if (_testSQLiteDb != default)
             {
-                File.Delete(_testDbPath);
-            }
-            catch (IOException)
-            {
-                Console.WriteLine($@"Unable to delete database file ""{_testDbPath}""");
+                try
+                {
+                    File.Delete(_testSQLiteDb);
+                }
+                catch (IOException)
+                {
+                    Console.WriteLine($@"Unable to delete database file ""{_testSQLiteDb}""");
+                }
             }
 
             Client.Dispose();
