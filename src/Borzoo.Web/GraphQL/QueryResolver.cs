@@ -13,31 +13,13 @@ namespace Borzoo.Web.GraphQL
     public class QueryResolver : IQueryResolver
     {
         private readonly IUserRepository _userRepo;
+        
+        private readonly ITaskListRepository _taskListRepo;
 
-        public QueryResolver(IUserRepository userRepo)
+        public QueryResolver(IUserRepository userRepo, ITaskListRepository taskListRepo)
         {
             _userRepo = userRepo;
-        }
-
-        public async Task<UserDto> GetUserAsync(ResolveFieldContext<object> context)
-        {
-            string username = context.GetArgument<string>("id");
-            User entity;
-            try
-            {
-                entity = await _userRepo.GetByNameAsync(username, cancellationToken: context.CancellationToken);
-            }
-            catch (EntityNotFoundException)
-            {
-                var err = new Error("not found")
-                {
-                    Path = new[] {"user"}
-                };
-                context.Errors.Add(err);
-                return default;
-            }
-
-            return (UserDto) entity;
+            _taskListRepo = taskListRepo;
         }
 
         public async Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context)
@@ -66,7 +48,65 @@ namespace Borzoo.Web.GraphQL
 
             return (UserDto) entity;
         }
+        
+        public async Task<UserDto> GetUserAsync(ResolveFieldContext<object> context)
+        {
+            string username = context.GetArgument<string>("id");
+            User entity;
+            try
+            {
+                entity = await _userRepo.GetByNameAsync(username, cancellationToken: context.CancellationToken);
+            }
+            catch (EntityNotFoundException)
+            {
+                var err = new Error("not found")
+                {
+                    Path = new[] {"user"}
+                };
+                context.Errors.Add(err);
+                return default;
+            }
 
+            return (UserDto) entity;
+        }
+
+        public async Task<TaskListDto> CreateTaskListAsync(ResolveFieldContext<object> context)
+        {
+            string username = context.GetArgument<string>("owner");
+            var dto = context.GetArgument<TaskListCreationDto>("list");
+
+            var entity = (TaskList) dto;
+            await _taskListRepo.SetUsername(username);
+            try
+            {
+                await _taskListRepo.AddAsync(entity, context.CancellationToken);
+            }
+            catch (DuplicateKeyException)
+            {
+                var err = new Error("duplicate key")
+                {
+                    Path = new[] {"list"}
+                };
+                context.Errors.Add(err);
+                return default;
+            }
+
+            return (TaskListDto) entity;            
+        }
+        
+        public async Task<TaskListDto[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
+        {
+            string username = context.Source.Id;
+            await _taskListRepo.SetUsername(username, context.CancellationToken);
+
+            var taskLists = await _taskListRepo.GetUserTaskListsAsync(context.CancellationToken);
+            var taskListDtos = taskLists
+                .Select(tl => (TaskListDto)tl)
+                .ToArray();
+            
+            return taskListDtos;
+        }
+        
         private string GenerateAlphaNumericString(int charCount)
         {
             var rnd = new Random(DateTime.UtcNow.Millisecond);

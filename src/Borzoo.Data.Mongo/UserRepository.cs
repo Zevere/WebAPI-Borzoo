@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace Borzoo.Data.Mongo
 {
@@ -50,14 +51,15 @@ namespace Borzoo.Data.Mongo
         public async Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
-            // ToDo inclue deleted
-            name = name.ToLower();
+            name = Regex.Escape(name);
+            var filter = Builders<User>.Filter.And(
+                Builders<User>.Filter.Where(u => includeDeletedRecords || !u.IsDeleted),
+                Builders<User>.Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i"))
+            );
+
             User entity = await _collection
-                .AsQueryable()
-                .SingleOrDefaultAsync(
-                    u => u.DisplayId.ToLower().Contains(name),
-                    cancellationToken
-                );
+                .Find(filter)
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (entity is default)
             {

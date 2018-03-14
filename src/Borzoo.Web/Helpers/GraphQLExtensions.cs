@@ -17,6 +17,8 @@ namespace Borzoo.Web.Helpers
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
+            services.AddSingleton<TaskListType>();
+            services.AddSingleton<TaskListInput>();
             services.AddSingleton<UserType>();
             services.AddSingleton<UserInput>();
 

@@ -15,6 +15,18 @@ namespace Borzoo.GraphQL
                 ),
                 resolver.CreateUserAsync
             );
+
+            Field<TaskListType>("createTaskList",
+                "Create a new task list for user", new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "owner",
+                        Description = "Username of owner"
+                    },
+                    new QueryArgument<NonNullGraphType<TaskListInput>> {Name = "list"}
+                ),
+                resolver.CreateTaskListAsync
+            );
         }
     }
 }

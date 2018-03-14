@@ -6,8 +6,12 @@ namespace Borzoo.GraphQL
 {
     public interface IQueryResolver
     {
+        Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context);
+        
         Task<UserDto> GetUserAsync(ResolveFieldContext<object> context);
         
-        Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context);
+        Task<TaskListDto> CreateTaskListAsync(ResolveFieldContext<object> context);
+        
+        Task<TaskListDto[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context);
     }
 }

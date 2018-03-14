@@ -18,6 +18,16 @@
                     public const string Username = "username";
                 }
             }
+            
+            public static class TaskLists
+            {
+                public const string Name = "task-lists";
+                
+                public static class Indexes
+                {
+                    public const string OwnerListName = "owner_list-name";
+                }
+            }
         }
     }
 }

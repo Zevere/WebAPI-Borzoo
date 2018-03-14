@@ -1,5 +1,6 @@
 ﻿using Borzoo.Data.Abstractions;
 using Borzoo.Data.Mongo;
+using Borzoo.Data.Mongo.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
@@ -19,7 +20,12 @@ namespace Borzoo.Web.Helpers
                 _.GetRequiredService<IMongoDatabase>()
                     .GetCollection<UserEntity>(MongoConstants.Collections.Users.Name)
             );
+            services.AddTransient<IMongoCollection<TaskListMongo>>(_ =>
+                _.GetRequiredService<IMongoDatabase>()
+                    .GetCollection<TaskListMongo>(MongoConstants.Collections.TaskLists.Name)
+            );
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ITaskListRepository, TaskListRepository>();
             
             Initializer.RegisterClassMaps();
             
