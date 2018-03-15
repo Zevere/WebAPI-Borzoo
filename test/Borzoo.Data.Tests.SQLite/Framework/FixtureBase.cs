@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
 using Microsoft.Data.Sqlite;
@@ -19,7 +20,7 @@ namespace Borzoo.Data.Tests.SQLite.Framework
             Connection.Dispose();
         }
 
-        protected void SeedUserData()
+        protected async Task SeedUserDataAsync()
         {
             User[] testUsers =
             {

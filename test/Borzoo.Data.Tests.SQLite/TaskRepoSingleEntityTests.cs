@@ -102,7 +102,7 @@ namespace Borzoo.Data.Tests.SQLite
             public Fixture()
                 : base(nameof(TaskRepoSingleEntityTests))
             {
-                SeedUserData();
+                SeedUserDataAsync().GetAwaiter().GetResult();
             }
         }
     }

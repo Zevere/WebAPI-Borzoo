@@ -38,14 +38,33 @@ namespace Borzoo.Data.Tests.Common
         }
 
         [OrderedFact]
+        public async Task Should_Throw_If_Duplicate_Name()
+        {
+            ITaskListRepository repo = CreateTaskListRepo();
+            await repo.SetUsername("bobby");
+
+            var taskList = new TaskList
+            {
+                DisplayId = "my_tasks",
+                Title = "My Tasks 2",
+            };
+
+            var e = await Assert.ThrowsAsync<DuplicateKeyException>(() =>
+                repo.AddAsync(taskList)
+            );
+
+            Assert.Equal("name", e.Key);
+        }
+
+        [OrderedFact]
         public async Task Should_Throw_If_Username_Not_Set()
         {
             ITaskListRepository repo = CreateTaskListRepo();
 
-            var e = await Assert.ThrowsAsync<ArgumentNullException>(() => 
+            var e = await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 repo.AddAsync(new TaskList())
             );
-            
+
             Assert.Equal("UserId", e.ParamName);
         }
 
