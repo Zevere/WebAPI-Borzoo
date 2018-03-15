@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
@@ -61,7 +62,7 @@ namespace Borzoo.Data.Tests.Common
                 repo.AddAsync(user)
             );
 
-            Assert.Equal("name", e.Key);
+            Assert.Equal("DisplayId", e.Keys.Single());
         }
 
         [OrderedFact]

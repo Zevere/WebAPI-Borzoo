@@ -66,7 +66,7 @@ namespace Borzoo.Data.SQLite
                     when (e.SqliteErrorCode == raw.SQLITE_CONSTRAINT &&
                           e.Message.Contains("tasklist.owner_id, tasklist.name"))
                 {
-                    throw new DuplicateKeyException("name");
+                    throw new DuplicateKeyException(nameof(TaskList.OwnerId), nameof(TaskList.DisplayId));
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();

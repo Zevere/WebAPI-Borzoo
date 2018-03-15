@@ -54,7 +54,7 @@ namespace Borzoo.Data.SQLite
                 (e.SqliteErrorCode == raw.SQLITE_CONSTRAINT &&
                  e.Message.Contains("user.name"))
                 {
-                    throw new DuplicateKeyException("name");
+                    throw new DuplicateKeyException(nameof(User.DisplayId));
                 }
 
                 if (cancellationToken.IsCancellationRequested)

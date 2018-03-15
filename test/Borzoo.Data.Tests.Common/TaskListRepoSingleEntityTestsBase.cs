@@ -53,7 +53,8 @@ namespace Borzoo.Data.Tests.Common
                 repo.AddAsync(taskList)
             );
 
-            Assert.Equal("name", e.Key);
+            Assert.Contains("OwnerId", e.Keys);
+            Assert.Contains("DisplayId", e.Keys);
         }
 
         [OrderedFact]

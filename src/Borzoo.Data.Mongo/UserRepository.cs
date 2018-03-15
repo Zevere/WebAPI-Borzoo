@@ -28,7 +28,7 @@ namespace Borzoo.Data.Mongo
                 when (e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
                       e.WriteError.Message.Contains($" index: {MongoConstants.Collections.Users.Indexes.Username} "))
             {
-                throw new DuplicateKeyException("name");
+                throw new DuplicateKeyException(nameof(User.DisplayId));
             }
 
             return entity;

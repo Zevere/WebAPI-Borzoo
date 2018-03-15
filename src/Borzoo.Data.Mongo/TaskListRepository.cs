@@ -49,7 +49,7 @@ namespace Borzoo.Data.Mongo
                           .Contains($" index: {MongoConstants.Collections.TaskLists.Indexes.OwnerListName} ")
                       )
             {
-                throw new DuplicateKeyException(MongoConstants.Collections.TaskLists.Indexes.OwnerListName);
+                throw new DuplicateKeyException(nameof(TaskList.OwnerId), nameof(TaskList.DisplayId));
             }
 
             entity.OwnerId = tlMongo.OwnerDbRef.Id.AsString;
