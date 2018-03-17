@@ -25,14 +25,14 @@ namespace Borzoo.Web.Models.Task
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime DueBy { get; set; }
 
-        public static explicit operator UserTask(TaskCreationDto dto)
+        public static explicit operator TaskItem(TaskCreationDto dto)
         {
             if (dto is default)
                 return default;
 
-            var task = new UserTask
+            var task = new TaskItem
             {
-                Name = dto.Id ?? Guid.NewGuid().ToString(),
+                DisplayId = dto.Id ?? Guid.NewGuid().ToString(),
                 Title = dto.Title,
                 Description = dto.Description,
             };

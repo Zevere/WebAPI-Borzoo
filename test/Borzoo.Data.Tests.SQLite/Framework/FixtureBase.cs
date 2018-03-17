@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Borzoo.Data.Abstractions.Entities;
-using Borzoo.Data.SQLite;
 using Microsoft.Data.Sqlite;
 
 namespace Borzoo.Data.Tests.SQLite.Framework
@@ -18,30 +15,6 @@ namespace Borzoo.Data.Tests.SQLite.Framework
         public void Dispose()
         {
             Connection.Dispose();
-        }
-
-        protected async Task SeedUserDataAsync()
-        {
-            User[] testUsers =
-            {
-                new User
-                {
-                    DisplayId = "alice0",
-                    FirstName = "Alice",
-                    PassphraseHash = "secret_passphrase"
-                },
-                new User
-                {
-                    DisplayId = "bobby",
-                    FirstName = "Bob",
-                    LastName = "Boo",
-                    PassphraseHash = "secret_passphrase2"
-                },
-            };
-
-            var userRepo = new UserRepository(Connection);
-            foreach (var user in testUsers)
-                userRepo.AddAsync(user).GetAwaiter().GetResult();
         }
     }
 }

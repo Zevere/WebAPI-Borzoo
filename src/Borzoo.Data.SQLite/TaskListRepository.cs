@@ -30,7 +30,7 @@ namespace Borzoo.Data.SQLite
             _userRepo = userRepo;
         }
 
-        public async Task SetUsername(string username, CancellationToken cancellationToken = default)
+        public async Task SetUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
             var user = await _userRepo.GetByNameAsync(username, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -59,7 +59,9 @@ namespace Borzoo.Data.SQLite
 
                 try
                 {
-                    entity.Id = (await cmd.ExecuteScalarAsync(cancellationToken)).ToString();
+                    var result = await cmd.ExecuteScalarAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    entity.Id = result.ToString();
                     entity.OwnerId = UserId;
                 }
                 catch (SqliteException e)
@@ -92,6 +94,47 @@ namespace Borzoo.Data.SQLite
             throw new NotImplementedException();
         }
 
+        public async Task<TaskList> GetByNameAsync(string name, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default)
+        {
+            EnsureUserId();
+
+            string sql = "SELECT id, name, title, is_deleted, created_at FROM tasklist " +
+                         "WHERE UPPER(name) = UPPER($name) AND owner_id = $owner_id ";
+
+            if (!includeDeletedRecords)
+                sql += "AND is_deleted IS NULL";
+
+            var cmd = Connection.CreateCommand();
+
+            cmd.CommandText = sql;
+            cmd.Parameters.AddWithValue("$name", name);
+            cmd.Parameters.AddWithValue("$owner_id", UserId);
+
+            TaskList entity;
+            var reader = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow, cancellationToken)
+                .ConfigureAwait(false);
+            using (reader)
+            {
+                if (!(reader.HasRows && reader.Read()))
+                {
+                    throw new EntityNotFoundException(nameof(TaskList.DisplayId), name);
+                }
+
+                entity = new TaskList
+                {
+                    Id = reader["id"].ToString(),
+                    OwnerId = UserId,
+                    DisplayId = reader["name"].ToString(),
+                    Title = reader["title"].ToString(),
+                    IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString()),
+                    CreatedAt = long.Parse(reader["created_at"].ToString()).FromUnixTime(),
+                };
+            }
+
+            return entity;
+        }
+
         public async Task<TaskList[]> GetUserTaskListsAsync(CancellationToken cancellationToken = default)
         {
             EnsureUserId();
@@ -104,9 +147,11 @@ namespace Borzoo.Data.SQLite
             cmd.Parameters.AddWithValue("$owner_id", UserId);
 
             var entities = new List<TaskList>();
-            using (var reader = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow, cancellationToken))
+            var reader = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow, cancellationToken)
+                .ConfigureAwait(false);
+            using (reader)
             {
-                while (await reader.ReadAsync(cancellationToken))
+                while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var entity = new TaskList
                     {
@@ -126,7 +171,7 @@ namespace Borzoo.Data.SQLite
         private void EnsureUserId()
         {
             if (string.IsNullOrWhiteSpace(UserId))
-                throw new ArgumentNullException(nameof(UserId), $"Call {nameof(SetUsername)} method first.");
+                throw new ArgumentNullException(nameof(UserId), $"Call {nameof(SetUsernameAsync)} method first.");
         }
     }
 }

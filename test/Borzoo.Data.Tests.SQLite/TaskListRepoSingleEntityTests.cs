@@ -10,12 +10,9 @@ namespace Borzoo.Data.Tests.SQLite
         TaskListRepoSingleEntityTestsBase,
         IClassFixture<TaskListRepoSingleEntityTests.Fixture>
     {
-        private readonly Fixture _fixture;
-
         public TaskListRepoSingleEntityTests(Fixture fixture)
             : base(() => new TaskListRepository(fixture.Connection, fixture.UserRepo))
         {
-            _fixture = fixture;
         }
 
         public class Fixture : FixtureBase
@@ -27,7 +24,7 @@ namespace Borzoo.Data.Tests.SQLite
             {
                 UserRepo = new UserRepository(Connection);
 
-                SeedUserDataAsync().GetAwaiter().GetResult();
+                TestDataSeeder.SeedUsersAsync(UserRepo).GetAwaiter().GetResult();
             }
         }
     }

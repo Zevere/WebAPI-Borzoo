@@ -20,7 +20,7 @@ namespace Borzoo.Data.Tests.Common
         public async Task Should_Add_TaskList()
         {
             ITaskListRepository repo = CreateTaskListRepo();
-            await repo.SetUsername("bobby");
+            await repo.SetUsernameAsync("bobby");
 
             var taskList = new TaskList
             {
@@ -41,7 +41,7 @@ namespace Borzoo.Data.Tests.Common
         public async Task Should_Throw_If_Duplicate_Name()
         {
             ITaskListRepository repo = CreateTaskListRepo();
-            await repo.SetUsername("bobby");
+            await repo.SetUsernameAsync("bobby");
 
             var taskList = new TaskList
             {
@@ -73,7 +73,7 @@ namespace Borzoo.Data.Tests.Common
         public async Task Should_Get_All_TaskLists()
         {
             ITaskListRepository repo = CreateTaskListRepo();
-            await repo.SetUsername("bobby");
+            await repo.SetUsernameAsync("bobby");
 
             TaskList[] taskLists = await repo.GetUserTaskListsAsync();
 

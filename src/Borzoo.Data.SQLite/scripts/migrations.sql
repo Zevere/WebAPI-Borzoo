@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS tasklist (
   name          TEXT    NOT NULL,
   title         TEXT    NOT NULL,
   created_at    INTEGER NOT NULL DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)), -- Unix epoch time
+  is_deleted  INTEGER, -- Non-NULL values indicate Deleted
   FOREIGN KEY (owner_id) REFERENCES user (id)
 );
 
@@ -41,15 +42,15 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_tasklist_ownerId_name
 CREATE TABLE IF NOT EXISTS task (
   id            INTEGER PRIMARY KEY,
   name          TEXT    NOT NULL,
-  user_id       INTEGER NOT NULL,
+  list_id       INTEGER NOT NULL,
   title         TEXT    NOT NULL,
   description   TEXT,
   due           INTEGER, -- Unix epoch time
   created_at    INTEGER NOT NULL DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)), -- Unix epoch time
   modified_at   INTEGER, -- Unix epoch time
   is_deleted    INTEGER, -- Non-NULL values indicate Deleted
-  FOREIGN KEY (user_id) REFERENCES user (id)
+  FOREIGN KEY (list_id) REFERENCES tasklist (id)
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_task_userId_name
-  ON task (user_id, name);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_task_listId_name
+  ON task (list_id, name);

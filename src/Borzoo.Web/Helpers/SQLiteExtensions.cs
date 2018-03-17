@@ -24,9 +24,10 @@ namespace Borzoo.Web.Helpers
                 taskListRepo.EnsureConnectinoOpened();
                 return taskListRepo;
             });
-            services.AddTransient<ITaskRepository, TaskRepository>(delegate
+            services.AddTransient<ITaskItemRepository, TaskItemRepository>(provider =>
             {
-                var taskRepo = new TaskRepository(connString);
+                var tasklistRepo = provider.GetRequiredService<ITaskListRepository>();
+                var taskRepo = new TaskItemRepository(connString, tasklistRepo);
                 taskRepo.EnsureConnectinoOpened();
                 return taskRepo;
             });

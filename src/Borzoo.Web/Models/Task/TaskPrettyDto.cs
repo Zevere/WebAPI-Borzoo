@@ -29,7 +29,7 @@ namespace Borzoo.Web.Models.Task
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string DueIn { get; set; }
 
-        public static explicit operator TaskPrettyDto(UserTask entity)
+        public static explicit operator TaskPrettyDto(TaskItem entity)
         {
             if (entity is default)
                 return default;
@@ -66,7 +66,7 @@ namespace Borzoo.Web.Models.Task
 
             return new TaskPrettyDto
             {
-                Id = entity.Name,
+                Id = entity.DisplayId,
                 Title = entity.Title,
                 Description = entity.Description,
                 IsDue = isDue,

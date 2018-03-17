@@ -15,10 +15,10 @@ namespace Borzoo.Web.Tests.Unit
             const string taskName = "name";
             const string title = "test task";
 
-            var task = new UserTask
+            var task = new TaskItem
             {
                 Id = id,
-                Name = taskName,
+                DisplayId = taskName,
                 Title = title,
                 Due = DateTime.UtcNow.AddSeconds(20),
             };
@@ -39,10 +39,10 @@ namespace Borzoo.Web.Tests.Unit
             const string taskName = "name";
             const string title = "test task";
 
-            var task = new UserTask
+            var task = new TaskItem
             {
                 Id = id,
-                Name = taskName,
+                DisplayId = taskName,
                 Title = title,
                 Due = DateTime.UtcNow,
             };
@@ -63,10 +63,10 @@ namespace Borzoo.Web.Tests.Unit
             const string taskName = "name";
             const string title = "test task";
 
-            var task = new UserTask
+            var task = new TaskItem
             {
                 Id = id,
-                Name = taskName,
+                DisplayId = taskName,
                 Title = title,
                 Due = DateTime.UtcNow.Add(TimeSpan.Parse("1:7:34:10")),
             };

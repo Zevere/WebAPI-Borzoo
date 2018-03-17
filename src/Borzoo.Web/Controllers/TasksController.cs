@@ -17,11 +17,11 @@ namespace Borzoo.Web.Controllers
     [Authorize]
     public class TasksController : Controller
     {
-        private readonly ITaskRepository _taskRepo;
+        private readonly ITaskItemRepository _taskItemRepo;
 
-        public TasksController(ITaskRepository taskRepo)
+        public TasksController(ITaskItemRepository taskItemRepo)
         {
-            _taskRepo = taskRepo;
+            _taskItemRepo = taskItemRepo;
         }
 
         [HttpPost]
@@ -48,7 +48,7 @@ namespace Borzoo.Web.Controllers
             {
                 try
                 {
-                    await _taskRepo.GetByNameAsync(dto.Id);
+                    await _taskItemRepo.GetByNameAsync(dto.Id);
                     return StatusCode(StatusCodes.Status409Conflict);
                 }
                 catch (EntityNotFoundException)
@@ -56,9 +56,9 @@ namespace Borzoo.Web.Controllers
                 }
             }
 
-            var task = (UserTask) dto;
+            var task = (TaskItem) dto;
 
-            await _taskRepo.AddAsync(task);
+            await _taskItemRepo.AddAsync(task);
 
             string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
             switch (contentType)
@@ -83,7 +83,7 @@ namespace Borzoo.Web.Controllers
             if (result != null)
                 return result;
 
-            var tasks = await _taskRepo.GetUserTasksAsync();
+            var tasks = await _taskItemRepo.GetTaskListItemsAsync();
 
             string contentType = HttpContext.Request.Headers["Accept"].SingleOrDefault()?.ToLowerInvariant();
             switch (contentType)
@@ -110,10 +110,10 @@ namespace Borzoo.Web.Controllers
             if (!Regex.IsMatch(taskName, Constants.Regexes.TaskId))
                 return NotFound();
 
-            UserTask task;
+            TaskItem taskItem;
             try
             {
-                task = await _taskRepo.GetByNameAsync(taskName);
+                taskItem = await _taskItemRepo.GetByNameAsync(taskName);
             }
             catch (EntityNotFoundException)
             {
@@ -124,9 +124,9 @@ namespace Borzoo.Web.Controllers
             switch (contentType)
             {
                 case Constants.ZevereContentTypes.Task.Pretty:
-                    return Ok((TaskPrettyDto) task);
+                    return Ok((TaskPrettyDto) taskItem);
                 case Constants.ZevereContentTypes.Task.Full:
-                    return Ok((TaskFullDto) task);
+                    return Ok((TaskFullDto) taskItem);
                 default:
                     return BadRequest();
             }
@@ -146,7 +146,7 @@ namespace Borzoo.Web.Controllers
 
             try
             {
-                await _taskRepo.GetByNameAsync(taskName);
+                await _taskItemRepo.GetByNameAsync(taskName);
                 result = NoContent();
             }
             catch (EntityNotFoundException)
@@ -175,7 +175,7 @@ namespace Borzoo.Web.Controllers
             if (!User.Identity.Name.Equals(userName, StringComparison.OrdinalIgnoreCase))
                 return Forbid();
 
-            _taskRepo.UserName = userName;
+//            _taskItemRepo.TaskListName = userName;
             return default;
         }
     }

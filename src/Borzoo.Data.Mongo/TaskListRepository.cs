@@ -25,13 +25,18 @@ namespace Borzoo.Data.Mongo
             _userRepo = userRepo;
         }
 
-        public async Task SetUsername(string username, CancellationToken cancellationToken = default)
+        public async Task SetUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
             var user = await _userRepo.GetByNameAsync(username, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             UserName = user.DisplayId;
             UserId = user.Id;
+        }
+
+        public Task<TaskList> GetByNameAsync(string name, bool includeDeletedRecords = false, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<TaskList> AddAsync(TaskList entity, CancellationToken cancellationToken = default)
@@ -92,7 +97,7 @@ namespace Borzoo.Data.Mongo
         private void EnsureUserId()
         {
             if (string.IsNullOrWhiteSpace(UserId))
-                throw new ArgumentNullException(nameof(UserId), $"Call {nameof(SetUsername)} method first.");
+                throw new ArgumentNullException(nameof(UserId), $"Call {nameof(SetUsernameAsync)} method first.");
         }
     }
 }

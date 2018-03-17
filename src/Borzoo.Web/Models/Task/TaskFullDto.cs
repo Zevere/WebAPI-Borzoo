@@ -29,10 +29,10 @@ namespace Borzoo.Web.Models.Task
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime DueBy { get; set; }
 
-        public static explicit operator TaskFullDto(UserTask entity) =>
+        public static explicit operator TaskFullDto(TaskItem entity) =>
             new TaskFullDto
             {
-                Id = entity.Name,
+                Id = entity.DisplayId,
                 Title = entity.Title,
                 Description = entity.Description,
                 CreatedAt = entity.CreatedAt,

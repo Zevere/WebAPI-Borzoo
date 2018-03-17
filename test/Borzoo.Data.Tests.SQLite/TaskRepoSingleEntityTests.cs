@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
+using Borzoo.Data.Tests.Common;
 using Borzoo.Data.Tests.SQLite.Framework;
 using Borzoo.Tests.Framework;
 using Microsoft.Data.Sqlite;
@@ -10,28 +11,29 @@ using Xunit;
 
 namespace Borzoo.Data.Tests.SQLite
 {
-    public class TaskRepoSingleEntityTests : IClassFixture<TaskRepoSingleEntityTests.Fixture>
+    public class TaskRepoSingleEntityTests :
+        TaskItemRepoSingleEntityTestsBase,
+        IClassFixture<TaskRepoSingleEntityTests.Fixture>
     {
-        private SqliteConnection Connection => _fixture.Connection;
-
         private readonly Fixture _fixture;
 
         public TaskRepoSingleEntityTests(Fixture fixture)
+            : base(() => new TaskItemRepository(fixture.Connection, fixture.TaskListRepo))
         {
             _fixture = fixture;
         }
 
+        /*
         [OrderedFact]
-        public void Should_Find_UserId_From_UserName()
+        public async Task Should_Find_UserId_From_UserName()
         {
             const string userName = "BoBby";
 
-            ITaskRepository sut = new TaskRepository(Connection);
+            ITaskItemRepository sut = CreateTaskItemRepo();
+            await sut.SetTaskListAsync("BoBby", "list1");
 
-            sut.UserName = "BoBby";
-
-            Assert.Equal("2", sut.UserId);
-            Assert.Equal(userName, sut.UserName);
+            Assert.Equal("2", sut.TaskListId);
+            Assert.Equal(userName, sut.TaskListName);
         }
 
         [OrderedFact]
@@ -40,16 +42,17 @@ namespace Borzoo.Data.Tests.SQLite
             const string taskTitle = "Task 1";
             const string taskName = "test_name";
 
-            ITaskRepository sut = new TaskRepository(Connection) {UserName = "bobby"};
+            ITaskItemRepository sut = CreateTaskItemRepo();
+            await sut.SetTaskListAsync("bobby", "list1");
 
-            var task = await sut.AddAsync(new UserTask
+            var task = await sut.AddAsync(new TaskItem
             {
-                Name = taskName,
+                DisplayId = taskName,
                 Title = taskTitle,
             });
 
             Assert.Equal("1", task.Id);
-            Assert.Equal(taskName, task.Name);
+            Assert.Equal(taskName, task.DisplayId);
             Assert.Equal(taskTitle, task.Title);
             Assert.InRange(task.CreatedAt, DateTime.UtcNow.AddSeconds(-10), DateTime.UtcNow.AddSeconds(10));
             Assert.False(task.IsDeleted);
@@ -57,18 +60,19 @@ namespace Borzoo.Data.Tests.SQLite
             Assert.Null(task.Due);
             Assert.Null(task.ModifiedAt);
 
-            _fixture.Task = task;
+            _fixture.TaskItem = task;
         }
 
         [OrderedFact]
         public async Task Should_Throw_Adding_Same_Task_Name()
         {
-            var task = new UserTask
+            var task = new TaskItem
             {
-                Name = "test_name",
+                DisplayId = "test_name",
                 Title = "title",
             };
-            ITaskRepository sut = new TaskRepository(Connection) {UserName = "bobby"};
+            ITaskItemRepository sut = CreateTaskItemRepo();
+            await sut.SetTaskListAsync("bobby", "list1");
 
             var exception = await Assert.ThrowsAsync<SqliteException>(() => sut.AddAsync(task));
 
@@ -78,16 +82,17 @@ namespace Borzoo.Data.Tests.SQLite
         [OrderedFact]
         public async Task Should_Get_Task_Name()
         {
-            ITaskRepository sut = new TaskRepository(Connection) {UserName = "bobby"};
+            ITaskItemRepository sut = CreateTaskItemRepo();
+            await sut.SetTaskListAsync("bobby", "list1");
 
-            var task = await sut.GetByNameAsync(_fixture.Task.Name);
+            var task = await sut.GetByNameAsync(_fixture.TaskItem.DisplayId);
 
-            Assert.Equal(_fixture.Task.Id, task.Id);
-            Assert.Equal(_fixture.Task.Name, task.Name);
-            Assert.Equal(_fixture.Task.Title, task.Title);
+            Assert.Equal(_fixture.TaskItem.Id, task.Id);
+            Assert.Equal(_fixture.TaskItem.DisplayId, task.DisplayId);
+            Assert.Equal(_fixture.TaskItem.Title, task.Title);
             Assert.InRange(task.CreatedAt,
-                _fixture.Task.CreatedAt.AddSeconds(-1),
-                _fixture.Task.CreatedAt.AddSeconds(1)
+                _fixture.TaskItem.CreatedAt.AddSeconds(-1),
+                _fixture.TaskItem.CreatedAt.AddSeconds(1)
             );
             Assert.False(task.IsDeleted);
             Assert.Null(task.Description);
@@ -95,14 +100,23 @@ namespace Borzoo.Data.Tests.SQLite
             Assert.Null(task.ModifiedAt);
         }
 
+        */
         public class Fixture : FixtureBase
         {
-            public UserTask Task { get; set; }
+            public ITaskListRepository TaskListRepo { get; }
+
+            public TaskItem TaskItem { get; set; }
 
             public Fixture()
                 : base(nameof(TaskRepoSingleEntityTests))
             {
-                SeedUserDataAsync().GetAwaiter().GetResult();
+                var userRepo = new UserRepository(Connection);
+                TaskListRepo = new TaskListRepository(Connection, userRepo);
+
+                TestDataSeeder.SeedUsersAsync(userRepo).GetAwaiter().GetResult();
+                
+                TaskListRepo.SetUsernameAsync("bobby").GetAwaiter().GetResult();
+                TestDataSeeder.SeedTaskListAsync(TaskListRepo).GetAwaiter().GetResult();
             }
         }
     }

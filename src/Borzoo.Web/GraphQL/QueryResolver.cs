@@ -76,7 +76,7 @@ namespace Borzoo.Web.GraphQL
             var dto = context.GetArgument<TaskListCreationDto>("list");
 
             var entity = (TaskList) dto;
-            await _taskListRepo.SetUsername(username);
+            await _taskListRepo.SetUsernameAsync(username);
             try
             {
                 await _taskListRepo.AddAsync(entity, context.CancellationToken);
@@ -97,7 +97,7 @@ namespace Borzoo.Web.GraphQL
         public async Task<TaskListDto[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
         {
             string username = context.Source.Id;
-            await _taskListRepo.SetUsername(username, context.CancellationToken);
+            await _taskListRepo.SetUsernameAsync(username, context.CancellationToken);
 
             var taskLists = await _taskListRepo.GetUserTaskListsAsync(context.CancellationToken);
             var taskListDtos = taskLists
