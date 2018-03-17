@@ -16,7 +16,7 @@ deploy:
   provider: script
   script: node scripts/deploy/travis-ci/predeploy-staging.js && node scripts/deploy/deploy-docker-compose.js
   on:
-    branch: develop
+    branch: master
 notifications:
   email: false
 
