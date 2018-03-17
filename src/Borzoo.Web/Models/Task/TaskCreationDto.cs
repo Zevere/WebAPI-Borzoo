@@ -27,8 +27,8 @@ namespace Borzoo.Web.Models.Task
 
         public static explicit operator TaskItem(TaskCreationDto dto)
         {
-            if (dto is default)
-                return default;
+            if (dto is null)
+                return null;
 
             var task = new TaskItem
             {

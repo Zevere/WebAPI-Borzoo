@@ -32,8 +32,8 @@ namespace Borzoo.GraphQL.Models
         public string[] Members { get; set; }
 
         public static explicit operator User(UserCreationDto dtoModel) =>
-            dtoModel is default
-                ? default
+            dtoModel is null
+                ? null
                 : new User
                 {
                     DisplayId = dtoModel.Name,

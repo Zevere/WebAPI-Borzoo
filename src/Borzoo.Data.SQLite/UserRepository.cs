@@ -332,7 +332,7 @@ namespace Borzoo.Data.SQLite
                                   " WHERE id = $id";
                 cmd.Parameters.AddWithValue("$id", id.ToLower());
                 int count = cmd.ExecuteNonQuery();
-                if (count is default)
+                if (count == 0)
                 {
                     throw new EntityNotFoundException(id);
                 }

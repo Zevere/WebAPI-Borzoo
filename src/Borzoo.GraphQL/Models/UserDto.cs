@@ -21,14 +21,16 @@ namespace Borzoo.GraphQL.Models
         public DateTime JoinedAt;
 
         public static explicit operator UserDto(User entity) =>
-            new UserDto
-            {
-                Id = entity.DisplayId?.ToLower(),
-                FirstName = entity.FirstName,
-                LastName = entity.LastName,
-                Token = entity.Token,
-                DaysJoined = (DateTime.UtcNow - entity.JoinedAt).Days,
-                JoinedAt = entity.JoinedAt
-            };
+            entity is null
+                ? null
+                : new UserDto
+                {
+                    Id = entity.DisplayId?.ToLower(),
+                    FirstName = entity.FirstName,
+                    LastName = entity.LastName,
+                    Token = entity.Token,
+                    DaysJoined = (DateTime.UtcNow - entity.JoinedAt).Days,
+                    JoinedAt = entity.JoinedAt
+                };
     }
 }

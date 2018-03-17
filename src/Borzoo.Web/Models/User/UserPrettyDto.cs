@@ -23,8 +23,8 @@ namespace Borzoo.Web.Models.User
         public int DaysJoined { get; set; }
 
         public static explicit operator UserPrettyDto(UserEntity entity) =>
-            entity is default
-                ? default
+            entity is null
+                ? null
                 : new UserPrettyDto
                 {
                     Id = entity.DisplayId,

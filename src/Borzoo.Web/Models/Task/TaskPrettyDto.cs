@@ -31,8 +31,8 @@ namespace Borzoo.Web.Models.Task
 
         public static explicit operator TaskPrettyDto(TaskItem entity)
         {
-            if (entity is default)
-                return default;
+            if (entity is null)
+                return null;
             var now = DateTime.UtcNow;
             var due = entity.Due?.ToUniversalTime();
             bool isDue = due.HasValue && now >= due;

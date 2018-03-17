@@ -32,8 +32,8 @@ namespace Borzoo.Web.Models.User
         public string[] Members { get; set; }
 
         public static explicit operator UserEntity(UserCreationDto dtoModel) =>
-            dtoModel is default
-                ? default
+            dtoModel is null
+                ? null
                 : new UserEntity
                 {
                     DisplayId = dtoModel.Name,

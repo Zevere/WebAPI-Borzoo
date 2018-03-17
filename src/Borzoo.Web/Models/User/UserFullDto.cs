@@ -26,12 +26,14 @@ namespace Borzoo.Web.Models.User
         public DateTime JoinedAt { get; set; }
 
         public static explicit operator UserFullDto(UserEntity entity) =>
-            new UserFullDto
-            {
-                Id = entity.DisplayId,
-                FirstName = entity.FirstName,
-                LastName = entity.LastName,
-                JoinedAt = entity.JoinedAt
-            };
+            entity is null
+                ? null
+                : new UserFullDto
+                {
+                    Id = entity.DisplayId,
+                    FirstName = entity.FirstName,
+                    LastName = entity.LastName,
+                    JoinedAt = entity.JoinedAt
+                };
     }
 }

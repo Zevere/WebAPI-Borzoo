@@ -40,7 +40,7 @@ namespace Borzoo.Data.Mongo
             var filter = Builders<User>.Filter.Eq(u => u.Id, id.ToLower());
             User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
 
-            if (entity is default)
+            if (entity is null)
             {
                 throw new EntityNotFoundException(id);
             }
@@ -61,7 +61,7 @@ namespace Borzoo.Data.Mongo
                 .Find(filter)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            if (entity is default)
+            if (entity is null)
             {
                 throw new EntityNotFoundException("User Name", name);
             }
@@ -102,7 +102,7 @@ namespace Borzoo.Data.Mongo
             var filter = Builders<User>.Filter.Eq(u => u.Token, token);
             User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
 
-            if (entity is default)
+            if (entity is null)
             {
                 throw new EntityNotFoundException("token", token);
             }

@@ -30,13 +30,15 @@ namespace Borzoo.Web.Models.Task
         public DateTime DueBy { get; set; }
 
         public static explicit operator TaskFullDto(TaskItem entity) =>
-            new TaskFullDto
-            {
-                Id = entity.DisplayId,
-                Title = entity.Title,
-                Description = entity.Description,
-                CreatedAt = entity.CreatedAt,
-                DueBy = entity.Due?.ToUniversalTime() ?? default
-            };
+            entity is null
+                ? null
+                : new TaskFullDto
+                {
+                    Id = entity.DisplayId,
+                    Title = entity.Title,
+                    Description = entity.Description,
+                    CreatedAt = entity.CreatedAt,
+                    DueBy = entity.Due?.ToUniversalTime() ?? default
+                };
     }
 }
