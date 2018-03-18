@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 namespace Borzoo.Web.Models.Task
 {
     [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    public class TaskPrettyDto : UserDtoBase
+    public class TaskPrettyDto
     {
         [Required]
         [JsonProperty(Required = Required.Always)]

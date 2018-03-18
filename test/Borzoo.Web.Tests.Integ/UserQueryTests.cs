@@ -21,7 +21,7 @@ namespace Borzoo.Web.Tests.Integ
         public async Task Should_Get_User_By_Id()
         {
             const string userQuery = @"{ 
-                user(id: ""bobby"") { 
+                user(userId: ""bobby"") { 
                     id firstName lastName token daysJoined joinedAt 
                 } 
             }";

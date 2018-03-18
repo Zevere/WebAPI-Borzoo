@@ -6,7 +6,7 @@ using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 namespace Borzoo.Web.Models.User
 {
     [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
-    public class UserCreationDto : UserDtoBase
+    public class UserCreationDto
     {
         [Required]
         [MinLength(1)]

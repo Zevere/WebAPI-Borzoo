@@ -7,7 +7,7 @@ namespace Borzoo.GraphQL.Types
     {
         public TaskListInput()
         {
-            Name = "TaskListInput";
+            Name = "ListInput";
             Description = "Input for creating a new task list";
 
             Field(_ => _.Name)

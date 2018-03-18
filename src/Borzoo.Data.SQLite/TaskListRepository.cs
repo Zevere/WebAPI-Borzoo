@@ -42,6 +42,8 @@ namespace Borzoo.Data.SQLite
         public async Task<TaskList> AddAsync(TaskList entity, CancellationToken cancellationToken = default)
         {
             EnsureUserId();
+            entity.DisplayId = entity.DisplayId.ToLower();
+            
             string sql = "INSERT INTO tasklist(owner_id, name, title, created_at) " +
                          "VALUES ($owner_id, $name, $title, $created_at); " +
                          "SELECT last_insert_rowid() AS id";
@@ -71,7 +73,6 @@ namespace Borzoo.Data.SQLite
                     throw new DuplicateKeyException(nameof(TaskList.OwnerId), nameof(TaskList.DisplayId));
                 }
 
-                cancellationToken.ThrowIfCancellationRequested();
                 tnx.Commit();
             }
 
