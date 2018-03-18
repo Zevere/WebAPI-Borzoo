@@ -13,8 +13,8 @@ namespace Borzoo.Data.Tests.Mongo
     public class UserRepoSingleEntityTests : UserRepoSingleEntityTestsBase,
         IClassFixture<UserRepoSingleEntityTests.Fixture>
     {
-        public UserRepoSingleEntityTests(Fixture fixture)
-            : base(fixture, () => new UserRepository(fixture.Collection))
+        public UserRepoSingleEntityTests(Fixture classFixture)
+            : base(classFixture, () => new UserRepository(classFixture.Collection))
         {
         }
 

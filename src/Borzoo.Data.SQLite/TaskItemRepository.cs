@@ -152,7 +152,7 @@ namespace Borzoo.Data.SQLite
             return Task.FromResult(entity);
         }
 
-        public Task<TaskItem[]> GetTaskListItemsAsync(bool includeDeletedRecords = false,
+        public Task<TaskItem[]> GetTaskItemsAsync(bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
             EnsureListId();

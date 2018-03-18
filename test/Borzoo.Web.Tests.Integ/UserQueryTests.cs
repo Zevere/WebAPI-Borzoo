@@ -36,7 +36,7 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal("Bob", (string) result.data.user.firstName);
             Assert.Equal("Boo", (string) result.data.user.lastName);
             Assert.True(int.TryParse((string) result.data.user.daysJoined, out int daysJoined), "daysJoined is number");
-            Assert.Equal(daysJoined, 0);
+            Assert.Equal(0, daysJoined);
             Assert.True(DateTime.TryParse((string) result.data.user.joinedAt, out var joinedAt), "joinedAt is date");
             Assert.True(joinedAt < DateTime.UtcNow, "Joined before today");
             Assert.Null((string) result.data.user.token);

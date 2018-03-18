@@ -13,13 +13,16 @@ namespace Borzoo.Web.GraphQL
     public class QueryResolver : IQueryResolver
     {
         private readonly IUserRepository _userRepo;
-        
+
         private readonly ITaskListRepository _taskListRepo;
 
-        public QueryResolver(IUserRepository userRepo, ITaskListRepository taskListRepo)
+        private readonly ITaskItemRepository _taskItemRepo;
+
+        public QueryResolver(IUserRepository userRepo, ITaskListRepository taskListRepo, ITaskItemRepository taskItemRepo)
         {
             _userRepo = userRepo;
             _taskListRepo = taskListRepo;
+            _taskItemRepo = taskItemRepo;
         }
 
         public async Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context)
@@ -29,10 +32,12 @@ namespace Borzoo.Web.GraphQL
             var entity = (User) dto;
             try
             {
-                await _userRepo.AddAsync(entity, context.CancellationToken);
+                await _userRepo.AddAsync(entity, context.CancellationToken)
+                    .ConfigureAwait(false);
 
                 string token = GenerateAlphaNumericString(100);
-                await _userRepo.SetTokenForUserAsync(entity.Id, token, context.CancellationToken);
+                await _userRepo.SetTokenForUserAsync(entity.Id, token, context.CancellationToken)
+                    .ConfigureAwait(false);
                 string encodedToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
                 entity.Token = encodedToken;
             }
@@ -48,14 +53,15 @@ namespace Borzoo.Web.GraphQL
 
             return (UserDto) entity;
         }
-        
+
         public async Task<UserDto> GetUserAsync(ResolveFieldContext<object> context)
         {
-            string username = context.GetArgument<string>("id");
+            string username = context.GetArgument<string>("userId");
             User entity;
             try
             {
-                entity = await _userRepo.GetByNameAsync(username, cancellationToken: context.CancellationToken);
+                entity = await _userRepo.GetByNameAsync(username, cancellationToken: context.CancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (EntityNotFoundException)
             {
@@ -76,10 +82,12 @@ namespace Borzoo.Web.GraphQL
             var dto = context.GetArgument<TaskListCreationDto>("list");
 
             var entity = (TaskList) dto;
-            await _taskListRepo.SetUsernameAsync(username);
+            await _taskListRepo.SetUsernameAsync(username)
+                .ConfigureAwait(false);
             try
             {
-                await _taskListRepo.AddAsync(entity, context.CancellationToken);
+                await _taskListRepo.AddAsync(entity, context.CancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (DuplicateKeyException)
             {
@@ -91,22 +99,69 @@ namespace Borzoo.Web.GraphQL
                 return default;
             }
 
-            return (TaskListDto) entity;            
+            return (TaskListDto) entity;
         }
-        
+
         public async Task<TaskListDto[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
         {
             string username = context.Source.Id;
-            await _taskListRepo.SetUsernameAsync(username, context.CancellationToken);
+            await _taskListRepo.SetUsernameAsync(username, context.CancellationToken)
+                .ConfigureAwait(false);
 
-            var taskLists = await _taskListRepo.GetUserTaskListsAsync(context.CancellationToken);
+            var taskLists = await _taskListRepo.GetUserTaskListsAsync(context.CancellationToken)
+                .ConfigureAwait(false);
+
             var taskListDtos = taskLists
-                .Select(tl => (TaskListDto)tl)
+                .Select(tl => (TaskListDto) tl)
                 .ToArray();
-            
+
             return taskListDtos;
         }
+
+        public async Task<TaskItemDto> CreateTaskItemAsync(ResolveFieldContext<object> context)
+        {
+            string userName = context.GetArgument<string>("owner");
+            string listName = context.GetArgument<string>("list");
+            var dto = context.GetArgument<TaskItemCreationDto>("task");
+
+            var entity = (TaskItem) dto;
+            await _taskItemRepo.SetTaskListAsync(userName, listName, context.CancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                await _taskItemRepo.AddAsync(entity, context.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (DuplicateKeyException)
+            {
+                var err = new Error("duplicate key")
+                {
+                    Path = new[] {"task"}
+                };
+                context.Errors.Add(err);
+                return default;
+            }
+
+            return (TaskItemDto) entity;
+        }
         
+        public async Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskListDto> context)
+        {
+            string username = context.GetArgument<string>("userId");
+            string tasklistName = context.Source.Id;
+            await _taskItemRepo.SetTaskListAsync(username, tasklistName, context.CancellationToken)
+                .ConfigureAwait(false);
+
+            var tasks = await _taskItemRepo.GetTaskItemsAsync(cancellationToken: context.CancellationToken)
+                .ConfigureAwait(false);
+
+            var taskDtos = tasks
+                .Select(tl => (TaskItemDto) tl)
+                .ToArray();
+
+            return taskDtos;
+        }
+
         private string GenerateAlphaNumericString(int charCount)
         {
             var rnd = new Random(DateTime.UtcNow.Millisecond);

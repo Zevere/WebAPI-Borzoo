@@ -26,7 +26,7 @@ namespace Borzoo.Data.Abstractions.Entities
 
         public DateTime? Due { get; set; }
 
-        public Dictionary<string, string> Tags { get; set; }
+        public string[] Tags { get; set; }
         
         public DateTime? ModifiedAt { get; set; }
 

@@ -17,10 +17,12 @@ namespace Borzoo.Web.Helpers
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
-            services.AddSingleton<TaskListType>();
-            services.AddSingleton<TaskListInput>();
             services.AddSingleton<UserType>();
             services.AddSingleton<UserInput>();
+            services.AddSingleton<TaskListType>();
+            services.AddSingleton<TaskListInput>();
+            services.AddSingleton<TaskItemType>();
+            services.AddSingleton<TaskItemInput>();
 
             services.AddSingleton<ZevereQuery>();
             services.AddSingleton<ZevereMutation>();

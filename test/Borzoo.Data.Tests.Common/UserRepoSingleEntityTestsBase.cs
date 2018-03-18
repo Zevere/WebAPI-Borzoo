@@ -10,14 +10,14 @@ namespace Borzoo.Data.Tests.Common
 {
     public abstract class UserRepoSingleEntityTestsBase
     {
-        protected readonly IUserRepoSingleEntityFixture Fixture;
+        protected readonly IUserRepoSingleEntityFixture ClassFixture;
 
         protected Func<IUserRepository> CreateUserRepository { get; }
 
-        protected UserRepoSingleEntityTestsBase(IUserRepoSingleEntityFixture fixture,
+        protected UserRepoSingleEntityTestsBase(IUserRepoSingleEntityFixture classFixture,
             Func<IUserRepository> repoResolver)
         {
-            Fixture = fixture;
+            ClassFixture = classFixture;
             CreateUserRepository = repoResolver;
         }
 
@@ -43,7 +43,7 @@ namespace Borzoo.Data.Tests.Common
             Assert.False(entity.IsDeleted);
             Assert.Null(entity.ModifiedAt);
 
-            Fixture.NewUser = entity;
+            ClassFixture.NewUser = entity;
         }
 
         [OrderedFact]
@@ -54,7 +54,7 @@ namespace Borzoo.Data.Tests.Common
             User user = new User
             {
                 FirstName = "Al",
-                DisplayId = Fixture.NewUser.DisplayId,
+                DisplayId = ClassFixture.NewUser.DisplayId,
                 PassphraseHash = "a new passphrase"
             };
 
@@ -69,14 +69,14 @@ namespace Borzoo.Data.Tests.Common
         public async Task Should_Get_User_By_Id()
         {
             IEntityRepository<User> repo = CreateUserRepository();
-            User entity = await repo.GetByIdAsync(Fixture.NewUser.Id);
+            User entity = await repo.GetByIdAsync(ClassFixture.NewUser.Id);
 
-            Assert.Equal(Fixture.NewUser.Id, entity.Id);
-            Assert.Equal(Fixture.NewUser.DisplayId, entity.DisplayId);
-            Assert.Equal(Fixture.NewUser.PassphraseHash, entity.PassphraseHash);
-            Assert.Equal(Fixture.NewUser.FirstName, entity.FirstName);
-            Assert.Equal(Fixture.NewUser.LastName, entity.LastName);
-            Assert.Equal(entity.JoinedAt, Fixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
+            Assert.Equal(ClassFixture.NewUser.Id, entity.Id);
+            Assert.Equal(ClassFixture.NewUser.DisplayId, entity.DisplayId);
+            Assert.Equal(ClassFixture.NewUser.PassphraseHash, entity.PassphraseHash);
+            Assert.Equal(ClassFixture.NewUser.FirstName, entity.FirstName);
+            Assert.Equal(ClassFixture.NewUser.LastName, entity.LastName);
+            Assert.Equal(entity.JoinedAt, ClassFixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
             Assert.Null(entity.ModifiedAt);
             Assert.False(entity.IsDeleted);
         }
@@ -84,17 +84,17 @@ namespace Borzoo.Data.Tests.Common
         [OrderedFact]
         public async Task Should_Get_User_By_Name()
         {
-            string username = Fixture.NewUser.DisplayId.ToUpper();
+            string username = ClassFixture.NewUser.DisplayId.ToUpper();
 
             IUserRepository sut = CreateUserRepository();
             User entity = await sut.GetByNameAsync(username);
 
-            Assert.Equal(Fixture.NewUser.Id, entity.Id);
-            Assert.Equal(Fixture.NewUser.DisplayId, entity.DisplayId);
-            Assert.Equal(Fixture.NewUser.PassphraseHash, entity.PassphraseHash);
-            Assert.Equal(Fixture.NewUser.FirstName, entity.FirstName);
-            Assert.Equal(Fixture.NewUser.LastName, entity.LastName);
-            Assert.Equal(entity.JoinedAt, Fixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
+            Assert.Equal(ClassFixture.NewUser.Id, entity.Id);
+            Assert.Equal(ClassFixture.NewUser.DisplayId, entity.DisplayId);
+            Assert.Equal(ClassFixture.NewUser.PassphraseHash, entity.PassphraseHash);
+            Assert.Equal(ClassFixture.NewUser.FirstName, entity.FirstName);
+            Assert.Equal(ClassFixture.NewUser.LastName, entity.LastName);
+            Assert.Equal(entity.JoinedAt, ClassFixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
             Assert.Null(entity.ModifiedAt);
             Assert.False(entity.IsDeleted);
         }
@@ -123,12 +123,12 @@ namespace Borzoo.Data.Tests.Common
 
             User user = new User
             {
-                Id = Fixture.NewUser.Id,
+                Id = ClassFixture.NewUser.Id,
                 DisplayId = newDisplayId,
                 FirstName = newFName,
                 LastName = newLName,
                 PassphraseHash = newPassphraseHash,
-                JoinedAt = Fixture.NewUser.JoinedAt
+                JoinedAt = ClassFixture.NewUser.JoinedAt
             };
             DateTime timeBeforeTestAction = DateTime.UtcNow;
 
@@ -136,16 +136,16 @@ namespace Borzoo.Data.Tests.Common
             User updatedEntity = await sut.UpdateAsync(user);
 
             Assert.Same(user, updatedEntity);
-            Assert.Equal(Fixture.NewUser.Id, updatedEntity.Id);
+            Assert.Equal(ClassFixture.NewUser.Id, updatedEntity.Id);
             Assert.Equal(newFName, updatedEntity.FirstName);
             Assert.Equal(newLName, updatedEntity.LastName);
             Assert.Equal(newDisplayId, updatedEntity.DisplayId);
             Assert.Equal(newPassphraseHash, updatedEntity.PassphraseHash);
             Assert.NotNull(updatedEntity.ModifiedAt);
             Assert.True(updatedEntity.ModifiedAt > timeBeforeTestAction);
-            Assert.Equal(updatedEntity.JoinedAt, Fixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
+            Assert.Equal(updatedEntity.JoinedAt, ClassFixture.NewUser.JoinedAt, new DateTimeEqualityComparer());
 
-            updatedEntity.CopyTo(Fixture.NewUser);
+            updatedEntity.CopyTo(ClassFixture.NewUser);
         }
 
         [OrderedFact]
@@ -153,7 +153,7 @@ namespace Borzoo.Data.Tests.Common
         {
             DateTime modificationDate = DateTime.Today.AddDays(-1);
 
-            User user = Fixture.NewUser;
+            User user = ClassFixture.NewUser;
             user.ModifiedAt = modificationDate;
 
             IEntityRepository<User> sut = CreateUserRepository();
@@ -162,7 +162,7 @@ namespace Borzoo.Data.Tests.Common
             Assert.Equal(modificationDate.ToUniversalTime(), updatedEntity.ModifiedAt,
                 new NullableDateTimeEqualityComparer());
 
-            updatedEntity.CopyTo(Fixture.NewUser);
+            updatedEntity.CopyTo(ClassFixture.NewUser);
         }
 
         [OrderedFact]
@@ -172,9 +172,9 @@ namespace Borzoo.Data.Tests.Common
 
             IUserRepository sut = CreateUserRepository();
 
-            await sut.SetTokenForUserAsync(Fixture.NewUser.Id, token);
+            await sut.SetTokenForUserAsync(ClassFixture.NewUser.Id, token);
 
-            Fixture.NewUser.Token = token;
+            ClassFixture.NewUser.Token = token;
         }
 
         [OrderedFact]
@@ -182,20 +182,20 @@ namespace Borzoo.Data.Tests.Common
         {
             IUserRepository sut = CreateUserRepository();
 
-            User entity = await sut.GetByTokenAsync(Fixture.NewUser.Token);
+            User entity = await sut.GetByTokenAsync(ClassFixture.NewUser.Token);
 
-            Assert.Equal(Fixture.NewUser.Token, entity.Token);
+            Assert.Equal(ClassFixture.NewUser.Token, entity.Token);
 
-            Assert.Equal(Fixture.NewUser.Id, entity.Id);
-            Assert.Equal(Fixture.NewUser.DisplayId, entity.DisplayId);
-            Assert.Equal(Fixture.NewUser.PassphraseHash, entity.PassphraseHash);
-            Assert.Equal(Fixture.NewUser.FirstName, entity.FirstName);
-            Assert.Equal(Fixture.NewUser.LastName, entity.LastName);
-            Assert.Equal(Fixture.NewUser.JoinedAt, entity.JoinedAt, new DateTimeEqualityComparer());
+            Assert.Equal(ClassFixture.NewUser.Id, entity.Id);
+            Assert.Equal(ClassFixture.NewUser.DisplayId, entity.DisplayId);
+            Assert.Equal(ClassFixture.NewUser.PassphraseHash, entity.PassphraseHash);
+            Assert.Equal(ClassFixture.NewUser.FirstName, entity.FirstName);
+            Assert.Equal(ClassFixture.NewUser.LastName, entity.LastName);
+            Assert.Equal(ClassFixture.NewUser.JoinedAt, entity.JoinedAt, new DateTimeEqualityComparer());
             Assert.NotNull(entity.ModifiedAt);
             Assert.False(entity.IsDeleted);
 
-            entity.CopyTo(Fixture.NewUser);
+            entity.CopyTo(ClassFixture.NewUser);
         }
 
         [OrderedFact]

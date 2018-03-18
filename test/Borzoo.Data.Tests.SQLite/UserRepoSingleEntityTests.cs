@@ -12,8 +12,8 @@ namespace Borzoo.Data.Tests.SQLite
     public class UserRepoSingleEntityTests : UserRepoSingleEntityTestsBase,
         IClassFixture<UserRepoSingleEntityTests.Fixture>
     {
-        public UserRepoSingleEntityTests(Fixture fixture)
-            : base(fixture, () => new UserRepository(fixture.Connection))
+        public UserRepoSingleEntityTests(Fixture classFixture)
+            : base(classFixture, () => new UserRepository(classFixture.Connection))
         {
         }
 

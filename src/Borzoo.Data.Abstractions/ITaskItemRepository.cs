@@ -19,7 +19,7 @@ namespace Borzoo.Data.Abstractions
         Task<TaskItem> GetByNameAsync(string name, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default);
 
-        Task<TaskItem[]> GetTaskListItemsAsync(bool includeDeletedRecords = false,
+        Task<TaskItem[]> GetTaskItemsAsync(bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default);
     }
 }

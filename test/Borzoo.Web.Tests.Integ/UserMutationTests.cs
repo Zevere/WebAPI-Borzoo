@@ -44,7 +44,7 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal("eli.1024", (string) result.data.createUser.id);
             Assert.Equal("Eli", (string) result.data.createUser.firstName);
             Assert.Null((string) result.data.createUser.lastName);
-            Assert.Equal((int) result.data.createUser.daysJoined, 0);
+            Assert.Equal(0, (int) result.data.createUser.daysJoined);
             Assert.True(DateTime.TryParse((string) result.data.createUser.joinedAt, out var join), "joinedAt is date");
             Assert.InRange(join, DateTime.UtcNow.AddSeconds(-10), DateTime.UtcNow);
             Assert.NotEmpty((string) result.data.createUser.token);
