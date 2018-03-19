@@ -5,13 +5,13 @@ using Newtonsoft.Json.Serialization;
 
 namespace Borzoo.GraphQL.Models
 {
-    [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class TaskListCreationDto
     {
         [Required]
         [MinLength(1)]
         [JsonProperty(Required = Required.Always)]
-        public string Name { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [MinLength(1)]
@@ -23,7 +23,7 @@ namespace Borzoo.GraphQL.Models
                 ? null
                 : new TaskList
                 {
-                    DisplayId = dto.Name,
+                    DisplayId = dto.Id,
                     Title = dto.Title,
                 };
     }

@@ -1,36 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Borzoo.Data.Abstractions.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Borzoo.GraphQL.Models
 {
-    [JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class TaskItemCreationDto
     {
-        [Required] [MinLength(1)] [JsonProperty(Required = Required.Always)]
-        public string Name;
+        [Required]
+        [MinLength(1)]
+        [JsonProperty(Required = Required.Always)]
+        public string Id { get; set; }
 
-        [Required] [MinLength(1)] [JsonProperty(Required = Required.Always)]
-        public string Title;
+        [Required]
+        [MinLength(1)]
+        [JsonProperty(Required = Required.Always)]
+        public string Title { get; set; }
 
-        public string Description;
+        [MinLength(1)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Description { get; set; }
 
-        public DateTime? Due;
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DateTime? Due { get; set; }
 
-        public string[] Tags;
+        [MinLength(1)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public IEnumerable<string> Tags { get; set; }
 
         public static explicit operator TaskItem(TaskItemCreationDto dto) =>
             dto is null
                 ? null
                 : new TaskItem
                 {
-                    DisplayId = dto.Name,
+                    DisplayId = dto.Id,
                     Title = dto.Title,
                     Description = dto.Description,
                     Due = dto.Due,
-                    Tags = dto.Tags
+                    Tags = dto.Tags.ToArray()
                 };
     }
 }

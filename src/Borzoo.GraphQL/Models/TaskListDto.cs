@@ -5,16 +5,16 @@ using Newtonsoft.Json.Serialization;
 
 namespace Borzoo.GraphQL.Models
 {
-    [JsonObject(MemberSerialization.Fields, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class TaskListDto
     {
-        public string Id;
+        public string Id { get; set; }
 
-        public string Owner;
-        
-        public string Title;
+        public string Owner { get; set; }
 
-        public DateTime CreatedAt;
+        public string Title { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
         public static explicit operator TaskListDto(TaskList tl) =>
             tl is null

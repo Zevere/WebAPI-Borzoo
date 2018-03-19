@@ -8,11 +8,11 @@ using Xunit;
 
 namespace Borzoo.Web.Tests.Integ
 {
-    public class UsersQueryTests : IClassFixture<TestHostFixture<Startup>>
+    public class QueryTests : IClassFixture<TestHostFixture<Startup>>
     {
         private readonly TestHostFixture<Startup> _fixture;
 
-        public UsersQueryTests(TestHostFixture<Startup> fixture)
+        public QueryTests(TestHostFixture<Startup> fixture)
         {
             _fixture = fixture;
         }

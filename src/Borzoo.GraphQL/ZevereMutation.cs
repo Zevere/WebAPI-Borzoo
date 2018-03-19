@@ -28,7 +28,7 @@ namespace Borzoo.GraphQL
                 resolver.CreateTaskListAsync
             );
             
-            Field<TaskItemType>("addTaskToList",
+            Field<TaskItemType>("addTask",
                 "Add a new task to the list", new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>>
                     {

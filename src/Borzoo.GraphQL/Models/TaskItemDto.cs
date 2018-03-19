@@ -5,20 +5,22 @@ using Newtonsoft.Json.Serialization;
 
 namespace Borzoo.GraphQL.Models
 {
-    [JsonObject(MemberSerialization.Fields, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class TaskItemDto
     {
-        public string Id;
+        public string Id { get; set; }
 
-        public string List;
+        public string List { get; set; }
 
-        public string Title;
+        public string Title { get; set; }
 
-        public string Description;
+        public string Description { get; set; }
 
-        public DateTime? Due;
+        public DateTime? Due { get; set; }
+        
+        public string[] Tags { get; set; }
 
-        public DateTime CreatedAt;
+        public DateTime CreatedAt { get; set; }
 
         public static explicit operator TaskItemDto(TaskItem ti) =>
             ti is null
@@ -30,6 +32,7 @@ namespace Borzoo.GraphQL.Models
                     Title = ti.Title,
                     Description = ti.Description,
                     Due = ti.Due,
+                    Tags = ti.Tags,
                     CreatedAt = ti.CreatedAt
                 };
     }

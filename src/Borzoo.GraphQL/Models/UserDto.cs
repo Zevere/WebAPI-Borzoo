@@ -5,20 +5,20 @@ using Newtonsoft.Json.Serialization;
 
 namespace Borzoo.GraphQL.Models
 {
-    [JsonObject(MemberSerialization.Fields, NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class UserDto
     {
-        public string Id;
+        public string Id { get; set; }
 
-        public string FirstName;
+        public string FirstName { get; set; }
 
-        public string LastName;
+        public string LastName { get; set; }
 
-        public string Token;
+        public string Token { get; set; }
 
-        public int DaysJoined;
+        public int DaysJoined { get; set; }
 
-        public DateTime JoinedAt;
+        public DateTime JoinedAt { get; set; }
 
         public static explicit operator UserDto(User entity) =>
             entity is null
