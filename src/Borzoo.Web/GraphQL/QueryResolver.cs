@@ -18,7 +18,8 @@ namespace Borzoo.Web.GraphQL
 
         private readonly ITaskItemRepository _taskItemRepo;
 
-        public QueryResolver(IUserRepository userRepo, ITaskListRepository taskListRepo, ITaskItemRepository taskItemRepo)
+        public QueryResolver(IUserRepository userRepo, ITaskListRepository taskListRepo,
+            ITaskItemRepository taskItemRepo)
         {
             _userRepo = userRepo;
             _taskListRepo = taskListRepo;
@@ -76,7 +77,7 @@ namespace Borzoo.Web.GraphQL
             return (UserDto) entity;
         }
 
-        public async Task<TaskListDto> CreateTaskListAsync(ResolveFieldContext<object> context)
+        public async Task<TaskList> CreateTaskListAsync(ResolveFieldContext<object> context)
         {
             string username = context.GetArgument<string>("owner");
             var dto = context.GetArgument<TaskListCreationDto>("list");
@@ -99,10 +100,10 @@ namespace Borzoo.Web.GraphQL
                 return default;
             }
 
-            return (TaskListDto) entity;
+            return (TaskList) entity;
         }
 
-        public async Task<TaskListDto[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
+        public async Task<TaskList[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
         {
             string username = context.Source.Id;
             await _taskListRepo.SetUsernameAsync(username, context.CancellationToken)
@@ -112,7 +113,7 @@ namespace Borzoo.Web.GraphQL
                 .ConfigureAwait(false);
 
             var taskListDtos = taskLists
-                .Select(tl => (TaskListDto) tl)
+                .Select(tl => (TaskList) tl)
                 .ToArray();
 
             return taskListDtos;
@@ -144,12 +145,16 @@ namespace Borzoo.Web.GraphQL
 
             return (TaskItemDto) entity;
         }
-        
-        public async Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskListDto> context)
+
+        public async Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
         {
-            string username = context.GetArgument<string>("userId");
-            string tasklistName = context.Source.Id;
-            await _taskItemRepo.SetTaskListAsync(username, tasklistName, context.CancellationToken)
+            string tasklistName = context.Source.DisplayId;
+            string userName = (await _userRepo
+                    .GetByIdAsync(context.Source.OwnerId, cancellationToken: context.CancellationToken)
+                    .ConfigureAwait(false)
+                ).DisplayId;
+            
+            await _taskItemRepo.SetTaskListAsync(userName, tasklistName, context.CancellationToken)
                 .ConfigureAwait(false);
 
             var tasks = await _taskItemRepo.GetTaskItemsAsync(cancellationToken: context.CancellationToken)

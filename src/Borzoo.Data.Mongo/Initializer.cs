@@ -43,6 +43,26 @@ namespace Borzoo.Data.Mongo
                     cancellationToken
                 );
             }
+
+            {
+                // "task-items" Collection
+                await database.CreateCollectionAsync(MongoConstants.Collections.TaskItems.Name, null,
+                    cancellationToken);
+                var collection = database.GetCollection<TaskItemMongo>(MongoConstants.Collections.TaskItems.Name);
+                var indexBuilder = Builders<TaskItemMongo>.IndexKeys;
+                var key = indexBuilder.Combine(
+                    indexBuilder.Ascending(tl => tl.ListDbRef.Id),
+                    indexBuilder.Ascending(tl => tl.DisplayId)
+                );
+                await collection.Indexes.CreateOneAsync(key,
+                    new CreateIndexOptions
+                    {
+                        Name = MongoConstants.Collections.TaskItems.Indexes.ListTaskName,
+                        Unique = true
+                    },
+                    cancellationToken
+                );
+            }
         }
 
         public static void RegisterClassMaps()
@@ -71,12 +91,35 @@ namespace Borzoo.Data.Mongo
                     map.MapProperty(tl => tl.DisplayId).SetElementName("name").SetOrder(1);
                     map.MapProperty(tl => tl.Title).SetElementName("title");
                     map.MapProperty(tl => tl.CreatedAt).SetElementName("created");
+                    map.MapProperty(tl => tl.IsDeleted).SetElementName("deleted").SetIgnoreIfDefault(true);
                 });
                 BsonClassMap.RegisterClassMap<TaskListMongo>(map =>
                 {
                     map.MapProperty(tl => tl.OwnerDbRef)
                         .SetIsRequired(true)
                         .SetElementName("owner");
+                });
+            }
+
+            if (!BsonClassMap.IsClassMapRegistered(typeof(TaskItem)))
+            {
+                BsonClassMap.RegisterClassMap<TaskItem>(map =>
+                {
+                    map.MapIdProperty(tl => tl.Id).SetIdGenerator(new StringObjectIdGenerator());
+                    map.MapProperty(tl => tl.DisplayId).SetElementName("name").SetOrder(1);
+                    map.MapProperty(tl => tl.Title).SetElementName("title");
+                    map.MapProperty(tl => tl.Description).SetElementName("description").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.Due).SetElementName("due").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.Tags).SetElementName("tags").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.ModifiedAt).SetElementName("modified").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.IsDeleted).SetElementName("deleted").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.CreatedAt).SetElementName("created");
+                });
+                BsonClassMap.RegisterClassMap<TaskItemMongo>(map =>
+                {
+                    map.MapProperty(tl => tl.ListDbRef)
+                        .SetIsRequired(true)
+                        .SetElementName("list");
                 });
             }
         }

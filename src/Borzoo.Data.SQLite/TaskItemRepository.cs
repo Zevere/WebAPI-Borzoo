@@ -152,28 +152,30 @@ namespace Borzoo.Data.SQLite
             return Task.FromResult(entity);
         }
 
-        public Task<TaskItem[]> GetTaskItemsAsync(bool includeDeletedRecords = false,
+        public async Task<TaskItem[]> GetTaskItemsAsync(bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
             EnsureListId();
             string sql = "SELECT id, name, title, description, due, created_at, modified_at, is_deleted " +
                          "FROM task " +
-                         "WHERE user_id = $user_id ";
+                         "WHERE list_id = $list_id ";
 
             if (!includeDeletedRecords)
-            {
                 sql += "AND is_deleted IS NULL";
-            }
 
             TaskItem[] tasksItem;
             using (var cmd = Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
-                cmd.Parameters.AddWithValue("$user_id", TaskListId);
-                using (var reader = cmd.ExecuteReader())
+                cmd.Parameters.AddWithValue("$list_id", TaskListId);
+                var reader = await cmd.ExecuteReaderAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                using (reader)
                 {
                     var list = new List<TaskItem>();
-                    while (reader.Read())
+                    while (await reader.ReadAsync(cancellationToken)
+                        .ConfigureAwait(false)
+                    )
                     {
                         var t = new TaskItem
                         {
@@ -203,7 +205,7 @@ namespace Borzoo.Data.SQLite
                 }
             }
 
-            return Task.FromResult(tasksItem);
+            return tasksItem;
         }
 
         public Task<TaskItem> GetByIdAsync(string id, bool includeDeletedRecords,

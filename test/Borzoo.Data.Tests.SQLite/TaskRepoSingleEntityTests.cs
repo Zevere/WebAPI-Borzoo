@@ -1,23 +1,19 @@
-using System;
-using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
 using Borzoo.Data.Tests.Common;
 using Borzoo.Data.Tests.SQLite.Framework;
-using Borzoo.Tests.Framework;
-using Microsoft.Data.Sqlite;
 using Xunit;
 
 namespace Borzoo.Data.Tests.SQLite
 {
-    public class TaskRepoSingleEntityTests :
-        TaskItemRepoSingleEntityTestsBase,
-        IClassFixture<TaskRepoSingleEntityTests.Fixture>
+    public class TaskRepoTests :
+        TaskItemRepoTestsBase,
+        IClassFixture<TaskRepoTests.Fixture>
     {
         private readonly Fixture _fixture;
 
-        public TaskRepoSingleEntityTests(Fixture fixture)
+        public TaskRepoTests(Fixture fixture)
             : base(() => new TaskItemRepository(fixture.Connection, fixture.TaskListRepo))
         {
             _fixture = fixture;
@@ -108,7 +104,7 @@ namespace Borzoo.Data.Tests.SQLite
             public TaskItem TaskItem { get; set; }
 
             public Fixture()
-                : base(nameof(TaskRepoSingleEntityTests))
+                : base(nameof(TaskRepoTests))
             {
                 var userRepo = new UserRepository(Connection);
                 TaskListRepo = new TaskListRepository(Connection, userRepo);

@@ -7,11 +7,11 @@ using Xunit;
 
 namespace Borzoo.Data.Tests.Common
 {
-    public abstract class TaskItemRepoSingleEntityTestsBase
+    public abstract class TaskItemRepoTestsBase
     {
         protected Func<ITaskItemRepository> CreateTaskItemRepo { get; }
 
-        protected TaskItemRepoSingleEntityTestsBase(Func<ITaskItemRepository> repoResolver)
+        protected TaskItemRepoTestsBase(Func<ITaskItemRepository> repoResolver)
         {
             CreateTaskItemRepo = repoResolver;
         }
@@ -31,6 +31,7 @@ namespace Borzoo.Data.Tests.Common
             TaskItem entity = await repo.AddAsync(task);
 
             Assert.Same(task, entity);
+            Assert.NotEmpty(entity.Id);
             Assert.NotEmpty(entity.ListId);
             Assert.NotEmpty(entity.Title);
             Assert.NotEmpty(entity.DisplayId);

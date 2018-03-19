@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
@@ -14,6 +16,8 @@ namespace Borzoo.Data.Mongo
         public string UserName { get; private set; }
 
         public string UserId { get; private set; }
+
+        private FilterDefinitionBuilder<TaskListMongo> Filter => Builders<TaskListMongo>.Filter;
 
         private readonly IMongoCollection<TaskListMongo> _collection;
 
@@ -34,14 +38,42 @@ namespace Borzoo.Data.Mongo
             UserId = user.Id;
         }
 
-        public Task<TaskList> GetByNameAsync(string name, bool includeDeletedRecords = false, CancellationToken cancellationToken = default)
+        public async Task<TaskList> GetByNameAsync(string name, bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            EnsureUserId();
+
+            name = Regex.Unescape(name).ToLower();
+
+            var filter = Filter.And(
+                Filter.Eq(list => list.OwnerDbRef.Id, UserId),
+                Filter.Regex(list => list.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
+                Filter.Exists(list => list.IsDeleted, includeDeletedRecords)
+            );
+
+            TaskListMongo tl;
+
+            try
+            {
+                tl = await _collection
+                    .Find(filter)
+                    .SingleAsync(cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new EntityNotFoundException(nameof(TaskList.DisplayId), name);
+            }
+
+            tl.DisplayId = name;
+            return tl;
         }
 
         public async Task<TaskList> AddAsync(TaskList entity, CancellationToken cancellationToken = default)
         {
             EnsureUserId();
+            entity.DisplayId = entity.DisplayId.ToLower();
+
             var tlMongo = TaskListMongo.FromTaskList(entity);
             tlMongo.OwnerDbRef = new MongoDBRef(MongoConstants.Collections.Users.Name, UserId);
             try
@@ -52,7 +84,7 @@ namespace Borzoo.Data.Mongo
                 when (e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
                       e.WriteError.Message
                           .Contains($" index: {MongoConstants.Collections.TaskLists.Indexes.OwnerListName} ")
-                      )
+                )
             {
                 throw new DuplicateKeyException(nameof(TaskList.OwnerId), nameof(TaskList.DisplayId));
             }
@@ -79,6 +111,7 @@ namespace Borzoo.Data.Mongo
 
         public async Task<TaskList[]> GetUserTaskListsAsync(CancellationToken cancellationToken = default)
         {
+            EnsureUserId();
             var filter = Builders<TaskListMongo>
                 .Filter.Eq(list => list.OwnerDbRef.Id, UserId);
 

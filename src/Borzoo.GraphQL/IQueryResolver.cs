@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Borzoo.Data.Abstractions.Entities;
 using Borzoo.GraphQL.Models;
 using GraphQL.Types;
 
@@ -10,12 +11,12 @@ namespace Borzoo.GraphQL
         
         Task<UserDto> GetUserAsync(ResolveFieldContext<object> context);
         
-        Task<TaskListDto> CreateTaskListAsync(ResolveFieldContext<object> context);
+        Task<TaskList> CreateTaskListAsync(ResolveFieldContext<object> context);
         
-        Task<TaskListDto[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context);
+        Task<TaskList[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context);
         
         Task<TaskItemDto> CreateTaskItemAsync(ResolveFieldContext<object> context);
         
-        Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskListDto> context);
+        Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context);
     }
 }

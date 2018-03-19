@@ -26,6 +26,7 @@ namespace Borzoo.Web.Tests.Integ
             mutation ZevereMutation($u: UserInput!) { 
                 createUser(user: $u) { 
                     id firstName lastName token daysJoined joinedAt
+                    lists { id }
                 } 
             }";
             var variables = new
@@ -43,6 +44,7 @@ namespace Borzoo.Web.Tests.Integ
             dynamic result = JsonConvert.DeserializeObject(respContent);
 
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            Assert.Null(result.errors);
             Assert.Equal("eli.1024", (string) result.data.createUser.id);
             Assert.Equal("Eli", (string) result.data.createUser.firstName);
             Assert.Null((string) result.data.createUser.lastName);
@@ -50,6 +52,8 @@ namespace Borzoo.Web.Tests.Integ
             Assert.True(DateTime.TryParse((string) result.data.createUser.joinedAt, out var join), "joinedAt is date");
             Assert.InRange(join, DateTime.UtcNow.AddSeconds(-10), DateTime.UtcNow);
             Assert.NotEmpty((string) result.data.createUser.token);
+            object[] lists = JArray.FromObject(result.data.createUser.lists).ToObject<object[]>();
+            Assert.Empty(lists);
 
             _fixture.User = JObject.FromObject(result.data.createUser).ToObject<UserDto>();
         }
@@ -75,15 +79,17 @@ namespace Borzoo.Web.Tests.Integ
             dynamic result = JsonConvert.DeserializeObject(respContent);
 
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            Assert.Null(result.errors);
             Assert.Equal("groceries", (string) result.data.createList.id);
             Assert.Equal("ToDo Groceries", (string) result.data.createList.title);
-            Assert.Null(((JValue) result.data.createList.tasks).Value);
             Assert.True(
                 DateTime.TryParse((string) result.data.createList.createdAt, out var creationDate), "createdAt is date"
             );
             Assert.InRange(creationDate, DateTime.UtcNow.AddSeconds(-10), DateTime.UtcNow);
+            object[] tasks = JArray.FromObject(result.data.createList.tasks).ToObject<object[]>();
+            Assert.Empty(tasks);
 
-            _fixture.TaskList = JObject.FromObject(result.data.createList).ToObject<TaskListDto>();
+            _fixture.TaskList = result.data.createList;
         }
 
         [OrderedFact]
@@ -98,7 +104,7 @@ namespace Borzoo.Web.Tests.Integ
             var variables = new
             {
                 userId = _fixture.User.Id,
-                listId = _fixture.TaskList.Id,
+                listId = _fixture.TaskList["id"].Value<string>(),
                 task = new
                 {
                     id = "fruit",
@@ -114,6 +120,7 @@ namespace Borzoo.Web.Tests.Integ
             dynamic result = JsonConvert.DeserializeObject(respContent);
 
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            Assert.Null(result.errors);
             Assert.Equal("fruit", (string) result.data.addTask.id);
             Assert.Equal("Fruits", (string) result.data.addTask.title);
             Assert.Equal("Apples", (string) result.data.addTask.description);
@@ -138,7 +145,7 @@ namespace Borzoo.Web.Tests.Integ
         {
             public UserDto User;
 
-            public TaskListDto TaskList;
+            public JObject TaskList;
 
             public TaskItemDto TaskItem;
         }

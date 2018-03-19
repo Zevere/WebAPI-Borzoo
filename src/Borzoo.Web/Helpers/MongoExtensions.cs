@@ -24,8 +24,13 @@ namespace Borzoo.Web.Helpers
                 _.GetRequiredService<IMongoDatabase>()
                     .GetCollection<TaskListMongo>(MongoConstants.Collections.TaskLists.Name)
             );
+            services.AddTransient<IMongoCollection<TaskItemMongo>>(_ =>
+                _.GetRequiredService<IMongoDatabase>()
+                    .GetCollection<TaskItemMongo>(MongoConstants.Collections.TaskItems.Name)
+            );
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ITaskListRepository, TaskListRepository>();
+            services.AddTransient<ITaskItemRepository, TaskItemRepository>();
             
             Initializer.RegisterClassMaps();
             
