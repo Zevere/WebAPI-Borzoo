@@ -273,5 +273,6 @@ appsettings.*.json
 **/*.db
 
 # Deployments files
-scripts/deploy/docker-certs/
+scripts/deploy/appsettings.json
 scripts/deploy/deploy-docker-compose-configs.json
+scripts/deploy/docker-certs/

@@ -12,31 +12,36 @@ const rootDir = path.resolve(`${__dirname}/../../..`)
 logStep('Pre-Deploy: Staging')
 
 
-logInfo('Read Docker configurations')
-const dockerHost = $.env['BORZOO_DOCKER_HOST']
-if (!dockerHost) {
-  throw 'Environment variable "BORZOO_DOCKER_HOST" is not set.'
+logInfo('Read Docker settings')
+if (!$.env['BORZOO_DOCKER_SETTINGS']) {
+  throw 'Environment variable "BORZOO_DOCKER_SETTINGS" is not set.'
 }
-
-if (!$.env['BORZOO_DOCKER_CERTS']) {
-  throw 'Environment variable "BORZOO_DOCKER_CERTS" is not set.'
-}
-const dockerCerts = JSON.parse($.env['BORZOO_DOCKER_CERTS'])
-
+const dockerSettings = JSON.parse($.env['BORZOO_DOCKER_SETTINGS'])
 const dockerCertsDir = `${rootDir}/scripts/deploy/docker-certs`
+
+logInfo('Read app settings')
+if (!$.env['BORZOO_APP_SETTINGS']) {
+  throw 'Environment variable "BORZOO_APP_SETTINGS" is not set.'
+}
+const appSettings = JSON.parse($.env['BORZOO_APP_SETTINGS'])
+
+logInfo(`Write Docker certificates to: ${dockerCertsDir}`)
 if (!fs.existsSync(dockerCertsDir)) {
   $.mkdir(dockerCertsDir)
 }
+fs.writeFileSync(dockerCertsDir + "/ca.pem", dockerSettings.ca)
+fs.writeFileSync(dockerCertsDir + "/cert.pem", dockerSettings.cert)
+fs.writeFileSync(dockerCertsDir + "/key.pem", dockerSettings.key)
 
-logInfo(`Write Docker certificates to: ${dockerCertsDir}`)
-fs.writeFileSync(dockerCertsDir + "/ca.pem", dockerCerts.ca);
-fs.writeFileSync(dockerCertsDir + "/cert.pem", dockerCerts.cert);
-fs.writeFileSync(dockerCertsDir + "/key.pem", dockerCerts.key);
+logInfo(`Write appsettings.json`)
+fs.writeFileSync(`${rootDir}/scripts/deploy/appsettings.json`, JSON.stringify(appSettings.settings, undefined, 2))
 
-
-logInfo(`Write Docker certificates to: ${dockerCertsDir}`)
+logInfo(`Write Docker Compose deployment settings`)
 const configs = {
-  dockerHost: dockerHost,
-  dockerCertsDir: dockerCertsDir
+  app: appSettings,
+  docker: {
+    host: dockerSettings.host,
+    certsDir: dockerCertsDir
+  }
 }
 fs.writeFileSync(`${rootDir}/scripts/deploy/deploy-docker-compose-configs.json`, JSON.stringify(configs, undefined, 2))

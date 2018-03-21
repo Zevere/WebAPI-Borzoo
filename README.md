@@ -75,8 +75,11 @@ node /path/to/WebAPI-Borzoo/scripts/deploy/travis-ci/gen-docker-certs.js
 
 #### Docker Compose
 
-# TODO
+Docker Compose deploys multiple containers at the same time. (See [`docker-compose.yml`](./scripts/deploy/docker-compose.yml))
+
+- Web app ([borzoo.web](./scripts/deploy/Borzoo.Web.Dockerfile))
+- Nginx web server
 
 #### Nginx Configurations
 
-# TODO
+Nginx acts as a reverse proxy here. Nginx container loads the configurations file on the host at `/var/nginx/nginx.conf`. See the [sample `nginx.conf`](./scripts/deploy/nginx.conf).

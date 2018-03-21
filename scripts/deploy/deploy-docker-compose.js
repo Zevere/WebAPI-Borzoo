@@ -23,22 +23,16 @@ function tryLoadConfigs() {
     $.env['DOCKER_CERT_PATH'] = configs.docker.certsDir
     $.env['DOCKER_TLS_VERIFY'] = 1
 
-    if (configs.app && configs.app.env) {
-        
-    }
+    $.env['ASPNETCORE_ENVIRONMENT'] = configs.app.env
 }
 
 
 function checkDockerConnection() {
     logInfo('Check Docker connection')
-    if ($.exec(`docker version --format '{{.Server.Version}}'`).code != 0) {
-        throw "Unable to connect to Docker daemon"
-    }
+    $.exec(`docker version --format '{{.Server.Version}}'`)
 
     logInfo('Check Docker Compose installation')
-    if ($.exec('docker-compose version').code != 0) {
-        throw "Docker Compose is not installed"
-    }
+    $.exec('docker-compose version')
 }
 
 
@@ -46,8 +40,16 @@ function publishWebApp() {
     logInfo('Publish app')
     $.cd(`${rootDir}/src/Borzoo.Web`)
     const publishDir = `${rootDir}/src/Borzoo.Web/bin/publish/Release`
-    $.rm(`${publishDir}/*`)
+
+    if (fs.existsSync(publishDir))
+        $.rm(publishDir + '/*')
+
     $.exec(`dotnet publish --configuration Release --output "${publishDir}"`)
+
+    if (fs.existsSync(`${rootDir}/scripts/deploy/appsettings.json`))
+        $.cp(`${rootDir}/scripts/deploy/appsettings.json`, publishDir)
+    else
+        logWarn(`File "scripts/deploy/appsettings.json" not found`)
 }
 
 
@@ -67,6 +69,7 @@ function publishDockerContainers() {
 
     logInfo('Start Docker compose containers')
     $.exec('docker-compose up -d')
+    // $.exec('docker-compose logs --follow')
 }
 
 tryLoadConfigs()

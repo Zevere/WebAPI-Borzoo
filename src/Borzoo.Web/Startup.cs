@@ -43,7 +43,7 @@ namespace Borzoo.Web
             }
 
             #endregion
-            
+
             #region Auth
 
             services.AddAuthentication("Basic")
@@ -81,9 +81,9 @@ namespace Borzoo.Web
 
             app.UseAuthentication();
 
-            app.UseMiddleware<GraphQLMiddleware>(new GraphQLSettings {Path = "/graphql"});
-
-            app.UseGraphiQl("/graphql");
+            const string GraphQLPath = "/graphql";
+            app.UseGraphQL(new GraphQLSettings {Path = GraphQLPath});
+            app.UseGraphiQl(GraphQLPath);
 
             app.UseMvc();
 

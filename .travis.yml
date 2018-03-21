@@ -25,5 +25,5 @@ notifications:
 ## Disable "Build pushed pull requests"
 
 ## Environment Variables:
-#### BORZOO_DOCKER_HOST: 'example.org:1234'
-#### BORZOO_DOCKER_CERTS: '{ "ca":"", "cert":"", "key":"" }'
+#### BORZOO_DOCKER_SETTINGS: '{ "host":"example.org:1234", "ca":"", "cert":"", "key":"" }'
+#### BORZOO_APP_SETTINGS: '{ "env":"Staging", "settings":{ /* contents of appsettings.json */ } }'
