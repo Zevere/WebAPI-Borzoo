@@ -2,11 +2,30 @@
 
 A [Zevere GraphQL Web API](https://github.com/Zevere/Zevere-Specs/) implementation in ASP.NET Core C#.
 
+## Gettings Started
+
+This is a Web API with only 1 GraphQL endpoint so
+
+- Open the solution in a .NET IDE such as Visual Studio 2017 or Rider
+- Press _Run_!
+- Hit [http://localhost:5000/GraphQL](http://localhost:5000/GraphQL)
+
+> Application uses SQLite database by default so it is a painless start. You can change storage type to Mongo Db by modifying `appsettings`.
+
+## Development
+
+- Repository pattern for data storage
+  - SQLite implementation
+  - Mongo Db implementation
+- GraphQL API
+- ASP.NET Core Web API to expose GraphQL
+- Test Driven Development
+
 ## Deployment
 
-CI/CD pipeline is set with the help of AppVeyor, Travis-CI, and Docker.
+CI/CD pipeline is set with the help of [AppVeyor](https://www.appveyor.com/), [Travis-CI](https://travis-ci.org/), and Docker.
 
-### CI
+### Continuous Integration
 
 #### AppVeyor
 
@@ -35,8 +54,29 @@ Testing framework in use is mainly [xUnit](https://github.com/xunit/xunit/).
 
 Some tests such as systems integration tests take advantage of Docker-in-Docker approach where a temporary Mongo container runs in background to store data.
 
-### CD
+### Continuous Delivery
 
-Deployment only happens if commit is pushed on `master` branch. If all the tests pass(process exits with return code of 0), deployment begins.
+Deployment only happens if commit is pushed on `master` branch. If all the tests pass(process exits with return code of 0), deployment process begins. Application environment is set to _Staging_.
 
-### Server
+#### Staging Server
+
+Deployment server needs to be accessible from Travis-CI container and have a Docker daemon. See [Ubuntu Server Setup](./scripts/deploy/ubuntu-server-setup.md) for more info.
+
+#### Depoloyment Settings
+
+As mentioned in [`travis file`](./.travis.yml), some environment variables should be set to connect to deployment server from Travis-CI build container. Use [`gen-docker-certs.js`](./scripts/deploy/travis-ci/gen-docker-certs.js) script to create a JSON-serialized values for them.
+
+```bash
+# in /path/to/docker-certs directory
+node /path/to/WebAPI-Borzoo/scripts/deploy/travis-ci/gen-docker-certs.js
+```
+
+> This script assumes all Docker daemon certificate files are in one directory. Refer to [Ubuntu server setup file](./scripts/deploy/ubuntu-server-setup.md).
+
+#### Docker Compose
+
+# TODO
+
+#### Nginx Configurations
+
+# TODO
