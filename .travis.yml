@@ -15,6 +15,7 @@ script:
 deploy:
   provider: script
   script: node scripts/deploy/travis-ci/predeploy-staging.js && node scripts/deploy/deploy-docker-compose.js
+  skip_cleanup: true
   on:
     branch: master
 notifications:

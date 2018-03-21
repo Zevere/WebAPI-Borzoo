@@ -63,7 +63,7 @@ namespace Borzoo.Web
 
             services.AddGraphQL();
 
-            services.AddMvc();
+//            services.AddMvc(); // ToDo remvoe
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
@@ -81,11 +81,10 @@ namespace Borzoo.Web
 
             app.UseAuthentication();
 
-            const string GraphQLPath = "/graphql";
-            app.UseGraphQL(new GraphQLSettings {Path = GraphQLPath});
-            app.UseGraphiQl(GraphQLPath);
+            app.UseGraphQL(new GraphQLSettings {Path = "/zv/graphql"});
+            app.UseGraphiQL("/zv/graphql", "wwwroot/GraphiQL");
 
-            app.UseMvc();
+//            app.UseMvc(); // ToDo remvoe
 
             app.Run(context =>
             {
