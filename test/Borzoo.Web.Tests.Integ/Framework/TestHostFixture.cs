@@ -69,7 +69,7 @@ namespace Borzoo.Web.Tests.Integ.Framework
                 operationName
             }, new JsonSerializerSettings {DefaultValueHandling = DefaultValueHandling.Ignore});
 
-            var resp = await Client.PostAsync("/graphql", new StringContent(
+            var resp = await Client.PostAsync("/zv/graphql", new StringContent(
                 payload, Encoding.UTF8, "application/json"
             ), cancellationToken);
             return resp;

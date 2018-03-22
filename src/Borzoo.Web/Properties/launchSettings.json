@@ -2,24 +2,28 @@
   "iisSettings": {
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49767/",
+      "applicationUrl": "http://localhost:5000/",
       "sslPort": 0
     },
     "windowsAuthentication": false
   },
   "profiles": {
     "Borzoo": {
-      "applicationUrl": "http://localhost:49768/",
+      "applicationUrl": "http://localhost:5000/",
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5000/zv/GraphiQL"
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5000/zv/GraphiQL"
     }
   }
 }

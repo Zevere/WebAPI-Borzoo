@@ -6,9 +6,18 @@ A [Zevere GraphQL Web API](https://github.com/Zevere/Zevere-Specs/) implementati
 
 This is a Web API with only 1 GraphQL endpoint so
 
-- Open the solution in a .NET IDE such as Visual Studio 2017 or Rider
-- Press _Run_!
-- Hit [http://localhost:5000/GraphQL](http://localhost:5000/GraphQL)
+1. Open the solution in a .NET IDE such as Visual Studio 2017 or Rider
+1. Press _Run_!
+1. Hit [http://localhost:5000/zv/GraphiQL](http://localhost:5000/zv/GraphiQL)
+1. Execute a GraphQL query like:
+
+```graphql
+{
+  user(userId: "bobby") {
+    firstName lastName joinedAt lists { id }
+  }
+}
+```
 
 > Application uses SQLite database by default so it is a painless start. You can change storage type to Mongo Db by modifying `appsettings`.
 
