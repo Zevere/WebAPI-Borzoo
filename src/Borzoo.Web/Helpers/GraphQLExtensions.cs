@@ -1,15 +1,10 @@
-﻿using System.IO;
-using Borzoo.GraphQL;
+﻿using Borzoo.GraphQL;
 using Borzoo.GraphQL.Types;
 using Borzoo.Web.GraphQL;
-using Borzoo.Web.Middlewares.GraphQL;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Types;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 
 namespace Borzoo.Web.Helpers
 {
@@ -35,27 +30,13 @@ namespace Borzoo.Web.Helpers
                 new FuncDependencyResolver(_.GetRequiredService)
             ));
 
-            return services;
-        }
-
-        public static IApplicationBuilder UseGraphQL(this IApplicationBuilder app, GraphQLSettings settings = default)
-        {
-            app.UseMiddleware<GraphQLMiddleware>(settings);
-            return app;
-        }
-
-        public static IApplicationBuilder UseGraphiQL(this IApplicationBuilder app, string requestPath,
-            string filesBasePath)
-        {
-            var opts = new SharedOptions
+            services.AddGraphQl(schema =>
             {
-                RequestPath = requestPath,
-                FileProvider = new PhysicalFileProvider(Path.GetFullPath(filesBasePath))
-            };
-            app.UseDefaultFiles(new DefaultFilesOptions(opts));
-            app.UseStaticFiles(new StaticFileOptions(opts));
+                schema.SetQueryType<ZevereQuery>();
+                schema.SetMutationType<ZevereMutation>();
+            });
 
-            return app;
+            return services;
         }
     }
 }

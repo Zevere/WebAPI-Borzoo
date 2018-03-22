@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Borzoo.Web.Data;
 using Borzoo.Web.Helpers;
 using Borzoo.Web.Middlewares.BasicAuth;
-using Borzoo.Web.Middlewares.GraphQL;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -62,8 +61,6 @@ namespace Borzoo.Web
             #endregion
 
             services.AddGraphQL();
-
-//            services.AddMvc(); // ToDo remvoe
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
@@ -81,10 +78,8 @@ namespace Borzoo.Web
 
             app.UseAuthentication();
 
-            app.UseGraphQL(new GraphQLSettings {Path = "/zv/graphql"});
-            app.UseGraphiQL("/zv/graphql", "wwwroot/GraphiQL");
-
-//            app.UseMvc(); // ToDo remvoe
+            app.UseGraphQl("/zv/GraphQL");
+            app.UseGraphiql("/zv/GraphiQL", opts => { opts.GraphQlEndpoint = "/zv/GraphQL"; });
 
             app.Run(context =>
             {

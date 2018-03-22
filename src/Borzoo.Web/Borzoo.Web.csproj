@@ -4,10 +4,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="GraphQL" Version="2.0.0-alpha-851" />
+    <PackageReference Include="GraphQl.AspNetCore" Version="1.0.4.55" />
+    <PackageReference Include="GraphQL.AspNetCore.Graphiql" Version="1.0.4.55" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
