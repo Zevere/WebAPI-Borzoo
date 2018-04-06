@@ -55,7 +55,7 @@ namespace Borzoo.Web.Tests.Integ.Framework
                 DataInitializer.InitMongoDb(configuration["data:mongo:connection"]).GetAwaiter().GetResult();
         }
 
-        public async Task<HttpResponseMessage> SendGraphQLQuery(
+        public async Task<HttpResponseMessage> SendGraphQLRequest(
             string query,
             object variables = default,
             string operationName = default,

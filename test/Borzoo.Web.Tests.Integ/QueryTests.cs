@@ -26,7 +26,7 @@ namespace Borzoo.Web.Tests.Integ
                 } 
             }";
 
-            var resp = await _fixture.SendGraphQLQuery(userQuery);
+            var resp = await _fixture.SendGraphQLRequest(userQuery);
 
             string respContent = await resp.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject(respContent);

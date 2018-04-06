@@ -30,7 +30,7 @@ namespace Borzoo.GraphQL.Models
 
         [MinLength(1)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public IEnumerable<string> Tags { get; set; }
+        public string[] Tags { get; set; }
 
         public static explicit operator TaskItem(TaskItemCreationDto dto) =>
             dto is null

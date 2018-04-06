@@ -38,7 +38,7 @@ namespace Borzoo.Web.Tests.Integ
                     passphrase = "my-passphrase9"
                 }
             };
-            var resp = await _fixture.SendGraphQLQuery(mutation, variables);
+            var resp = await _fixture.SendGraphQLRequest(mutation, variables);
 
             string respContent = await resp.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject(respContent);
@@ -73,7 +73,7 @@ namespace Borzoo.Web.Tests.Integ
                 userId = _fixture.User.Id,
                 list = new {id = "GROCERIES", title = "ToDo Groceries"}
             };
-            var resp = await _fixture.SendGraphQLQuery(mutation, variables);
+            var resp = await _fixture.SendGraphQLRequest(mutation, variables);
 
             string respContent = await resp.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject(respContent);
@@ -114,7 +114,7 @@ namespace Borzoo.Web.Tests.Integ
                     tags = new[] {"_priority:5"}
                 }
             };
-            var resp = await _fixture.SendGraphQLQuery(mutation, variables);
+            var resp = await _fixture.SendGraphQLRequest(mutation, variables);
 
             string respContent = await resp.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject(respContent);
