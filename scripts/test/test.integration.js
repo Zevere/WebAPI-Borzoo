@@ -5,6 +5,7 @@ const {
     logStep,
     logInfo
 } = require('../logging');
+const usingMongoContainer = require('./container-provider').usingMongoContainer
 
 const rootDir = path.resolve(`${__dirname}/../..`)
 $.config.fatal = true
@@ -26,8 +27,8 @@ logInfo('Run integration tests (SQLite)'); {
 
 logInfo('Run integration tests (MongoDb)'); {
     $.cd(`${rootDir}/test/Borzoo.Web.Tests.Integ`)
-    containerId = $.exec('docker run -d -p 27017:27017 mongo').stdout.trim()
-    try {
+    usingMongoContainer(() => {
+
         fs.writeFileSync(`appsettings.Staging.json`, JSON.stringify({
             "data": {
                 "use": "mongo",
@@ -37,7 +38,6 @@ logInfo('Run integration tests (MongoDb)'); {
             }
         }, undefined, 2))
         $.exec(`dotnet xunit -configuration Release -stoponfail -verbose`)
-    } finally {
-        $.exec(`docker rm -f ${containerId}`)
-    }
+
+    })
 }
