@@ -31,6 +31,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Borzoo.Web.Tests.Integ", "t
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{1EACB75C-16EF-4CCD-8EFD-75DD4ABE3B42}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dependencies", "dependencies", "{2B67815E-A9C8-4AA7-9288-51BC7FBE0E40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphQl.AspNetCore", "dependencies\graphql-aspnetcore\GraphQl.AspNetCore\GraphQl.AspNetCore.csproj", "{51F14FDA-383C-4D94-8846-3B368D1B50E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphQL.AspNetCore.Graphiql", "dependencies\graphql-aspnetcore\GraphQL.AspNetCore.Graphiql\GraphQL.AspNetCore.Graphiql.csproj", "{E5A02989-881A-4F1B-93AA-9585C320562F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +87,14 @@ Global
 		{F4EAAF80-B82E-48F6-A304-31FDF2796442}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4EAAF80-B82E-48F6-A304-31FDF2796442}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4EAAF80-B82E-48F6-A304-31FDF2796442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51F14FDA-383C-4D94-8846-3B368D1B50E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F14FDA-383C-4D94-8846-3B368D1B50E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F14FDA-383C-4D94-8846-3B368D1B50E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51F14FDA-383C-4D94-8846-3B368D1B50E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5A02989-881A-4F1B-93AA-9585C320562F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5A02989-881A-4F1B-93AA-9585C320562F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5A02989-881A-4F1B-93AA-9585C320562F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5A02989-881A-4F1B-93AA-9585C320562F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,5 +115,7 @@ Global
 		{6C0B27CB-3C9A-43AB-ADB2-AEDD1599BF72} = {1EACB75C-16EF-4CCD-8EFD-75DD4ABE3B42}
 		{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3} = {1EACB75C-16EF-4CCD-8EFD-75DD4ABE3B42}
 		{A3B5B1DF-2227-4918-B180-9E882FA43547} = {1EACB75C-16EF-4CCD-8EFD-75DD4ABE3B42}
+		{51F14FDA-383C-4D94-8846-3B368D1B50E0} = {2B67815E-A9C8-4AA7-9288-51BC7FBE0E40}
+		{E5A02989-881A-4F1B-93AA-9585C320562F} = {2B67815E-A9C8-4AA7-9288-51BC7FBE0E40}
 	EndGlobalSection
 EndGlobal

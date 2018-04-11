@@ -11,7 +11,7 @@ namespace Borzoo.GraphQL
 
             Field<UserType>("createUser",
                 "Create a new user", new QueryArguments(
-                    new QueryArgument<NonNullGraphType<UserInput>> {Name = "user"}
+                    new QueryArgument<NonNullGraphType<UserInputType>> {Name = "user"}
                 ),
                 resolver.CreateUserAsync
             );
@@ -23,7 +23,7 @@ namespace Borzoo.GraphQL
                         Name = "owner",
                         Description = "Username of owner"
                     },
-                    new QueryArgument<NonNullGraphType<TaskListInput>> {Name = "list"}
+                    new QueryArgument<NonNullGraphType<TaskListInputType>> {Name = "list"}
                 ),
                 resolver.CreateTaskListAsync
             );
@@ -40,7 +40,7 @@ namespace Borzoo.GraphQL
                         Name = "list",
                         Description = "name of list for task"
                     },
-                    new QueryArgument<NonNullGraphType<TaskItemInput>> {Name = "task"}
+                    new QueryArgument<NonNullGraphType<TaskItemInputType>> {Name = "task",}
                 ),
                 resolver.CreateTaskItemAsync
             );

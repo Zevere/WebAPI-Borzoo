@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Borzoo.Data.Abstractions.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -30,7 +29,7 @@ namespace Borzoo.GraphQL.Models
 
         [MinLength(1)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string[] Tags { get; set; }
+        public List<string> Tags { get; set; }
 
         public static explicit operator TaskItem(TaskItemCreationDto dto) =>
             dto is null
@@ -41,7 +40,7 @@ namespace Borzoo.GraphQL.Models
                     Title = dto.Title,
                     Description = dto.Description,
                     Due = dto.Due,
-                    Tags = dto.Tags.ToArray()
+                    Tags = dto.Tags?.ToArray()
                 };
     }
 }

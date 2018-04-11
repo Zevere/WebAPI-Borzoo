@@ -14,15 +14,14 @@ namespace Borzoo.Web.Helpers
         {
             services.AddTransient<IQueryResolver, QueryResolver>();
 
-            services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
             services.AddSingleton<UserType>();
-            services.AddSingleton<UserInput>();
+            services.AddSingleton<UserInputType>();
             services.AddSingleton<TaskListType>();
-            services.AddSingleton<TaskListInput>();
+            services.AddSingleton<TaskListInputType>();
             services.AddSingleton<TaskItemType>();
-            services.AddSingleton<TaskItemInput>();
+            services.AddSingleton<TaskItemInputType>();
 
             services.AddSingleton<ZevereQuery>();
             services.AddSingleton<ZevereMutation>();

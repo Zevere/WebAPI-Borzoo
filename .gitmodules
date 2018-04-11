@@ -1,0 +1,3 @@
+[submodule "dependencies/graphql-aspnetcore"]
+	path = dependencies/graphql-aspnetcore
+	url = https://github.com/pouladpld/graphql-aspnetcore.git

@@ -3,9 +3,9 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
-    public class UserInput : InputObjectGraphType<UserCreationDto>
+    public class UserInputType : InputObjectGraphType<UserCreationDto>
     {
-        public UserInput()
+        public UserInputType()
         {
             Name = "UserInput";
             Description = "Input for creating a new user or organization";

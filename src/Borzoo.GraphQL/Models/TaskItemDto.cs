@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Borzoo.Data.Abstractions.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -17,7 +18,7 @@ namespace Borzoo.GraphQL.Models
         public string Description { get; set; }
 
         public DateTime? Due { get; set; }
-        
+
         public string[] Tags { get; set; }
 
         public DateTime CreatedAt { get; set; }

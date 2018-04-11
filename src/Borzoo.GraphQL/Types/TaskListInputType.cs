@@ -3,9 +3,9 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
-    public class TaskListInput : InputObjectGraphType<TaskListCreationDto>
+    public class TaskListInputType : InputObjectGraphType<TaskListCreationDto>
     {
-        public TaskListInput()
+        public TaskListInputType()
         {
             Name = "ListInput";
             Description = "Input for creating a new task list";

@@ -27,7 +27,7 @@ namespace Borzoo.Web.Tests.Integ
                 createUser(user: $u) { 
                     id firstName lastName token daysJoined joinedAt
                     lists { id }
-                } 
+                }
             }";
             var variables = new
             {
@@ -89,7 +89,7 @@ namespace Borzoo.Web.Tests.Integ
             object[] tasks = JArray.FromObject(result.data.createList.tasks).ToObject<object[]>();
             Assert.Empty(tasks);
 
-            _fixture.TaskList = result.data.createList;
+            _fixture.TaskListDto = result.data.createList;
         }
 
         [OrderedFact]
@@ -104,7 +104,7 @@ namespace Borzoo.Web.Tests.Integ
             var variables = new
             {
                 userId = _fixture.User.Id,
-                listId = _fixture.TaskList["id"].Value<string>(),
+                listId = (string) _fixture.TaskListDto.id,
                 task = new
                 {
                     id = "fruit",
@@ -138,16 +138,16 @@ namespace Borzoo.Web.Tests.Integ
             Assert.NotEmpty(tags);
             Assert.Collection(tags, Assert.NotEmpty);
 
-            _fixture.TaskItem = JObject.FromObject(result.data.addTask).ToObject<TaskItemDto>();
+            _fixture.TaskItemDto = JObject.FromObject(result.data.addTask).ToObject<TaskItemDto>();
         }
 
         public class Fixture : TestHostFixture<Startup>
         {
             public UserDto User;
 
-            public JObject TaskList;
+            public dynamic TaskListDto;
 
-            public TaskItemDto TaskItem;
+            public dynamic TaskItemDto;
         }
     }
 }

@@ -100,7 +100,7 @@ namespace Borzoo.Web.GraphQL
                 return default;
             }
 
-            return (TaskList) entity;
+            return entity;
         }
 
         public async Task<TaskList[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
@@ -113,7 +113,7 @@ namespace Borzoo.Web.GraphQL
                 .ConfigureAwait(false);
 
             var taskListDtos = taskLists
-                .Select(tl => (TaskList) tl)
+                .Select(tl => tl)
                 .ToArray();
 
             return taskListDtos;
@@ -153,7 +153,7 @@ namespace Borzoo.Web.GraphQL
                     .GetByIdAsync(context.Source.OwnerId, cancellationToken: context.CancellationToken)
                     .ConfigureAwait(false)
                 ).DisplayId;
-            
+
             await _taskItemRepo.SetTaskListAsync(userName, tasklistName, context.CancellationToken)
                 .ConfigureAwait(false);
 

@@ -1,11 +1,12 @@
 ﻿using Borzoo.GraphQL.Models;
 using GraphQL.Types;
+using Newtonsoft.Json.Linq;
 
 namespace Borzoo.GraphQL.Types
 {
-    public class TaskItemInput : InputObjectGraphType<TaskItemCreationDto>
+    public class TaskItemInputType : InputObjectGraphType<TaskItemCreationDto>
     {
-        public TaskItemInput()
+        public TaskItemInputType()
         {
             Name = "TaskInput";
             Description = "Input for creating a new task";
