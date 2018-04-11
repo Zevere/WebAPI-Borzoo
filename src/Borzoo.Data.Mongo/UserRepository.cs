@@ -13,6 +13,8 @@ namespace Borzoo.Data.Mongo
     {
         private readonly IMongoCollection<User> _collection;
 
+        private FilterDefinitionBuilder<User> Filter => Builders<User>.Filter;
+
         public UserRepository(IMongoCollection<User> collection)
         {
             _collection = collection;
@@ -52,9 +54,11 @@ namespace Borzoo.Data.Mongo
             CancellationToken cancellationToken = default)
         {
             name = Regex.Escape(name);
-            var filter = Builders<User>.Filter.And(
-                Builders<User>.Filter.Where(u => includeDeletedRecords || !u.IsDeleted),
-                Builders<User>.Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i"))
+            var filter = Filter.And(
+                Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
+                includeDeletedRecords
+                    ? Filter.Where(u => u.IsDeleted)
+                    : Filter.Exists(u => u.IsDeleted, false)
             );
 
             User entity = await _collection

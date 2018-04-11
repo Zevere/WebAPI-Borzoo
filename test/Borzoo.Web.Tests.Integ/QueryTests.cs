@@ -5,6 +5,7 @@ using Borzoo.Tests.Framework;
 using Borzoo.Web.Tests.Integ.Framework;
 using Newtonsoft.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Borzoo.Web.Tests.Integ
 {
@@ -12,9 +13,12 @@ namespace Borzoo.Web.Tests.Integ
     {
         private readonly TestHostFixture<Startup> _fixture;
 
-        public QueryTests(TestHostFixture<Startup> fixture)
+        private readonly ITestOutputHelper _output;
+
+        public QueryTests(TestHostFixture<Startup> fixture, ITestOutputHelper output)
         {
             _fixture = fixture;
+            _output = output;
         }
 
         [OrderedFact]
@@ -31,7 +35,10 @@ namespace Borzoo.Web.Tests.Integ
             string respContent = await resp.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject(respContent);
 
+            _output.WriteLine(respContent);
+
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            Assert.Null(result.errors);
             Assert.Equal("bobby", (string) result.data.user.id);
             Assert.Equal("Bob", (string) result.data.user.firstName);
             Assert.Equal("Boo", (string) result.data.user.lastName);

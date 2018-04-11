@@ -19,7 +19,7 @@ namespace Borzoo.GraphQL.Types
             Field(_ => _.LastName, true)
                 .Description("User's last name");
 
-            Field(_ => _.Token)
+            Field(_ => _.Token, true)
                 .Description("Authentication token");
 
             Field(_ => _.DaysJoined)

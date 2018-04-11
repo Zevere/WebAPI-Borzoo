@@ -71,7 +71,7 @@ namespace Borzoo.Web.GraphQL
                     Path = new[] {"user"}
                 };
                 context.Errors.Add(err);
-                return default;
+                return null;
             }
 
             return (UserDto) entity;
