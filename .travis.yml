@@ -15,7 +15,9 @@ script:
   - npm run test
 deploy:
   provider: script
-  script: cd scripts && npm run "deploy:travis-ci"
+  script: >
+    cd "$TRAVIS_BUILD_DIR/scripts" &&
+    npm run "deploy:travis-ci"
   skip_cleanup: true
   on:
     branch: master
