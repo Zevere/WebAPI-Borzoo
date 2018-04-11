@@ -8,8 +8,8 @@
     "test": "npm run test:unit && npm run test:integ",
     "test:unit": "node test/test.unit.js",
     "test:integ": "node test/test.integration.js",
-    "predeploy:staging": "node deploy/travis-ci/predeploy-staging.js",
-    "deploy": "node deploy/deploy-docker-compose.js"
+    "deploy": "node deploy/deploy-docker-compose.js",
+    "deploy:travis-ci": "node deploy/travis-ci/predeploy-staging.js && npm run deploy"
   },
   "author": "",
   "license": "ISC",

@@ -10,16 +10,12 @@ install:
   - cd "$TRAVIS_BUILD_DIR/scripts"
   - npm install
 script:
-  - cd "$TRAVIS_BUILD_DIR"
-  - node scripts/build/build.js
-  - node scripts/test/test.unit.js
-  - node scripts/test/test.integration.js
+  - cd "$TRAVIS_BUILD_DIR/scripts"
+  - npm run build
+  - npm run test
 deploy:
   provider: script
-  script:
-    - cd "$TRAVIS_BUILD_DIR"
-    - node scripts/deploy/travis-ci/predeploy-staging.js
-    - node scripts/deploy/deploy-docker-compose.js
+  script: cd scripts && npm run "deploy:travis-ci"
   skip_cleanup: true
   on:
     branch: master

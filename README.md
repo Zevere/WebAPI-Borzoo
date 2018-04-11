@@ -6,6 +6,7 @@ A [Zevere GraphQL Web API](https://github.com/Zevere/Zevere-Specs/) implementati
 
 This is a Web API with only 1 GraphQL endpoint so
 
+1. Clone dependency projects: `git submodule update --init --recursive`
 1. Open the solution in a .NET IDE such as Visual Studio 2017 or Rider
 1. Press _Run_!
 1. Hit [http://localhost:5000/zv/GraphiQL](http://localhost:5000/zv/GraphiQL)
