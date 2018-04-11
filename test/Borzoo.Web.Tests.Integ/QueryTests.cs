@@ -33,9 +33,8 @@ namespace Borzoo.Web.Tests.Integ
             var resp = await _fixture.SendGraphQLRequest(userQuery);
 
             string respContent = await resp.Content.ReadAsStringAsync();
-            dynamic result = JsonConvert.DeserializeObject(respContent);
-
             _output.WriteLine(respContent);
+            dynamic result = JsonConvert.DeserializeObject(respContent);
 
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
             Assert.Null(result.errors);

@@ -50,11 +50,6 @@ namespace Borzoo.Web.Tests.Integ.Framework
 
             Client = _server.CreateClient();
             Client.BaseAddress = new Uri("http://localhost");
-
-            if (configuration["data:use"] == "mongo")
-            {
-                DataInitializer.InitMongoDb(configuration["data:mongo:connection"]).GetAwaiter().GetResult();
-            }
         }
 
         public async Task<HttpResponseMessage> SendGraphQLRequest(

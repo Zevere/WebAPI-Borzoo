@@ -1,5 +1,7 @@
 version: CI-Build-{build}
 image: Visual Studio 2017
+install:
+  - git submodule update --init --recursive
 before_build:
   - nuget restore Borzoo.sln
 build:

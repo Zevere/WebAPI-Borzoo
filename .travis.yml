@@ -1,20 +1,25 @@
 dist: trusty
 sudo: required
+shallow_clone: true
 services:
   - docker
 language: csharp
 mono: none
 dotnet: 2.1.4
 install:
-  - cd scripts
+  - cd "$TRAVIS_BUILD_DIR/scripts"
   - npm install
-  - cd ..
 script:
+  - cd "$TRAVIS_BUILD_DIR"
   - node scripts/build/build.js
-  - node scripts/test/test.js
+  - node scripts/test/test.unit.js
+  - node scripts/test/test.integration.js
 deploy:
   provider: script
-  script: node scripts/deploy/travis-ci/predeploy-staging.js && node scripts/deploy/deploy-docker-compose.js
+  script:
+    - cd "$TRAVIS_BUILD_DIR"
+    - node scripts/deploy/travis-ci/predeploy-staging.js
+    - node scripts/deploy/deploy-docker-compose.js
   skip_cleanup: true
   on:
     branch: master

@@ -7,6 +7,7 @@ using Borzoo.Web.Tests.Integ.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Borzoo.Web.Tests.Integ
 {
@@ -14,9 +15,12 @@ namespace Borzoo.Web.Tests.Integ
     {
         private readonly Fixture _fixture;
 
-        public MutationTests(Fixture fixture)
+        private readonly ITestOutputHelper _output;
+
+        public MutationTests(Fixture fixture, ITestOutputHelper output)
         {
             _fixture = fixture;
+            _output = output;
         }
 
         [OrderedFact]
@@ -41,6 +45,7 @@ namespace Borzoo.Web.Tests.Integ
             var resp = await _fixture.SendGraphQLRequest(mutation, variables);
 
             string respContent = await resp.Content.ReadAsStringAsync();
+            _output.WriteLine(respContent);
             dynamic result = JsonConvert.DeserializeObject(respContent);
 
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
@@ -76,6 +81,7 @@ namespace Borzoo.Web.Tests.Integ
             var resp = await _fixture.SendGraphQLRequest(mutation, variables);
 
             string respContent = await resp.Content.ReadAsStringAsync();
+            _output.WriteLine(respContent);
             dynamic result = JsonConvert.DeserializeObject(respContent);
 
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
@@ -117,6 +123,7 @@ namespace Borzoo.Web.Tests.Integ
             var resp = await _fixture.SendGraphQLRequest(mutation, variables);
 
             string respContent = await resp.Content.ReadAsStringAsync();
+            _output.WriteLine(respContent);
             dynamic result = JsonConvert.DeserializeObject(respContent);
 
             Assert.Equal(HttpStatusCode.OK, resp.StatusCode);

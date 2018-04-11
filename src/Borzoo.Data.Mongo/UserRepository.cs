@@ -24,7 +24,7 @@ namespace Borzoo.Data.Mongo
         {
             try
             {
-                await _collection.InsertOneAsync(entity, default, cancellationToken);
+                await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
             }
             catch (MongoWriteException e)
                 when (e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
@@ -54,12 +54,12 @@ namespace Borzoo.Data.Mongo
             CancellationToken cancellationToken = default)
         {
             name = Regex.Escape(name);
-            var filter = Filter.And(
-                Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
-                includeDeletedRecords
-                    ? Filter.Where(u => u.IsDeleted)
-                    : Filter.Exists(u => u.IsDeleted, false)
-            );
+           var filter = Filter.And(
+               Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
+               includeDeletedRecords
+                   ? Filter.Where(u => u.IsDeleted)
+                   : Filter.Exists(u => u.IsDeleted, false)
+           );
 
             User entity = await _collection
                 .Find(filter)
