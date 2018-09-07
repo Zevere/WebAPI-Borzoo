@@ -4,8 +4,31 @@ A [Zevere GraphQL Web API](https://github.com/Zevere/Zevere-Specs/) implementati
 
 ## Gettings Started
 
-This is a Web API with only 1 GraphQL endpoint so
+This is a Web API with only 1 GraphQL endpoint.
 
+### CLI
+1. Clone the repository
+```sh
+git clone https://github.com/Zevere/WebAPI-Borzoo.git
+```
+2. Switch to the WebAPI-Borzoo directory
+```sh
+cd WebAPI-Borzoo
+```
+3. Clone dependency projects
+```sh
+git submodule update --init --recursive
+```
+4. Restore packages
+```sh
+dotnet restore
+```
+5. Run the web project
+```sh
+dotnet run ./src/Borzoo.Web/Borzoo.Web.csproj
+```
+
+### Visual Studio 2017/Rider
 1. Clone dependency projects: `git submodule update --init --recursive`
 1. Open the solution in a .NET IDE such as Visual Studio 2017 or Rider
 1. Press _Run_!
