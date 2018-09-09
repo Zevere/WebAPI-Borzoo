@@ -1,21 +1,36 @@
 # Borzoo
 
-A [Zevere GraphQL Web API](https://github.com/Zevere/Zevere-Specs/) implementation in ASP.NET Core C#.
+A [Zevere GraphQL Web API] implementation in ASP.NET Core C#.
 
-## Gettings Started
+## Getting Started
 
-This is a Web API with only 1 GraphQL endpoint so
+Make sure you have .NET Core SDK 2.0 installed on your system.
 
-1. Clone dependency projects: `git submodule update --init --recursive`
-1. Open the solution in a .NET IDE such as Visual Studio 2017 or Rider
-1. Press _Run_!
-1. Hit [http://localhost:5000/zv/GraphiQL](http://localhost:5000/zv/GraphiQL)
-1. Execute a GraphQL query like:
+First, clone this repository and run the web app:
+
+```sh
+# Clone the repository
+git clone https://github.com/Zevere/WebAPI-Borzoo.git
+
+# Switch to the WebAPI-Borzoo directory
+cd WebAPI-Borzoo
+
+# Clone dependency projects
+git submodule update --init --recursive
+
+# Run the web project from CLI or an IDE
+dotnet run ./src/Borzoo.Web/Borzoo.Web.csproj
+```
+
+After running the web app, hit [http://localhost:5000/zv/GraphiQL](http://localhost:5000/zv/GraphiQL) and execute a GraphQL query like:
 
 ```graphql
 {
   user(userId: "bobby") {
-    firstName lastName joinedAt lists { id }
+    firstName
+    lastName
+    joinedAt
+    lists { id }
   }
 }
 ```
@@ -33,7 +48,7 @@ This is a Web API with only 1 GraphQL endpoint so
 
 ## Deployment
 
-CI/CD pipeline is set with the help of [AppVeyor](https://www.appveyor.com/), [Travis-CI](https://travis-ci.org/), and Docker.
+CI/CD pipeline is set with the help of [AppVeyor], [Travis-CI], and Docker.
 
 ### Continuous Integration
 
@@ -72,7 +87,7 @@ Deployment only happens if commit is pushed on `master` branch. If all the tests
 
 Deployment server needs to be accessible from Travis-CI container and have a Docker daemon. See [Ubuntu Server Setup](./scripts/deploy/ubuntu-server-setup.md) for more info.
 
-#### Depoloyment Settings
+#### Deployment Settings
 
 As mentioned in [`travis file`](./.travis.yml), some environment variables should be set to connect to deployment server from Travis-CI build container. Use [`gen-docker-certs.js`](./scripts/deploy/travis-ci/gen-docker-certs.js) script to create a JSON-serialized values for them.
 
@@ -93,3 +108,9 @@ Docker Compose deploys multiple containers at the same time. (See [`docker-compo
 #### Nginx Configurations
 
 Nginx acts as a reverse proxy here. Nginx container loads the configurations file on the host at `/var/nginx/nginx.conf`. See the [sample `nginx.conf`](./scripts/deploy/nginx.conf).
+
+<!-- ------ -->
+
+[Zevere GraphQL Web API]: https://github.com/Zevere/Zevere-Specs
+[AppVeyor]: https://www.appveyor.com
+[Travis-CI]: https://travis-ci.org
