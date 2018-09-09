@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "npm run build && npm run test && npm run predeploy:staging && npm run deploy",
-    "build": "node build/build.js",
+    "build": "node build/index.js",
     "test": "npm run test:unit && npm run test:integ",
     "test:unit": "node test/test.unit.js",
     "test:integ": "node test/test.integration.js",
