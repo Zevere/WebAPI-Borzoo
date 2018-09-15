@@ -14,13 +14,13 @@ function push_image_to_heroku(app, source, dyno, user, token) {
     console.info('pushing docker image to heroku')
 
     console.debug('connecting to heroku docker registry')
-    $.exec(`docker login --username "${user}" --password "${token}" registry.heroku.com`)
+    $.exec(`docker login --username ${user} --password ${token} registry.heroku.com`)
 
     console.debug('tagging the image')
-    $.exec(`docker tag "${source}" "registry.heroku.com/${app}/${dyno}"`)
+    $.exec(`docker tag ${source} registry.heroku.com/${app}/${dyno}`)
 
     console.debug('pushing the image')
-    $.exec(`docker push "registry.heroku.com/${app}/${dyno}"`)
+    $.exec(`docker push registry.heroku.com/${app}/${dyno}`)
 }
 
 function release_heroku_app(app, source, dyno, token) {
@@ -38,8 +38,8 @@ function release_heroku_app(app, source, dyno, token) {
     })
 
     $.exec(
-        `curl -X PATCH "https://api.heroku.com/apps/${app}/formation" ` +
-        `-H "Authorization: Bearer ${token}" ` +
+        `curl -X PATCH https://api.heroku.com/apps/${app}/formation ` +
+        `-H 'Authorization: Bearer ${token}' ` +
         `-H "Content-Type: application/json" ` +
         `-H "Accept: application/vnd.heroku+json; version=3.docker-releases" ` +
         `-d ${JSON.stringify(post_data)}`

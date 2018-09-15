@@ -4,18 +4,18 @@ require('../logging')
 function get_environment_name() {
     console.info('verifying environment name')
 
-    const environment_name = process.argv[2]
+    const environment_name = process.argv[process.argv.length - 1]
     if (environment_name && environment_name.length) {
-        console.debug(`environment is "${environment_name}".`)
+        console.debug(`environment is ${environment_name}.`)
         return environment_name
     } else {
         throw `No environment name is passed.\n` +
-        `\tExample: node ci/deploy Staging`
+            `\tExample: node ci/deploy Staging`
     }
 }
 
 function get_deployments_for_env(environment_name) {
-    console.info(`finding deployments for environment "${environment_name}".`)
+    console.info(`finding deployments for environment ${environment_name}.`)
 
     const jsonValue = process.env['DEPLOY_SETTINGS_JSON']
     let deployment_map;
@@ -27,19 +27,19 @@ function get_deployments_for_env(environment_name) {
 
     const env_deployments = deployment_map[environment_name];
     if (!env_deployments) {
-        throw `There are no field for environment "${environment_name}" in "DEPLOY_SETTINGS_JSON" value.`
+        throw `There are no field for environment ${environment_name} in "DEPLOY_SETTINGS_JSON" value.`
     }
     if (!(Array.isArray(env_deployments) && env_deployments.length)) {
-        console.warn(`There are deployments specified for environment "${environment_name}".`)
+        console.warn(`There are deployments specified for environment ${environment_name}.`)
     }
 
-    console.debug(`"${env_deployments.length || 0}" deployments found.`)
+    console.debug(`${env_deployments.length || 0} deployments found.`)
 
     return env_deployments
 }
 
 function deploy(environment_name, deployment) {
-    console.info(`deploying to "${deployment.type}" for environment "${environment_name}".`)
+    console.info(`deploying to ${deployment.type} for environment ${environment_name}.`)
     const docker = require('./deploy_docker_registry')
     const heorku = require('./deploy_heroku')
 
@@ -59,7 +59,7 @@ function deploy(environment_name, deployment) {
             deployment.options.token
         )
     } else {
-        throw `Invalid deployment type "${deployment.type}".`
+        throw `Invalid deployment type ${deployment.type}.`
     }
 }
 
