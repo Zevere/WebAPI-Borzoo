@@ -27,10 +27,10 @@ function get_deployments_for_env(environment_name) {
 
     const env_deployments = deployment_map[environment_name];
     if (!env_deployments) {
-        throw `There are no field for environemnt "${environment_name}" in "DEPLOY_SETTINGS_JSON" value.`
+        throw `There are no field for environment "${environment_name}" in "DEPLOY_SETTINGS_JSON" value.`
     }
     if (!(Array.isArray(env_deployments) && env_deployments.length)) {
-        console.warn(`There are deployments specified for environemnt "${environment_name}".`)
+        console.warn(`There are deployments specified for environment "${environment_name}".`)
     }
 
     console.debug(`"${env_deployments.length || 0}" deployments found.`)
@@ -38,28 +38,28 @@ function get_deployments_for_env(environment_name) {
     return env_deployments
 }
 
-function deploy(environment_name, deployoment) {
-    console.info(`deploying to "${deployoment.type}" for environment "${environment_name}".`)
+function deploy(environment_name, deployment) {
+    console.info(`deploying to "${deployment.type}" for environment "${environment_name}".`)
     const docker = require('./deploy_docker_registry')
     const heorku = require('./deploy_heroku')
 
-    if (deployoment.type === 'docker') {
+    if (deployment.type === 'docker') {
         docker.deploy(
-            deployoment.options.source,
-            deployoment.options.target,
-            deployoment.options.user,
-            deployoment.options.pass
+            deployment.options.source,
+            deployment.options.target,
+            deployment.options.user,
+            deployment.options.pass
         )
-    } else if (deployoment.type === 'heroku') {
+    } else if (deployment.type === 'heroku') {
         heorku.deploy(
-            deployoment.options.app,
-            deployoment.options.source,
-            deployoment.options.dyno,
-            deployoment.options.user,
-            deployoment.options.token
+            deployment.options.app,
+            deployment.options.source,
+            deployment.options.dyno,
+            deployment.options.user,
+            deployment.options.token
         )
     } else {
-        throw `Invalid deployment type "${deployoment.type}".`
+        throw `Invalid deployment type "${deployment.type}".`
     }
 }
 
