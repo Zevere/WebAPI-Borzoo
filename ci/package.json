@@ -3,15 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "npm run build && npm run test && npm run predeploy:staging && npm run deploy",
-    "build": "node build/index.js",
-    "test": "npm run test:unit && npm run test:integ",
-    "test:unit": "node test/test.unit.js",
-    "test:integ": "node test/test.integration.js",
-    "deploy": "node deploy/deploy-docker-compose.js",
-    "deploy:travis-ci": "node deploy/travis-ci/predeploy-staging.js && npm run deploy"
+    "start": "npm run build && npm run test",
+    "build": "node build",
+    "test": "node test"
   },
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "chalk": "^2.3.1",
