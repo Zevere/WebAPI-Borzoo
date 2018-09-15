@@ -7,4 +7,4 @@ WORKDIR /app/
 ENV ASPNETCORE_ENVIRONMENT=Development
 ENV BORZOO_SETTINGS='{"data":{"sqlite":{"migrations":"/tmp/migrations.sql"}}}'
 
-ENTRYPOINT ["dotnet", "Borzoo.Web.dll"]
+CMD ASPNETCORE_URLS=http://+:${PORT:-80} dotnet Borzoo.Web.dll

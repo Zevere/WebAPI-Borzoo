@@ -6,7 +6,8 @@ const root = `${__dirname}/../..`
 
 
 module.exports.build_image = function () {
-    console.info('Build Docker Image')
+    const image_name = 'webapi-borzoo:latest'
+    console.info(`building Docker Image "${image_name}"`)
 
     console.debug('copying SQLite migrations file')
     $.cp(`${root}/src/Borzoo.Data.SQLite/scripts/migrations.sql`, `${root}/dist/`)
@@ -15,5 +16,5 @@ module.exports.build_image = function () {
     $.cp(`${root}/ci/build/borzoo-dev.Dockerfile`, `${root}/dist/Dockerfile`)
 
     console.debug('building docker image')
-    $.exec(`docker build -t webapi-borzoo:latest ${root}/dist/`)
+    $.exec(`docker build -t ${image_name} ${root}/dist/`)
 }
