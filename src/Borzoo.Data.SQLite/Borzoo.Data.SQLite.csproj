@@ -7,7 +7,7 @@
     <ProjectReference Include="..\Borzoo.Data.Abstractions\Borzoo.Data.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts" />
