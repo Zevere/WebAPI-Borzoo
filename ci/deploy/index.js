@@ -1,7 +1,4 @@
-const path = require('path')
 require('../logging')
-
-const root = path.join(__dirname, '..', '..')
 
 
 function get_environment_name() {
@@ -44,7 +41,7 @@ function get_deployments_for_env(environment_name) {
 function deploy(environment_name, deployoment) {
     console.info(`deploying to "${deployoment.type}" for environment "${environment_name}".`)
     const docker = require('./deploy_docker_registry')
-    // const heorku = require('./deploy-heroku')
+    const heorku = require('./deploy_heroku')
 
     if (deployoment.type === 'docker') {
         docker.deploy(
@@ -54,79 +51,18 @@ function deploy(environment_name, deployoment) {
             deployoment.options.pass
         )
     } else if (deployoment.type === 'heroku') {
-
+        heorku.deploy(
+            deployoment.options.app,
+            deployoment.options.source,
+            deployoment.options.dyno,
+            deployoment.options.user,
+            deployoment.options.token
+        )
     } else {
         throw `Invalid deployment type "${deployoment.type}".`
     }
 }
 
-/*
-function verify_heroku_env_vars(environment_name) {
-    const heroku_env_vars = [
-        process.env['HEROKU_APP_NAME_JSON'],
-        process.env['HEROKU_USERNAME'],
-        process.env['HEROKU_AUTH_TOKEN'],
-    ]
-
-    const are_all_heroku_vars_set = heroku_env_vars.every(v => v && v.length)
-    if (!are_all_heroku_vars_set && heroku_env_vars.some(v => !!v)) {
-        throw `All of the Heroku environment variables must be set.`
-    } else {
-        return
-    }
-
-    let app_name_map;
-    try {
-        app_name_map = JSON.parse(heroku_env_vars[0])
-    } catch (e) {
-        throw `Value of "HEROKU_APP_NAME_JSON" environment variable is not valid JSON.`
-    }
-
-    const heroku_app_name = app_name_map[environment_name]
-    if (heroku_app_name && heroku_app_name.length) {
-
-    } else {
-        throw `Heroku app name is not specified for environment "${environment_name}".\n` +
-            `\tExample: HEROKU_APP_NAME_JSON='{"${environment_name}":"foo"}'`
-    }
-
-    return {
-        app: heroku_app_name,
-        email: heroku_env_vars[1],
-        token: heroku_env_vars[2],
-    }
-}
-
-function deploy_heroku(options) {
-    console.info('deploying to Heroku')
-
-    const heroku_env_vars = [
-        process.env['HEROKU_APP_NAME_JSON'],
-        process.env['HEROKU_USERNAME'],
-        process.env['HEROKU_AUTH_TOKEN'],
-    ]
-
-    const are_all_heroku_vars_set = heroku_env_vars.every(v => v)
-    if (!are_all_heroku_vars_set && heroku_env_vars.some(v => !!v)) {
-        throw `All of the Heroku environment variables must be set.`
-    } else {
-        return
-    }
-
-    let app_name_map;
-    try {
-        app_name_map = JSON.parse(heroku_env_vars[0])
-    } catch (e) {
-        throw `Value of "HEROKU_APP_NAME_JSON" environment variable is not valid JSON.`
-    }
-
-    return {
-        map: app_name_map,
-        email: heroku_env_vars[1],
-        token: heroku_env_vars[2],
-    }
-}
-*/
 
 try {
     const environment_name = get_environment_name()

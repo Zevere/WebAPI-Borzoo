@@ -40,12 +40,12 @@ deploy:
 #   DEPLOY_SETTINGS_JSON: A mapping of environment to the deployment types and their options.
 #       '{
 #         "Staging": [
-#           { "type": "heroku", "options": { "app": "foo-staging", "user": "foo@example.org", "token": "TOKEN" } },
+#           { "type": "heroku", 
+#             "options": { "app": "foo-staging", "source": "foo:latest", "dyno": "web", "user": "foo@example.org", "token": "TOKEN" }
+#           },
 #           { "type": "docker", "options": { "source": "foo:edge", "target": "foo/bar:latest", "user": "foo", "pass": "PASS" } },
 #         ],
-#         "Production": [
-#           { "type": "heroku", "options": { "app": "bar-production", "user": "bar@example.org", "token": "TOKEN" } }
-#         ]
+#         "Production": [ /* ... */ ]
 #       }'
 ### if deploying using Docker Compose:
 #   DOCKER_SETTINGS_JSON: '{ "host":"example.org:1234", "ca":"", "cert":"", "key":"" }'
