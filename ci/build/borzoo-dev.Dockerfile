@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime
+FROM microsoft/dotnet:2.1.4-aspnetcore-runtime
 
 COPY app /app
 COPY migrations.sql /var/data/sqlite/

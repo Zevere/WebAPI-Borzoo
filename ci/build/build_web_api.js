@@ -23,7 +23,7 @@ module.exports.build_asp_net_core_app = function () {
         `--volume "${root}/deps:/project/deps" ` +
         `--volume "${root}/dist/app:/app" ` +
         `--workdir /project/src/Borzoo.Web/ ` +
-        `microsoft/dotnet:2.1-sdk ` +
+        `microsoft/dotnet:2.1.402-sdk ` +
         `dotnet publish --configuration Release --output /app/`
     )
 }

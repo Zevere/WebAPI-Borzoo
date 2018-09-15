@@ -11,7 +11,7 @@ notifications:
 services:
   - docker
 install:
-  - docker pull microsoft/dotnet:2.1-sdk
+  - docker pull microsoft/dotnet:2.1.402-sdk
   - cd ci && npm install && cd ..
 
 script:
