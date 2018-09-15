@@ -1,6 +1,6 @@
 [submodule "deps/graphql-aspnetcore"]
 	path = deps/graphql-aspnetcore
-	url = https://github.com/JuergenGutsch/graphql-aspnetcore.git
+	url = https://github.com/poulad/graphql-aspnetcore.git
 [submodule "deps/EnvJson"]
 	path = deps/EnvJson
 	url = https://github.com/poulad/EnvJson.git

@@ -22,7 +22,8 @@ deploy:
     skip_cleanup: true
     script: node ci/deploy Staging
     on:
-      branch: develop
+      branch: ci
+# TODO branch: develop      
   - provider: script
     skip_cleanup: true
     script: node ci/deploy Production
