@@ -8,16 +8,18 @@ namespace Borzoo.GraphQL.Types
         public UserInputType()
         {
             Name = "UserInput";
-            Description = "Input for creating a new user or organization";
+            Description = "Input for creating a new user account";
 
             Field(_ => _.Name)
-                .Description("The desired user name. User names are case insensitive. " +
+                .Description("The desired user name. User names are case-insensitive. " +
                              "Valid characters are ASCII alphanumeric characters, _, ., and -.");
             Field(_ => _.FirstName).Description("User's first name");
             Field(_ => _.Passphrase).Description("Passphrase as clear text");
 
             Field(_ => _.LastName, true).Description("User's last name");
-            Field(_ => _.Members, true).Description("If organization user, user ID of team members");
+            Field(_ => _.Members, true).Description(
+                "If creating an organization user, user IDs of team members. They will be added as collaborators."
+            );
         }
     }
 }

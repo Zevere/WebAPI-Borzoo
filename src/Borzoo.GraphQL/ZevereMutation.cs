@@ -10,7 +10,7 @@ namespace Borzoo.GraphQL
             Name = nameof(ZevereMutation);
 
             Field<UserType>("createUser",
-                "Create a new user", new QueryArguments(
+                "Create a new user account", new QueryArguments(
                     new QueryArgument<NonNullGraphType<UserInputType>> {Name = "user"}
                 ),
                 resolver.CreateUserAsync
@@ -27,7 +27,7 @@ namespace Borzoo.GraphQL
                 ),
                 resolver.CreateTaskListAsync
             );
-            
+
             Field<TaskItemType>("addTask",
                 "Add a new task to the list", new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>>

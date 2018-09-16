@@ -14,7 +14,6 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "launchBrowser": true,
       "launchUrl": "http://localhost:5000/zv/GraphiQL"
     },
     "IIS Express": {
@@ -22,7 +21,6 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "launchBrowser": true,
       "launchUrl": "http://localhost:5000/zv/GraphiQL"
     }
   }

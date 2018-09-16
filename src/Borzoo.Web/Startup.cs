@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Borzoo.Web
 {
@@ -55,7 +54,7 @@ namespace Borzoo.Web
                     {
                         new AssertionRequirement(authContext => authContext.User.FindFirstValue("token") != default)
                     },
-                    new[] { "Basic" });
+                    new[] {"Basic"});
             });
 
             #endregion
@@ -65,14 +64,10 @@ namespace Borzoo.Web
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
         {
+            logger.LogInformation($@"Using database ""{Configuration["data:use"]}"".");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-
-            logger.LogInformation($@"Using database ""{Configuration["data:use"]}"".");
-            if (new[] { "Development", "Staging" }.Contains(env.EnvironmentName))
-            {
                 app.SeedData(Configuration.GetSection("data"));
             }
 
@@ -81,11 +76,7 @@ namespace Borzoo.Web
             app.UseGraphQl("/zv/GraphQL");
             app.UseGraphiql("/zv/GraphiQL", opts => { opts.GraphQlEndpoint = "/zv/GraphQL"; });
 
-            app.Run(context =>
-            {
-                context.Response.Redirect("https://github.com/Zevere");
-                return Task.CompletedTask;
-            });
+            app.Run(context => context.Response.WriteAsync("Hello, World! Welcome to Borzoo ;)"));
         }
     }
 }
