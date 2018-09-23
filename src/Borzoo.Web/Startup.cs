@@ -1,4 +1,5 @@
-﻿using Borzoo.Web.Data;
+﻿using System;
+using Borzoo.Web.Data;
 using Borzoo.Web.Helpers;
 using Borzoo.Web.Middlewares.BasicAuth;
 using Microsoft.AspNetCore.Authentication;
@@ -60,6 +61,8 @@ namespace Borzoo.Web
             #endregion
 
             services.AddGraphQL();
+
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
@@ -70,6 +73,13 @@ namespace Borzoo.Web
                 app.UseDeveloperExceptionPage();
                 app.SeedData(Configuration.GetSection("data"));
             }
+
+            app.UseCors(cors => cors
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetPreflightMaxAge(TimeSpan.FromDays(7))
+            );
 
             app.UseAuthentication();
 
