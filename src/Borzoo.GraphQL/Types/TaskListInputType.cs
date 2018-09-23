@@ -12,8 +12,10 @@ namespace Borzoo.GraphQL.Types
 
             Field(_ => _.Id)
                 .Description("The desired task list name. Names are case insensitive and " +
-                             "valid characters are ASCII alphanumeric characters, _, ., and -.");
-            Field(_ => _.Title).Description("Title of task list");
+                             "valid characters are ASCII alphanumeric characters, '_', '.', and '-'.");
+
+            Field(_ => _.Title)
+                .Description("Short title of task list");
         }
     }
 }

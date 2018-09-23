@@ -10,7 +10,7 @@ namespace Borzoo.GraphQL
             Name = nameof(ZevereQuery);
 
             Field<UserType>("user",
-                "User",
+                "Get user account information by id",
                 new QueryArguments(new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "userId"}),
                 resolver.GetUserAsync
             );

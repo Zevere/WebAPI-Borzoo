@@ -15,12 +15,16 @@ namespace Borzoo.GraphQL.Types
                 .Description("List's ID");
 
             Field(_ => _.Title)
-                .Description("Title of the list");
+                .Description("Short title of this list");
 
             Field(_ => _.CreatedAt)
                 .Description("List creation date");
 
-            Field<ListGraphType<TaskItemType>>("tasks", "task items", null, queryResolver.GetTaskItemsForListAsync);
+            Field<ListGraphType<TaskItemType>>(
+                "tasks",
+                "Task items in this list",
+                resolve: queryResolver.GetTaskItemsForListAsync
+            );
         }
     }
 }

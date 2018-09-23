@@ -8,27 +8,31 @@ namespace Borzoo.GraphQL.Types
         public UserType(IQueryResolver queryResolver)
         {
             Name = "User";
-            Description = "A Zevere user";
+            Description = "A Zevere user account";
 
             Field(_ => _.Id)
-                .Description("User's ID");
+                .Description("User name");
 
             Field(_ => _.FirstName)
-                .Description("User's first name");
+                .Description("First name");
 
             Field(_ => _.LastName, true)
-                .Description("User's last name");
+                .Description("Last name");
 
             Field(_ => _.Token, true)
                 .Description("Authentication token");
 
             Field(_ => _.DaysJoined)
-                .Description("Number of days this user has joined.");
+                .Description("Number of days this user has joined");
 
             Field(_ => _.JoinedAt)
                 .Description("The date account was created in UTC format. Time should be set to the midnight.");
 
-            Field<ListGraphType<TaskListType>>("lists", "task lists", null, queryResolver.GetTaskListsForUserAsync);
+            Field<ListGraphType<TaskListType>>(
+                "lists",
+                "Tasks lists that this user has access to",
+                resolve: queryResolver.GetTaskListsForUserAsync
+            );
         }
     }
 }

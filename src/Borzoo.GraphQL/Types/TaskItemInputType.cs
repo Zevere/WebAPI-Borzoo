@@ -1,6 +1,5 @@
 ﻿using Borzoo.GraphQL.Models;
 using GraphQL.Types;
-using Newtonsoft.Json.Linq;
 
 namespace Borzoo.GraphQL.Types
 {
@@ -13,16 +12,19 @@ namespace Borzoo.GraphQL.Types
 
             Field(_ => _.Id)
                 .Description("The desired task list name. Names are case insensitive and " +
-                             "valid characters are ASCII alphanumeric characters, _, ., and -.");
+                             "valid characters are ASCII alphanumeric characters, '_', '.', and '-'.");
 
             Field(_ => _.Title)
-                .Description("Title of task list");
+                .Description("Short title of the new task");
 
-            Field(_ => _.Description, true);
+            Field(_ => _.Description, true)
+                .Description("Description of the new task");
 
-            Field(_ => _.Due, true, typeof(DateGraphType));
+            Field(_ => _.Due, true, typeof(DateGraphType))
+                .Description("Due data of the new task");
 
-            Field(_ => _.Tags, true, typeof(ListGraphType<StringGraphType>));
+            Field(_ => _.Tags, true, typeof(ListGraphType<StringGraphType>))
+                .Description("List of tags on the new task item");
         }
     }
 }

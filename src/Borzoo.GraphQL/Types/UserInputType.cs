@@ -12,9 +12,9 @@ namespace Borzoo.GraphQL.Types
 
             Field(_ => _.Name)
                 .Description("The desired user name. User names are case-insensitive. " +
-                             "Valid characters are ASCII alphanumeric characters, _, ., and -.");
+                             "Valid characters are ASCII alphanumeric characters, '_', '.', and '-'.");
             Field(_ => _.FirstName).Description("User's first name");
-            Field(_ => _.Passphrase).Description("Passphrase as clear text");
+            Field(_ => _.Passphrase).Description("Passphrase in clear text");
 
             Field(_ => _.LastName, true).Description("User's last name");
             Field(_ => _.Members, true).Description(

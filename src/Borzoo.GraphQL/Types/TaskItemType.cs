@@ -11,18 +11,19 @@ namespace Borzoo.GraphQL.Types
             Description = "Task item";
 
             Field(_ => _.Id)
-                .Description("task's ID");
+                .Description("Task's ID");
 
             Field(_ => _.Title)
-                .Description("Title of the task");
+                .Description("Short title of this task");
 
             Field(_ => _.Description)
-                .Description("Description of the task");
+                .Description("Description of this task");
 
             Field(_ => _.Due, true, typeof(DateGraphType))
-                .Description("Due date for the task, if exists");
+                .Description("Due date for this task");
 
-            Field(_ => _.Tags, true, typeof(ListGraphType<StringGraphType>));
+            Field(_ => _.Tags, true, typeof(ListGraphType<StringGraphType>))
+                .Description("List of tags associated with this task");
 
             Field(_ => _.CreatedAt)
                 .Description("Task creation date");
