@@ -47,10 +47,10 @@ namespace Borzoo.Data.SQLite
         }
 
         public static string GetDbFileConnectionString(string path) =>
-            "" + new SqliteConnectionStringBuilder
+            new SqliteConnectionStringBuilder
             {
                 DataSource = Path.GetFullPath(path),
                 Mode = SqliteOpenMode.ReadWriteCreate,
-            };
+            }.ToString();
     }
 }

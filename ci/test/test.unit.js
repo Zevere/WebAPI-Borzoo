@@ -1,37 +1,46 @@
 const $ = require('shelljs');
-const fs = require('fs');
 const path = require('path');
-const {
-    logStep,
-    logInfo
-} = require('../logging');
-const usingMongoContainer = require('./container-provider').usingMongoContainer
+require('../logging')
+// const usingMongoContainer = require('./container-provider').usingMongoContainer
 
-const rootDir = path.resolve(`${__dirname}/../..`)
+const root = path.resolve(`${__dirname}/../..`)
 $.config.fatal = true
-$.cd(rootDir)
 
-logStep('Test')
+exports.run_sqlite_data_tests = function () {
+    console.info(`running SQLite data tests`)
 
-logInfo('Run SQLite tests'); {
-    $.env['SQLite_Migrations_Script'] = `${rootDir}/src/Borzoo.Data.SQLite/scripts/migrations.sql`
-    $.cd(`${rootDir}/test/Borzoo.Data.Tests.SQLite`)
-    $.exec(`dotnet test --list-tests`)
-    $.exec(`dotnet test -c Release`)
-    // dotnet xunit -configuration Release -stoponfail -verbose
-    $.env.SQLite_Migrations_Script = ''
+    /* README:
+     * It is important to use "dotnet test" instead of "dotnet xunit" for testing.
+     * I don't know the reason yet!
+     */
+
+    const commands = [
+            `dotnet build`,
+            `cd test/Borzoo.Data.Tests.SQLite`,
+            `dotnet test --no-build --verbosity normal`
+        ]
+        .reduce((prev, curr) => `${prev} && ${curr}`, 'echo')
+
+    $.exec(
+        `docker run --rm --tty ` +
+        `--volume "${root}:/project" ` +
+        `--workdir /project/ ` +
+        `--env "SQLite_Migrations_Script=/project/src/Borzoo.Data.SQLite/scripts/migrations.sql" ` +
+        `microsoft/dotnet:2.1.402-sdk ` +
+        commands
+    )
 }
 
 
-logInfo('Run Mongo tests'); {
-    $.cd(`${rootDir}/test/Borzoo.Data.Tests.Mongo`)
-    usingMongoContainer(() => {
-        $.exec(`dotnet xunit -configuration Release -stoponfail -verbose`)
-    })
-}
+// logInfo('Run Mongo tests'); {
+//     $.cd(`${root}/test/Borzoo.Data.Tests.Mongo`)
+//     usingMongoContainer(() => {
+//         $.exec(`dotnet xunit -configuration Release -stoponfail -verbose`)
+//     })
+// }
 
 
-logInfo('Run unit tests'); {
-    $.cd(`${rootDir}/test/Borzoo.Web.Tests.Unit`)
-    $.exec(`dotnet xunit -configuration Release -stoponfail -verbose`)
-}
+// logInfo('Run unit tests'); {
+//     $.cd(`${root}/test/Borzoo.Web.Tests.Unit`)
+//     $.exec(`dotnet xunit -configuration Release -stoponfail -verbose`)
+// }

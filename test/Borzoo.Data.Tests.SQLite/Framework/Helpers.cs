@@ -14,6 +14,8 @@ namespace Borzoo.Data.Tests.SQLite.Framework
                 envVar ?? "../../../../../src/Borzoo.Data.SQLite/scripts/migrations.sql"
             );
 
+//            throw new Exception("##################" + Directory.GetCurrentDirectory());
+
             return DatabaseInitializer.ConnectAndCreateDatabase(
                 GetInMemoryConnectionString(uniqueDbName),
                 migrationsSql
@@ -21,11 +23,11 @@ namespace Borzoo.Data.Tests.SQLite.Framework
         }
 
         private static string GetInMemoryConnectionString(string uniqueDbName) =>
-            "" + new SqliteConnectionStringBuilder
+            new SqliteConnectionStringBuilder
             {
                 DataSource = uniqueDbName,
                 Mode = SqliteOpenMode.Memory,
                 Cache = SqliteCacheMode.Default
-            };
+            }.ToString();
     }
 }
