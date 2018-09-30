@@ -16,20 +16,30 @@ namespace Borzoo.Data.Tests.Mongo.Framework
 
         public static async Task<IMongoDatabase> GetTestDatabase()
         {
-            var client = new MongoClient(new MongoClientSettings
+            MongoClient client;
+            string connStr = Environment.GetEnvironmentVariable("MONGO_CONNECTION");
+            if (connStr != null)
             {
-                ClusterConfigurator = cb =>
+                client = new MongoClient(connStr);
+            }
+            else
+            {
+                client = new MongoClient(new MongoClientSettings
                 {
-                    var traceSource = new TraceSource("mongodb-tests", SourceLevels.Warning);
-                    traceSource.Listeners.Clear();
-                    var listener = new TextWriterTraceListener(Console.Out)
+                    ClusterConfigurator = cb =>
                     {
-                        TraceOutputOptions = TraceOptions.DateTime,
-                    };
-                    traceSource.Listeners.Add(listener);
-                    cb.TraceWith(traceSource);
-                }
-            });
+                        var traceSource = new TraceSource("mongodb-tests", SourceLevels.Warning);
+                        traceSource.Listeners.Clear();
+                        var listener = new TextWriterTraceListener(Console.Out)
+                        {
+                            TraceOutputOptions = TraceOptions.DateTime,
+                        };
+                        traceSource.Listeners.Add(listener);
+                        cb.TraceWith(traceSource);
+                    }
+                });
+            }
+
             await client.DropDatabaseAsync(MongoConstants.Database.Test);
             var db = client.GetDatabase(MongoConstants.Database.Test);
             return db;
