@@ -13,7 +13,7 @@ module.exports.build_image = function () {
     $.cp(`${root}/src/Borzoo.Data.SQLite/scripts/migrations.sql`, `${root}/dist/`)
 
     console.debug('copying Dockerfile')
-    $.cp(`${root}/ci/build/borzoo-dev.Dockerfile`, `${root}/dist/Dockerfile`)
+    $.cp(`${root}/scripts/build/borzoo-dev.Dockerfile`, `${root}/dist/Dockerfile`)
 
     console.debug('building docker image')
     $.exec(`docker build -t ${image_name} ${root}/dist/`)

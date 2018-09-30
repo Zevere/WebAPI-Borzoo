@@ -27,7 +27,7 @@ exports.run_sqlite_data_tests = function () {
         `--workdir /project/ ` +
         `--env "SQLite_Migrations_Script=/project/src/Borzoo.Data.SQLite/scripts/migrations.sql" ` +
         `microsoft/dotnet:2.1.402-sdk ` +
-        commands
+        `sh -c "${commands}"`
     )
 }
 
