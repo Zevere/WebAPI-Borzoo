@@ -3,7 +3,7 @@ using System.IO;
 using Borzoo.Data.SQLite;
 using Microsoft.Data.Sqlite;
 
-namespace Borzoo.Data.Tests.SQLite.Framework
+namespace SQLiteTests.Framework
 {
     public static class Helpers
     {
@@ -13,8 +13,6 @@ namespace Borzoo.Data.Tests.SQLite.Framework
             string migrationsSql = Path.GetFullPath(
                 envVar ?? "../../../../../src/Borzoo.Data.SQLite/scripts/migrations.sql"
             );
-
-//            throw new Exception("##################" + Directory.GetCurrentDirectory());
 
             return DatabaseInitializer.ConnectAndCreateDatabase(
                 GetInMemoryConnectionString(uniqueDbName),

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
-using Borzoo.Data.Tests.SQLite.Framework;
 using Borzoo.Tests.Framework;
+using SQLiteTests.Framework;
 using Xunit;
 
 namespace Borzoo.Data.Tests.SQLite.Single_Entity

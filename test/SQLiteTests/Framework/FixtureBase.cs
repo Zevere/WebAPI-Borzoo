@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Data.Sqlite;
 
-namespace Borzoo.Data.Tests.SQLite.Framework
+namespace SQLiteTests.Framework
 {
     public abstract class FixtureBase : IDisposable
     {

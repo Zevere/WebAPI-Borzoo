@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Borzoo.Tests.Framework", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Borzoo.Data.Tests.Common", "test\Borzoo.Data.Tests.Common\Borzoo.Data.Tests.Common.csproj", "{6C0B27CB-3C9A-43AB-ADB2-AEDD1599BF72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Borzoo.Data.Tests.SQLite", "test\Borzoo.Data.Tests.SQLite\Borzoo.Data.Tests.SQLite.csproj", "{A3B5B1DF-2227-4918-B180-9E882FA43547}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteTests", "test\SQLiteTests\SQLiteTests.csproj", "{A3B5B1DF-2227-4918-B180-9E882FA43547}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Borzoo.Data.Tests.Mongo", "test\Borzoo.Data.Tests.Mongo\Borzoo.Data.Tests.Mongo.csproj", "{4EF16CC3-109F-4A3C-BD46-74FDEB9DBAB3}"
 EndProject

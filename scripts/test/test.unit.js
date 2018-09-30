@@ -16,7 +16,7 @@ exports.run_sqlite_data_tests = function () {
 
     const commands = [
             `dotnet build`,
-            `cd test/Borzoo.Data.Tests.SQLite`,
+            `cd test/SQLiteTests/`,
             `dotnet test --no-build --verbosity normal`
         ]
         .reduce((prev, curr) => `${prev} && ${curr}`, 'echo')
