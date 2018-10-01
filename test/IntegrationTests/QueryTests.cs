@@ -2,12 +2,13 @@
 using System.Net;
 using System.Threading.Tasks;
 using Borzoo.Tests.Framework;
-using Borzoo.Web.Tests.Integ.Framework;
+using Borzoo.Web;
+using IntegrationTests.Framework;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Borzoo.Web.Tests.Integ
+namespace IntegrationTests
 {
     public class QueryTests : IClassFixture<TestHostFixture<Startup>>
     {

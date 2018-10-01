@@ -1,10 +1,11 @@
 ﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Borzoo.Web;
 using Borzoo.Web.Models.Login;
 using Newtonsoft.Json;
 
-namespace Borzoo.Web.Tests.Integ.Framework
+namespace IntegrationTests.Framework
 {
     public class AuthorizedClientFixtureBase : TestHostFixture<Startup>
     {

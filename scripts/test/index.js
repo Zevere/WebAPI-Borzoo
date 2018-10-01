@@ -10,6 +10,10 @@ try {
 
     const unit_tests = require('./test.unit')
     unit_tests.run_borzoo_unit_tests()
+
+    const integration_tests = require('./test.integration')
+    integration_tests.run_integration_tests_using_sqlite()
+    integration_tests.run_integration_tests_using_mongo()
 } catch (e) {
     console.error(e)
     process.exit(1)

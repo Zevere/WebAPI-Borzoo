@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
 
-namespace Borzoo.Web.Tests.Integ.Framework
+namespace IntegrationTests.Framework
 {
     public class TestHostFixture<TStartup> : IDisposable
     {
@@ -42,7 +42,7 @@ namespace Borzoo.Web.Tests.Integ.Framework
             var builder = new WebHostBuilder()
                 .UseContentRoot(_webAppContentRoot)
                 .ConfigureServices(InitializeServices)
-                .UseEnvironment("Staging")
+                .UseEnvironment("Development")
                 .UseConfiguration(configuration)
                 .UseStartup(typeof(TStartup));
 
@@ -77,15 +77,21 @@ namespace Borzoo.Web.Tests.Integ.Framework
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(_webAppContentRoot)
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile(new PhysicalFileProvider(_testAppContentRoot), "appsettings.Staging.json", true, false)
+                .AddJsonFile(new PhysicalFileProvider(_testAppContentRoot), "appsettings.Development.json", true, false)
+                .AddJsonEnvVar("BORZOO_TEST_SETTINGS", true)
                 .Build();
 
             if (configuration["data:use"] == "sqlite")
             {
                 _testSQLiteDb = Path.GetTempFileName();
                 configuration["data:sqlite:db"] = _testSQLiteDb;
-                configuration["data:sqlite:migrations"] =
-                    Path.GetFullPath(Path.Combine(_webAppContentRoot, configuration["data:sqlite:migrations"]));
+
+                string migrationsPath = configuration["data:sqlite:migrations"];
+                if (!Path.IsPathFullyQualified(migrationsPath))
+                {
+                    configuration["data:sqlite:migrations"] =
+                        Path.GetFullPath(Path.Combine(_webAppContentRoot, migrationsPath));
+                }
             }
 
             return configuration;
@@ -104,7 +110,7 @@ namespace Borzoo.Web.Tests.Integ.Framework
 
         public void Dispose()
         {
-            if (_testSQLiteDb != default)
+            if (_testSQLiteDb != null)
             {
                 try
                 {

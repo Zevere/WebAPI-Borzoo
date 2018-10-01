@@ -3,13 +3,14 @@ using System.Net;
 using System.Threading.Tasks;
 using Borzoo.GraphQL.Models;
 using Borzoo.Tests.Framework;
-using Borzoo.Web.Tests.Integ.Framework;
+using Borzoo.Web;
+using IntegrationTests.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Borzoo.Web.Tests.Integ
+namespace IntegrationTests
 {
     public class MutationTests : IClassFixture<MutationTests.Fixture>
     {
@@ -55,7 +56,7 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Null((string) result.data.createUser.lastName);
             Assert.Equal(0, (int) result.data.createUser.daysJoined);
             Assert.True(DateTime.TryParse((string) result.data.createUser.joinedAt, out var join), "joinedAt is date");
-            Assert.InRange(join, DateTime.UtcNow.AddSeconds(-10), DateTime.UtcNow);
+            Assert.Equal(join, DateTime.UtcNow.Date);
             Assert.NotEmpty((string) result.data.createUser.token);
             object[] lists = JArray.FromObject(result.data.createUser.lists).ToObject<object[]>();
             Assert.Empty(lists);
@@ -89,7 +90,8 @@ namespace Borzoo.Web.Tests.Integ
             Assert.Equal("groceries", (string) result.data.createList.id);
             Assert.Equal("ToDo Groceries", (string) result.data.createList.title);
             Assert.True(
-                DateTime.TryParse((string) result.data.createList.createdAt, out var creationDate), "createdAt is date"
+                DateTimeOffset.TryParse((string) result.data.createList.createdAt, out var creationDate),
+                "createdAt is date"
             );
             Assert.InRange(creationDate, DateTime.UtcNow.AddSeconds(-10), DateTime.UtcNow);
             object[] tasks = JArray.FromObject(result.data.createList.tasks).ToObject<object[]>();
@@ -137,7 +139,7 @@ namespace Borzoo.Web.Tests.Integ
                 DateTime.Today.AddDays(4)
             );
             Assert.InRange(
-                DateTime.Parse((string) result.data.addTask.createdAt),
+                DateTimeOffset.Parse((string) result.data.addTask.createdAt),
                 DateTime.UtcNow.AddSeconds(-10),
                 DateTime.UtcNow
             );

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Borzoo.Data.Abstractions.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -21,7 +20,7 @@ namespace Borzoo.GraphQL.Models
 
         public string[] Tags { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         public static explicit operator TaskItemDto(TaskItem ti) =>
             ti is null

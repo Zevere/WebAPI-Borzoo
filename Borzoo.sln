@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Borzoo.Data.Tests.Mongo", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{AE6DA9C1-924F-4ED2-BC05-51026FA3B071}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Borzoo.Web.Tests.Integ", "test\Borzoo.Web.Tests.Integ\Borzoo.Web.Tests.Integ.csproj", "{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{9E3A9D63-95EF-4A6F-8C83-8F439A090EC6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{1EACB75C-16EF-4CCD-8EFD-75DD4ABE3B42}"
 EndProject

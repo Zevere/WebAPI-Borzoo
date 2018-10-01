@@ -18,7 +18,7 @@ namespace Borzoo.Data.Abstractions.Entities
         public string Title { get; set; }
 
         [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTimeOffset CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? ModifiedAt { get; set; }
 

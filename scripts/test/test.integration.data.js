@@ -9,7 +9,7 @@ exports.run_sqlite_data_tests = function () {
     console.info(`running SQLite data tests`)
 
     /* README:
-     * It is important to use "dotnet test" instead of "dotnet xunit" for testing.
+     * It is important to use "dotnet test" instead of "dotnet xunit" for testing when using SQLite.
      * I don't know the reason yet!
      */
 

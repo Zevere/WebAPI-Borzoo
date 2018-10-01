@@ -43,7 +43,7 @@ namespace Borzoo.Data.SQLite
         {
             EnsureUserId();
             entity.DisplayId = entity.DisplayId.ToLower();
-            
+
             string sql = "INSERT INTO tasklist(owner_id, name, title, created_at) " +
                          "VALUES ($owner_id, $name, $title, $created_at); " +
                          "SELECT last_insert_rowid() AS id";

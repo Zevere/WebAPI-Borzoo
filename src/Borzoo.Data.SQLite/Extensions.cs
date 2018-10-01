@@ -17,6 +17,9 @@ namespace Borzoo.Data.SQLite
             return (long) diff.TotalMilliseconds;
         }
 
+        public static long ToUnixTime(this DateTimeOffset dateTimeOffset)
+            => dateTimeOffset.UtcDateTime.ToUnixTime();
+
         public static DateTime FromUnixTime(this long epochTime)
             => new DateTime(UnixEpochBase.Ticks, DateTimeKind.Utc).AddMilliseconds(epochTime);
     }
