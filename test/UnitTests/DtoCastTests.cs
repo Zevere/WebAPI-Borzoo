@@ -4,7 +4,7 @@ using Borzoo.Tests.Framework;
 using Borzoo.Web.Models.Task;
 using Xunit;
 
-namespace Borzoo.Web.Tests.Unit
+namespace UnitTests
 {
     public class DtoCastTests
     {
