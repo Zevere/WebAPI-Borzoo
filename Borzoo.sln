@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphQl.AspNetCore", "deps\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphQL.AspNetCore.Graphiql", "deps\graphql-aspnetcore\GraphQL.AspNetCore.Graphiql\GraphQL.AspNetCore.Graphiql.csproj", "{E5A02989-881A-4F1B-93AA-9585C320562F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extensions.Configuration.JsonEnvVar", "deps\EnvJson\EnvJson\Extensions.Configuration.JsonEnvVar.csproj", "{8824D4CC-751E-4A0F-BCD5-F6F20E84FF8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extensions.Configuration.JsonEnvVar", "deps\EnvJson\src\Extensions.Configuration.JsonEnvVar\Extensions.Configuration.JsonEnvVar.csproj", "{8824D4CC-751E-4A0F-BCD5-F6F20E84FF8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
