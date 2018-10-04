@@ -2,6 +2,8 @@
 
 A [Zevere GraphQL Web API] implementation in ASP.NET Core C#.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a168903a61c640e39bf7ceac74f95338)](https://www.codacy.com/app/Zevere/WebAPI-Borzoo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Zevere/WebAPI-Borzoo&amp;utm_campaign=Badge_Grade)
+
 ## Getting Started
 
 Make sure you have .NET Core SDK 2.0 installed on your system.
