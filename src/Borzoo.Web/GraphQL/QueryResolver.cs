@@ -55,6 +55,39 @@ namespace Borzoo.Web.GraphQL
             return (UserDto) entity;
         }
 
+        public async Task<UserDto> LoginAsync(ResolveFieldContext<object> context)
+        {
+            var login = context.GetArgument<UserLoginDto>("login");
+
+            User entity;
+            try
+            {
+                entity = await _userRepo.GetByNameAsync(login.Username, cancellationToken: context.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (EntityNotFoundException)
+            {
+                var err = new Error("authentication failed")
+                {
+                    Path = new[] {"login"}
+                };
+                context.Errors.Add(err);
+                return null;
+            }
+
+            if (login.Passphrase != entity.PassphraseHash)
+            {
+                var err = new Error("authentication failed")
+                {
+                    Path = new[] {"login"}
+                };
+                context.Errors.Add(err);
+                return null;
+            }
+
+            return (UserDto) entity;
+        }
+
         public async Task<UserDto> GetUserAsync(ResolveFieldContext<object> context)
         {
             string username = context.GetArgument<string>("userId");

@@ -18,6 +18,15 @@ namespace Borzoo.GraphQL
                 resolver.CreateUserAsync
             );
 
+            Field<UserType>(
+                "login",
+                "Login to a user account",
+                new QueryArguments(
+                    new QueryArgument<NonNullGraphType<LoginInputType>> {Name = "login"}
+                ),
+                resolver.LoginAsync
+            );
+
             Field<TaskListType>(
                 "createList",
                 "Create a new task list. Current user will be its owner.",

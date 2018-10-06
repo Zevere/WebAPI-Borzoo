@@ -18,6 +18,7 @@ namespace Borzoo.Web.Helpers
 
             services.AddSingleton<UserType>();
             services.AddSingleton<UserInputType>();
+            services.AddSingleton<LoginInputType>();
             services.AddSingleton<TaskListType>();
             services.AddSingleton<TaskListInputType>();
             services.AddSingleton<TaskItemType>();

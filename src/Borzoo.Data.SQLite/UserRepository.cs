@@ -25,7 +25,7 @@ namespace Borzoo.Data.SQLite
         {
         }
 
-        public Task<User> AddAsync(User entity, CancellationToken cancellationToken = default)
+        public async Task<User> AddAsync(User entity, CancellationToken cancellationToken = default)
         {
             bool hasLastName = !string.IsNullOrWhiteSpace(entity.LastName);
             string sql =
@@ -48,21 +48,32 @@ namespace Borzoo.Data.SQLite
 
                 try
                 {
-                    entity.Id = cmd.ExecuteScalar().ToString();
+                    var result = await cmd.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+                    entity.Id = result.ToString();
                 }
-                catch (SqliteException e) when
-                (e.SqliteErrorCode == raw.SQLITE_CONSTRAINT &&
-                 e.Message.Contains("user.name"))
+                catch (SqliteException e) when (
+                    e.SqliteErrorCode == raw.SQLITE_CONSTRAINT &&
+                    e.Message.Contains("user.name")
+                )
                 {
                     throw new DuplicateKeyException(nameof(User.DisplayId));
                 }
 
-                if (cancellationToken.IsCancellationRequested)
-                    throw new TaskCanceledException();
+//                if (entity.Token != null)
+//                {
+//                    string loginSql = "INSERT INTO login(user_id, token) VALUES ($user_id, $token)";
+//                    cmd.CommandText = loginSql;
+//                    cmd.Parameters.AddWithValue("$user_id", entity.Id);
+//                    cmd.Parameters.AddWithValue("$token", entity.Token);
+//
+//                    await cmd.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+//                }
+
+                cancellationToken.ThrowIfCancellationRequested();
                 tnx.Commit();
             }
 
-            return Task.FromResult(entity);
+            return entity;
         }
 
         public Task<User> GetByIdAsync(string id, bool includeDeletedRecords = false,
@@ -114,9 +125,10 @@ namespace Borzoo.Data.SQLite
         public Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
             CancellationToken cancellationToken = default)
         {
-            string sql = "SELECT id, passphrase, first_name, last_name, joined_at, modified_at, is_deleted " +
-                         "FROM user " +
-                         "WHERE UPPER(name) = UPPER($name) ";
+            string sql =
+                "SELECT id, passphrase, first_name, last_name, joined_at, user.modified_at, is_deleted, token " +
+                "FROM user LEFT OUTER JOIN login ON user.id = login.user_id " +
+                "WHERE UPPER(name) = UPPER($name) ";
 
             if (!includeDeletedRecords)
             {
@@ -143,6 +155,7 @@ namespace Borzoo.Data.SQLite
                     PassphraseHash = reader["passphrase"].ToString(),
                     FirstName = reader["first_name"].ToString(),
                     LastName = reader["last_name"] as string,
+                    Token = reader["token"] as string,
                     JoinedAt = long.Parse(reader["joined_at"].ToString()).FromUnixTime(),
                     IsDeleted = !string.IsNullOrWhiteSpace(reader["is_deleted"].ToString())
                 };

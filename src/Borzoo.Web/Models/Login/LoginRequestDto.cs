@@ -10,12 +10,11 @@ namespace Borzoo.Web.Models.Login
     )]
     public class LoginRequestDto
     {
-        [Required]
-        [MinLength(1)]
+        [Required(ErrorMessage = "Username is required")]
         public string UserName { get; set; }
 
-        [Required]
-        [MinLength(8)]
+        [Required(ErrorMessage = "Passphrase is required")]
+        [MinLength(8, ErrorMessage = "Passphrase should be at least 8 characters long")]
         public string Passphrase { get; set; }
     }
 }
