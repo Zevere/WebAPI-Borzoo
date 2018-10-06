@@ -36,21 +36,19 @@ exports.run_mongo_data_tests = function () {
     console.debug('starting a Docker container for Mongo')
     const container_id = $.exec(`docker run --rm --detach --publish 27017:27017 --name borzoo-mongo-test mongo`).stdout.trim()
 
-    const commands = [
-            `dotnet build`,
-            `dotnet xunit -configuration Release -stoponfail -verbose --fx-version 2.1.4`
-        ]
-        .reduce((prev, curr) => `${prev} && ${curr}`, 'echo')
+    const settings = JSON.stringify(JSON.stringify({
+        Connection: "mongodb://borzoo-mongo-test:27017/borzoo-tests"
+    }))
 
     try {
         $.exec(
             `docker run --rm --tty ` +
             `--volume "${root}:/project" ` +
-            `--workdir /project/test/Borzoo.Data.Tests.Mongo/ ` +
+            `--workdir /project/test/Data.Mongo.Tests/ ` +
             `--link borzoo-mongo-test ` +
-            `--env "MONGO_CONNECTION=mongodb://borzoo-mongo-test:27017/borzoo-test" ` +
-            `microsoft/dotnet:2.1.402-sdk ` +
-            `sh -c "${commands}"`
+            `--env "BORZOO_TEST_SETTINGS=${settings}" ` +
+            `microsoft/dotnet:2.1-sdk ` +
+            `dotnet test --configuration Release`
         )
     } finally {
         console.debug(`removing the Mongo container`)
