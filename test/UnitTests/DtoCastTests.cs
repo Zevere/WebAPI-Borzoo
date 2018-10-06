@@ -1,7 +1,7 @@
 using System;
 using Borzoo.Data.Abstractions.Entities;
-using Borzoo.Tests.Framework;
 using Borzoo.Web.Models.Task;
+using Framework;
 using Xunit;
 
 namespace UnitTests

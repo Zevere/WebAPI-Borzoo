@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Borzoo.Tests.Framework;
 using Borzoo.Web;
 using IntegrationTests.Framework;
 using Newtonsoft.Json;
+using Framework;
 using Xunit;
 using Xunit.Abstractions;
 

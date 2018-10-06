@@ -1,5 +1,5 @@
-﻿using Borzoo.Tests.Framework;
+﻿using Framework;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
-[assembly: TestCaseOrderer(TestFrameworkConstants.TestCaseOrderer, TestFrameworkConstants.AssemblyName)]
+[assembly: TestCaseOrderer(Constants.TestCaseOrderer, Constants.AssemblyName)]

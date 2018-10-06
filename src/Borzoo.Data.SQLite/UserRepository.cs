@@ -33,6 +33,7 @@ namespace Borzoo.Data.SQLite
                 $"VALUES ($name, $passphrase, $fname, $time {(hasLastName ? ", $lname" : "")} ); " +
                 "SELECT last_insert_rowid() AS id";
 
+            await Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
             using (var tnx = Connection.BeginTransaction())
             {
                 var cmd = Connection.CreateCommand();
@@ -59,16 +60,6 @@ namespace Borzoo.Data.SQLite
                     throw new DuplicateKeyException(nameof(User.DisplayId));
                 }
 
-//                if (entity.Token != null)
-//                {
-//                    string loginSql = "INSERT INTO login(user_id, token) VALUES ($user_id, $token)";
-//                    cmd.CommandText = loginSql;
-//                    cmd.Parameters.AddWithValue("$user_id", entity.Id);
-//                    cmd.Parameters.AddWithValue("$token", entity.Token);
-//
-//                    await cmd.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
-//                }
-
                 cancellationToken.ThrowIfCancellationRequested();
                 tnx.Commit();
             }
@@ -88,6 +79,7 @@ namespace Borzoo.Data.SQLite
                 sql += "AND is_deleted IS NULL";
             }
 
+            EnsureConnectionOpened();
             var cmd = Connection.CreateCommand();
 
             cmd.CommandText = sql;
@@ -122,8 +114,11 @@ namespace Borzoo.Data.SQLite
             return Task.FromResult(entity);
         }
 
-        public Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+        public async Task<User> GetByNameAsync(
+            string name,
+            bool includeDeletedRecords = false,
+            CancellationToken cancellationToken = default
+        )
         {
             string sql =
                 "SELECT id, passphrase, first_name, last_name, joined_at, user.modified_at, is_deleted, token " +
@@ -135,13 +130,16 @@ namespace Borzoo.Data.SQLite
                 sql += "AND is_deleted IS NULL";
             }
 
+            await Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
             var cmd = Connection.CreateCommand();
 
             cmd.CommandText = sql;
             cmd.Parameters.AddWithValue("$name", name);
 
             User entity;
-            using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+            var reader = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow, cancellationToken)
+                .ConfigureAwait(false);
+            using (reader)
             {
                 if (!(reader.HasRows && reader.Read()))
                 {
@@ -167,7 +165,7 @@ namespace Borzoo.Data.SQLite
                 }
             }
 
-            return Task.FromResult(entity);
+            return entity;
         }
 
         public Task<User> GetByTokenAsync(string token, bool includeDeletedRecords = false,
@@ -182,6 +180,7 @@ namespace Borzoo.Data.SQLite
                 sql += "AND is_deleted IS NULL";
             }
 
+            EnsureConnectionOpened();
             var cmd = Connection.CreateCommand();
 
             cmd.CommandText = sql;
@@ -230,6 +229,7 @@ namespace Borzoo.Data.SQLite
                 sql += "AND is_deleted IS NULL";
             }
 
+            EnsureConnectionOpened();
             var cmd = Connection.CreateCommand();
 
             cmd.CommandText = sql;
@@ -277,6 +277,7 @@ namespace Borzoo.Data.SQLite
                 "modified_at = $modified_at " +
                 "WHERE id = $id";
 
+            EnsureConnectionOpened();
             var cmd = Connection.CreateCommand();
             cmd.CommandText = sql;
 
@@ -301,6 +302,7 @@ namespace Borzoo.Data.SQLite
 
         public Task SetTokenForUserAsync(string userId, string token, CancellationToken cancellationToken = default)
         {
+            EnsureConnectionOpened();
             var cmd = Connection.CreateCommand();
             cmd.CommandText = "SELECT COUNT(user_id) FROM login WHERE user_id = $user_id";
             cmd.Parameters.AddWithValue("$user_id", userId);
@@ -328,6 +330,7 @@ namespace Borzoo.Data.SQLite
 
         public Task<bool> RevokeTokenAsync(string token, CancellationToken cancellationToken = default)
         {
+            EnsureConnectionOpened();
             var cmd = Connection.CreateCommand();
             cmd.CommandText = "DELETE FROM login WHERE token = $token";
             cmd.Parameters.AddWithValue("$token", token);
@@ -339,6 +342,7 @@ namespace Borzoo.Data.SQLite
 
         public Task DeleteAsync(string id, bool hardDelete = false, CancellationToken cancellationToken = default)
         {
+            EnsureConnectionOpened();
             using (var cmd = Connection.CreateCommand())
             {
                 cmd.CommandText = (hardDelete ? "DELETE FROM user" : "UPDATE user SET is_deleted = 1") +

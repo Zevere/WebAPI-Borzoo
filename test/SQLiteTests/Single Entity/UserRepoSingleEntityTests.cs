@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.SQLite;
-using Borzoo.Tests.Framework;
 using SQLiteTests.Framework;
+using Framework;
+using Framework.Helpers;
 using Xunit;
 
 namespace Borzoo.Data.Tests.SQLite.Single_Entity
@@ -209,7 +210,7 @@ namespace Borzoo.Data.Tests.SQLite.Single_Entity
             Assert.Contains("token", exception.Message);
         }
 
-///*
+        ///*
 //        [OrderedFact]
 //        public void _07_Should_Get_User_By_Token()
 //        {

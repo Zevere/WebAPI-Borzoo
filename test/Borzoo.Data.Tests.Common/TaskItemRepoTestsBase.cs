@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
-using Borzoo.Tests.Framework;
+using Framework;
 using Xunit;
 
 namespace Borzoo.Data.Tests.Common

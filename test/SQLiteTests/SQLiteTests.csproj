@@ -14,6 +14,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\Borzoo.Data.SQLite\Borzoo.Data.SQLite.csproj" />
-        <ProjectReference Include="..\Borzoo.Tests.Framework\Borzoo.Tests.Framework.csproj" />
+        <ProjectReference Include="..\Framework\Framework.csproj" />
     </ItemGroup>
 </Project>

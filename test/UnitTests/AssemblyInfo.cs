@@ -1,4 +1,4 @@
-﻿using Borzoo.Tests.Framework;
+﻿using Framework;
 using Xunit;
 
-[assembly: TestCaseOrderer(TestFrameworkConstants.TestCaseOrderer, TestFrameworkConstants.AssemblyName)]
+[assembly: TestCaseOrderer(Constants.TestCaseOrderer, Constants.AssemblyName)]

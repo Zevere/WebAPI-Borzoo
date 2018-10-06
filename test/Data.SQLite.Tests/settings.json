@@ -1,0 +1,4 @@
+{
+  "Database": "./tests.sqlite.db",
+  "MigrationsScript": "../../../../../src/Borzoo.Data.SQLite/scripts/migrations.sql"
+}

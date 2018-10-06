@@ -14,21 +14,21 @@ namespace Borzoo.Web.Helpers
             services.AddTransient<IUserRepository, UserRepository>(delegate
             {
                 var userRepo = new UserRepository(connString);
-                userRepo.EnsureConnectinoOpened();
+                userRepo.EnsureConnectionOpened();
                 return userRepo;
             });
             services.AddTransient<ITaskListRepository, TaskListRepository>(provider =>
             {
                 var userRepo = provider.GetRequiredService<IUserRepository>();
                 var taskListRepo = new TaskListRepository(connString, userRepo);
-                taskListRepo.EnsureConnectinoOpened();
+                taskListRepo.EnsureConnectionOpened();
                 return taskListRepo;
             });
             services.AddTransient<ITaskItemRepository, TaskItemRepository>(provider =>
             {
                 var tasklistRepo = provider.GetRequiredService<ITaskListRepository>();
                 var taskRepo = new TaskItemRepository(connString, tasklistRepo);
-                taskRepo.EnsureConnectinoOpened();
+                taskRepo.EnsureConnectionOpened();
                 return taskRepo;
             });
 

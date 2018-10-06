@@ -2,11 +2,11 @@
 using System.Net;
 using System.Threading.Tasks;
 using Borzoo.GraphQL.Models;
-using Borzoo.Tests.Framework;
 using Borzoo.Web;
 using IntegrationTests.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Framework;
 using Xunit;
 using Xunit.Abstractions;
 

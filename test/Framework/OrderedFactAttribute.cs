@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Xunit;
 
-namespace Borzoo.Tests.Framework
+namespace Framework
 {
     public class OrderedFactAttribute : FactAttribute
     {
