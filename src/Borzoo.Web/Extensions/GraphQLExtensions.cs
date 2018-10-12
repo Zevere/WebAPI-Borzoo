@@ -6,7 +6,7 @@ using GraphQL.Http;
 using GraphQL.Types;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Borzoo.Web.Helpers
+namespace Borzoo.Web.Extensions
 {
     public static class GraphQLExtensions
     {

@@ -1,4 +1,5 @@
-﻿using Borzoo.Data.Abstractions;
+﻿using System;
+using Borzoo.Data.Abstractions;
 using Borzoo.Data.Mongo;
 using Borzoo.Data.Mongo.Entities;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,12 +7,17 @@ using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
 using UserEntity = Borzoo.Data.Abstractions.Entities.User;
 
-namespace Borzoo.Web.Helpers
+namespace Borzoo.Web.Extensions
 {
     internal static class MongoExtensions
     {
         public static IServiceCollection AddMongo(this IServiceCollection services, string connectionString)
         {
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new ArgumentException($@"Invalid MongoDB connection string: ""{connectionString}"".");
+            }
+            
             string dbName = new ConnectionString(connectionString).DatabaseName;
             services.AddSingleton<IMongoClient, MongoClient>(_ => new MongoClient(connectionString));
             services.AddTransient<IMongoDatabase>(_ => _.GetRequiredService<IMongoClient>().GetDatabase(dbName));

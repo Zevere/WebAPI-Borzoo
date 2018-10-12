@@ -2,7 +2,7 @@
 using Borzoo.Data.SQLite;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Borzoo.Web.Helpers
+namespace Borzoo.Web.Extensions
 {
     public static class SQLiteExtensions
     {

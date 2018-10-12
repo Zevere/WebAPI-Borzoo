@@ -1,6 +1,5 @@
 ﻿using System;
 using Borzoo.Web.Data;
-using Borzoo.Web.Helpers;
 using Borzoo.Web.Middlewares.BasicAuth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using Borzoo.Web.Extensions;
 using Microsoft.AspNetCore.Http;
 
 namespace Borzoo.Web
