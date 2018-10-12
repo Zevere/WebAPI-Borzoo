@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo.Entities;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
@@ -71,7 +73,9 @@ namespace Borzoo.Data.Mongo
             {
                 BsonClassMap.RegisterClassMap<User>(map =>
                 {
-                    map.MapIdProperty(u => u.Id).SetIdGenerator(new StringObjectIdGenerator());
+                    map.MapIdProperty(u => u.Id)
+                        .SetIdGenerator(StringObjectIdGenerator.Instance)
+                        .SetSerializer(new StringSerializer(BsonType.ObjectId));
                     map.MapProperty(u => u.DisplayId).SetElementName("name").SetOrder(1);
                     map.MapProperty(u => u.PassphraseHash).SetElementName("pass");
                     map.MapProperty(u => u.FirstName).SetElementName("fname");
@@ -87,7 +91,9 @@ namespace Borzoo.Data.Mongo
             {
                 BsonClassMap.RegisterClassMap<TaskList>(map =>
                 {
-                    map.MapIdProperty(tl => tl.Id).SetIdGenerator(new StringObjectIdGenerator());
+                    map.MapIdProperty(tl => tl.Id)
+                        .SetIdGenerator(StringObjectIdGenerator.Instance)
+                        .SetSerializer(new StringSerializer(BsonType.ObjectId));
                     map.MapProperty(tl => tl.DisplayId).SetElementName("name").SetOrder(1);
                     map.MapProperty(tl => tl.Title).SetElementName("title");
                     map.MapProperty(tl => tl.CreatedAt).SetElementName("created");
@@ -105,7 +111,9 @@ namespace Borzoo.Data.Mongo
             {
                 BsonClassMap.RegisterClassMap<TaskItem>(map =>
                 {
-                    map.MapIdProperty(tl => tl.Id).SetIdGenerator(new StringObjectIdGenerator());
+                    map.MapIdProperty(tl => tl.Id)
+                        .SetIdGenerator(StringObjectIdGenerator.Instance)
+                        .SetSerializer(new StringSerializer(BsonType.ObjectId));
                     map.MapProperty(tl => tl.DisplayId).SetElementName("name").SetOrder(1);
                     map.MapProperty(tl => tl.Title).SetElementName("title");
                     map.MapProperty(tl => tl.Description).SetElementName("description").SetIgnoreIfDefault(true);
