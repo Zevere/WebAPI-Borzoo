@@ -35,7 +35,7 @@
 
                 public static class Indexes
                 {
-                    public const string ListTaskName = "list_task-name";
+                    public const string ListTaskName = "list-task_name";
                 }
             }
         }

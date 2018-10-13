@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo;
@@ -93,17 +92,20 @@ namespace Borzoo.Web.Data
         {
             DatabaseInitializer.EnsureMigrationsApplied(migrationsSqlFile);
         }
-        
+
         private static async Task<bool> InitMongoDbAsync(IMongoDatabase db)
         {
-            var curser = await db.ListCollectionsAsync();
-            if (curser.MoveNext() && curser.Current.Any())
+            var cursor = await db.ListCollectionNamesAsync();
+            var collections = await cursor.ToListAsync();
+
+            bool collectionsExist = collections.Count > 2;
+
+            if (!collectionsExist)
             {
-                return false;
+                await Initializer.CreateSchemaAsync(db);
             }
 
-            await Initializer.CreateSchemaAsync(db);
-            return true;
+            return !collectionsExist;
         }
     }
 }

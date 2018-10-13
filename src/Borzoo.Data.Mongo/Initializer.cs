@@ -12,58 +12,64 @@ namespace Borzoo.Data.Mongo
 {
     public static class Initializer
     {
-        public static async Task CreateSchemaAsync(IMongoDatabase database,
-            CancellationToken cancellationToken = default)
+        public static async Task CreateSchemaAsync(
+            IMongoDatabase database,
+            CancellationToken cancellationToken = default
+        )
         {
             {
                 // "users" Collection
                 await database.CreateCollectionAsync(MongoConstants.Collections.Users.Name, null, cancellationToken);
                 var usersCollection = database.GetCollection<User>(MongoConstants.Collections.Users.Name);
+
+                // create unique index "username" on the field "name"
                 var key = Builders<User>.IndexKeys.Ascending(u => u.DisplayId);
-                await usersCollection.Indexes.CreateOneAsync(key,
-                    new CreateIndexOptions {Name = MongoConstants.Collections.Users.Indexes.Username, Unique = true},
-                    cancellationToken
-                );
+                await usersCollection.Indexes.CreateOneAsync(new CreateIndexModel<User>(
+                        key,
+                        new CreateIndexOptions
+                            {Name = MongoConstants.Collections.Users.Indexes.Username, Unique = true}),
+                    cancellationToken: cancellationToken
+                ).ConfigureAwait(false);
             }
 
             {
                 // "task-lists" Collection
                 await database.CreateCollectionAsync(MongoConstants.Collections.TaskLists.Name, null,
                     cancellationToken);
-                var collection = database.GetCollection<TaskListMongo>(MongoConstants.Collections.TaskLists.Name);
+                var listsCollection = database.GetCollection<TaskListMongo>(MongoConstants.Collections.TaskLists.Name);
                 var indexBuilder = Builders<TaskListMongo>.IndexKeys;
+
+                // create unique index "owner-list_name" on the fields "name" and "owner"
                 var key = indexBuilder.Combine(
                     indexBuilder.Ascending(tl => tl.OwnerDbRef.Id),
                     indexBuilder.Ascending(tl => tl.DisplayId)
                 );
-                await collection.Indexes.CreateOneAsync(key,
-                    new CreateIndexOptions
-                    {
-                        Name = MongoConstants.Collections.TaskLists.Indexes.OwnerListName,
-                        Unique = true
-                    },
-                    cancellationToken
-                );
+                await listsCollection.Indexes.CreateOneAsync(new CreateIndexModel<TaskListMongo>(
+                        key,
+                        new CreateIndexOptions
+                            {Name = MongoConstants.Collections.TaskLists.Indexes.OwnerListName, Unique = true}),
+                    cancellationToken: cancellationToken
+                ).ConfigureAwait(false);
             }
 
             {
                 // "task-items" Collection
                 await database.CreateCollectionAsync(MongoConstants.Collections.TaskItems.Name, null,
                     cancellationToken);
-                var collection = database.GetCollection<TaskItemMongo>(MongoConstants.Collections.TaskItems.Name);
+                var tasksCollection = database.GetCollection<TaskItemMongo>(MongoConstants.Collections.TaskItems.Name);
                 var indexBuilder = Builders<TaskItemMongo>.IndexKeys;
+
+                // create unique index "list-task_name" on the fields "name" and "list"
                 var key = indexBuilder.Combine(
                     indexBuilder.Ascending(tl => tl.ListDbRef.Id),
                     indexBuilder.Ascending(tl => tl.DisplayId)
                 );
-                await collection.Indexes.CreateOneAsync(key,
-                    new CreateIndexOptions
-                    {
-                        Name = MongoConstants.Collections.TaskItems.Indexes.ListTaskName,
-                        Unique = true
-                    },
-                    cancellationToken
-                );
+                await tasksCollection.Indexes.CreateOneAsync(new CreateIndexModel<TaskItemMongo>(
+                        key,
+                        new CreateIndexOptions
+                            {Name = MongoConstants.Collections.TaskItems.Indexes.ListTaskName, Unique = true}),
+                    cancellationToken: cancellationToken
+                ).ConfigureAwait(false);
             }
         }
 
