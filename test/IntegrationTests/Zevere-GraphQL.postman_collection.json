@@ -1,0 +1,1854 @@
+{
+	"info": {
+		"_postman_id": "5e8d489a-839b-4ef8-8376-04cb221f2d59",
+		"name": "Zevere-GraphQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User (old)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"query\" : \"mutation {\\n createUser(user:{\\n id:\\\"aman\\\"\\n  }\\n {\\n firstName:\\\"Amanpreet\\\"\\n  } \\n {\\n lastName:\\\"Brar\\\"\\n } \\n{\\n  passphrase: \\\"pass1234\\\"\\n}) \\n}\" \n}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20createUser(user%3A%20%7B%0A%20%20%20%20name%3A%20%22aman%22%2C%0A%20%20%20%20firstName%3A%20%22aman%22%2C%0A%20%20%20%20lastName%3A%20%22brar%22%2C%0A%20%20%20%20passphrase%3A%20%22brarrr%22%0A%20%20%7D)%20%7B%0A%20%20%20%20id%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  createUser(user: {\\n    name: \\\"aman\\\",\\n    firstName: \\\"aman\\\",\\n    lastName: \\\"brar\\\",\\n    passphrase: \\\"brarrr\\\"\\n  }) {\\n    id\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query User2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=query%20%7B%0A%20%20user(userId%3A%20%22Johnny%22)%20%7B%0A%20%20%20%20id%2C%0A%20%20%20%20firstName%2C%0A%20%20%20%20lastName%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"query {\\n  user(userId: \\\"Johnny\\\") {\\n    id,\\n    firstName,\\n    lastName\\n  }\\n}\"\n\t\n\n}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  createUser(user: {\\n    name: \\\"aman4\\\",\\n    firstName: \\\"Amanpreet\\\",\\n    lastName: \\\"Brar\\\",\\n    passphrase: \\\"pass123\\\"\\n  }) {\\n    id\\n  }\\n}\"\n}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  createUser(user: {\\n    name: \\\"joe\\\",\\n    firstName: \\\"Joseph\\\",\\n    lastName: \\\"Harrison\\\",\\n  joinedAt: \\\"2018-10-10\\\",\\n  daysJoined: \\\"0\\\",  passphrase: \\\"Joe123\\\"\\n }) {\\n    id\\n  }\\n}\"\n}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query User3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=%0Aquery%7B%0A%20%20user(userId%3A%20%22Joe%22%0A%20%20%20%20)%0A%20%20%7B%0A%20%20id%0A%20%20firstName%0A%20%20%20%20lastName%0A%20%20%20%20joinedAt%0A%20%20%20%20daysJoined%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%7D%0A%7D%0A"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"\\nquery{\\n  user(userId: \\\"Joe\\\"\\n    )\\n  {\\n  id\\n  firstName\\n    lastName\\n    joinedAt\\n    daysJoined\\n    \\n    \\n  }\\n}\\n\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login: {\\n  passphrase: \\\"Joe123\\\"\\n  })\\n {\\n    token\\n  }\\n\"\n\n}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login: {\\n  passphrase: \\\"pass123\\\"\\n  })\\n {\\n    token\\n  }\\n\"\n\n}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20createUser(user%3A%7B%0A%20%20%20%20name%3A%22aman10%22%2C%0A%20%20%20%20firstName%3A%22Ammu%22%2C%0A%20%20%20%20lastName%3A%22Kaur%22%2C%0A%20%20%20%20passphrase%3A%22ammu%22%2C%0A%20%20%20%20members%3A%225%22%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20firstName%0A%20%20%20%20lastName%0A%20%20%20%20lists%20%7B%0A%20%20%20%20%20%20id%0A%20%20%20%20%7D%0A%20%20%20%20joinedAt%0A%20%20%20%20daysJoined%0A%20%20%20%20%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  createUser(user:{\\n    name:\\\"aman11\\\",\\n    firstName:\\\"Ammu\\\",\\n    lastName:\\\"Kaur\\\",\\n    passphrase:\\\"ammu\\\",\\n    members:\\\"5\\\"\\n  })\\n  {\\n    id\\n    firstName\\n    lastName\\n    lists {\\n      id\\n    }\\n    joinedAt\\n    daysJoined\\n    \\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20login(login%3A%7B%0A%20%20%20%20username%3A%22aman10%22%2C%0A%20%20%20%20passphrase%3A%22ammu%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20token%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    username:\\\"aman10\\\",\\n    passphrase:\\\"ammu\\\",\\n    \\n  })\\n  {\\n    token\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20login(login%3A%7B%0A%20%20%20%20username%3A%22aman4%22%2C%0A%20%20%20%20passphrase%3A%22pass123%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20token%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    username:\\\"aman4\\\",\\n    passphrase:\\\"pass123\\\",\\n    \\n  })\\n  {\\n    token\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login5",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20login(login%3A%7B%0A%20%20%20%20username%3A%22aman4%22%2C%0A%20%20%20%20passphrase%3A%22pass123%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    username:\\\"aman4\\\",\\n    passphrase:\\\"pass123\\\",\\n    \\n  })\\n  {\\n    \\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "when the token is missing"
+			},
+			"response": []
+		},
+		{
+			"name": "Login3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20login(login%3A%7B%0A%20%20%20%20username%3A%22aman4%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20token%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    username:\\\"aman4\\\",\\n    \\n  })\\n  {\\n    token\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "When passphrase is missing"
+			},
+			"response": []
+		},
+		{
+			"name": "Login6",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20login(login%3A%7B%0A%20%20%20%20passphrase%3A%22pass123%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20token%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    passphrase:\\\"pass123\\\",\\n    \\n  })\\n  {\\n    token\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "When username is missing"
+			},
+			"response": []
+		},
+		{
+			"name": "Login7",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20login(login%3A%7B%0A%20%20%20%20username%3A%22aman4%22%2C%0A%20%20%20%20passphrase%3A%22brarrr%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20token%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    username:\\\"aman4\\\",\\n    passphrase:\\\"brarrr\\\",\\n    \\n  })\\n  {\\n    token\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "When the passphrase is wrong"
+			},
+			"response": []
+		},
+		{
+			"name": "Login8",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20login(login%3A%7B%0A%20%20%20%20username%3A%22foo%22%2C%0A%20%20%20%20passphrase%3A%22%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20token%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    username:\\\"foo\\\",\\n    passphrase:\\\"\\\",\\n    \\n  })\\n  {\\n    token\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "when the username is invalid"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User5",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20createUser(user%3A%7B%0A%20%20%20%20name%3A%22foo1%22%2C%0A%20%20%20%20firstName%3A%22Foo%22%2C%0A%20%20%20%20lastName%3A%22Bar%22%2C%0A%20%20%20%20passphrase%3A%22%22%2C%0A%20%20%20%20%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20firstName%0A%20%20%20%20lastName%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  createUser(user:{\\n    name:\\\"foo2\\\",\\n    firstName:\\\"Foo\\\",\\n    lastName:\\\"Bar\\\",\\n    passphrase:\\\"\\\",\\n    \\n  })\\n  {\\n    id\\n    firstName\\n    lastName\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "With no value in the passphrase"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User6",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20createUser(user%3A%7B%0A%20%20%20%20name%3A%22foo4%22%2C%0A%20%20%20%20firstName%3A%22Foo%22%2C%0A%20%20%20%20lastName%3A%22Bar%22%2C%0A%20%20%20%20passphrase%3A%22%22%2C%0A%20%20%20%20members%3A%225%22%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20firstName%0A%20%20%20%20lastName%0A%20%20%20%20token%0A%20%20%20%20members%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  createUser(user:{\\n    name:\\\"foo4\\\",\\n    firstName:\\\"Foo\\\",\\n    lastName:\\\"Bar\\\",\\n    passphrase:\\\"\\\",\\n    members:\\\"5\\\"\\n  })\\n  {\\n    id\\n    firstName\\n    lastName\\n    token\\n    members\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "Cannot query member in create user"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zevere-staging.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zevere-staging.herokuapp.com/zv/GraphiQL?query=mutation%20%7B%0A%20%20createUser(user%3A%7B%0A%20%20%20%20name%3A%22foo5%22%2C%0A%20%20%20%20firstName%3A%22Foo%22%2C%0A%20%20%20%20lastName%3A%22Bar%22%2C%0A%20%20%20%20passphrase%3A%22%22%2C%0A%20%20%20%20members%3A%225%22%0A%20%20%7D)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20firstName%0A%20%20%20%20lastName%0A%20%20%20%20token%0A%20%20%20%20%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation {\\n  createUser(user:{\\n    name:\\\"foo6\\\",\\n    firstName:\\\"Foo\\\",\\n    lastName:\\\"Bar\\\",\\n    passphrase:\\\"\\\",\\n    members:\\\"5\\\"\\n  })\\n  {\\n    id\\n    firstName\\n    lastName\\n    token\\n    \\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zevere-staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "Member is added but cannot be quered "
+			},
+			"response": []
+		},
+		{
+			"name": "Create List1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7BcreateList(owner%3A%22harry1%22%2Clist%3A%7B%0A%20%20id%3A%22task1%22%2C%0A%20%20title%3A%22assignment1%22%0A%0A%7D%0A)%20%7B%0A%0A%20%20id%0A%20%20title%0A%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{createList(owner:\\\"harry1\\\",list:{\\n  id:\\\"task2\\\",\\n  title:\\\"assignment1\\\"\\n\\n}\\n) {\\n\\n  id\\n  title\\n}\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Task1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7BaddTask(owner%3A%22harry1%22%2Clist%3A%22task2%22%2Ctask%3A%7B%0A%20%20id%3A%22task2%22%2C%0A%20%20title%3A%22%22%2C%0A%20%20description%3A%22%22%2C%0A%20%20due%3A%222018-10-20%22%2C%0A%20%20tags%3A%22%22%0A%20%20%0A%0A%7D%0A)%20%7B%0A%0A%20%20id%0A%20%20title%0A%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{addTask(owner:\\\"harry1\\\",list:\\\"task1\\\",task:{\\n  id:\\\"task2\\\",\\n  title:\\\"\\\",\\n  description:\\\"\\\",\\n  due:\\\"2018-10-20\\\",\\n  tags:\\\"\\\"\\n  \\n\\n}\\n) {\\n\\n  id\\n  title\\n}\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Task2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7BaddTask(owner%3A%22harry1%22%2Clist%3A%22task2%22%2Ctask%3A%7B%0A%20%20id%3A%22assignment2%22%2C%0A%20%20title%3A%22create%20test%20cases%22%2C%0A%20%20description%3A%22create%20user%20and%20login%20test%20cases%22%2C%0A%20%20due%3A%222018-10-20%22%2C%0A%20%20tags%3A%22%22%0A%20%20%0A%0A%7D%0A)%20%7B%0A%0A%20%20id%0A%20%20title%0A%20%20description%0A%20%20due%0A%20%20createdAt%0A%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{addTask(owner:\\\"harry1\\\",list:\\\"task1\\\",task:{\\n  id:\\\"assignment2\\\",\\n  title:\\\"create test cases\\\",\\n  description:\\\"create user and login test cases\\\",\\n  due:\\\"2018-10-20\\\",\\n  tags:\\\"\\\"\\n  \\n\\n}\\n) {\\n\\n  id\\n  title\\n  description\\n  due\\n  createdAt\\n}\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Task3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7BaddTask(owner%3A%22harry1%22%2Clist%3A%22task2%22%2Ctask%3A%7B%0A%20%20id%3A%22assignment3%22%2C%0A%20%20title%3A%22run%20test%20cases%22%2C%0A%20%20description%3A%22run%20user%20and%20login%20test%20cases%22%2C%0A%20%20due%3A%222018-10-10%22%2C%0A%20%20tags%3A%22%22%0A%20%20%0A%0A%7D%0A)%20%7B%0A%0A%20%20id%0A%20%20title%0A%20%20description%0A%20%20due%0A%20%20createdAt%0A%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{addTask(owner:\\\"harry1\\\",list:\\\"task1\\\",task:{\\n  id:\\\"assignment3\\\",\\n  title:\\\"run test cases\\\",\\n  description:\\\"run user and login test cases\\\",\\n  due:\\\"2018-10-10\\\",\\n  tags:\\\"\\\"\\n  \\n\\n}\\n) {\\n\\n  id\\n  title\\n  description\\n  due\\n  createdAt\\n}\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Task4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7BaddTask(owner%3A%22harry1%22%2Clist%3A%22task2%22%2Ctask%3A%7B%0A%20%20id%3A%22assignment3%22%2C%0A%20%20title%3A%22run%20test%20cases%22%2C%0A%20%20description%3A%22run%20user%20and%20login%20test%20cases%22%2C%0A%20%20due%3A%222018-10-10%22%2C%0A%20%20tags%3A%22%22%0A%20%20%0A%0A%7D%0A)%20%7B%0A%0A%20%20id%0A%20%20title%0A%20%20description%0A%20%0A%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{addTask(owner:\\\"harry1\\\",list:\\\"task1\\\",task:{\\n  id:\\\"assignment3\\\",\\n  title:\\\"run test cases\\\",\\n  description:\\\"run user and login test cases\\\",\\n  due:\\\"2018-10-10\\\",\\n  tags:\\\"\\\"\\n  \\n\\n}\\n) {\\n\\n  id\\n  title\\n  description\\n \\n}\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "Duplicate values"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateList2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7B%0A%20%20createList(owner%3A%22shawn1%22%2Clist%3A%7B%0A%20%20%20%20id%3A%22Party%22%2C%0A%20%20%20%20title%3A%22Planning%20for%20the%20party%22%0A%20%20%7D%0A%20%20%20%0A%20%20)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20title%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{\\n  createList(owner:\\\"shawn1\\\",list:{\\n    id:\\\"Party1\\\",\\n    title:\\\"Planning for the party\\\"\\n  }\\n   \\n  )\\n  {\\n    id\\n    title\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Task5",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7B%0A%20%20addTask(owner%3A%22shawn1%22%2Clist%3A%22Party%22%2Ctask%3A%7B%0A%20%20%20%20id%3A%22food%22%2C%0A%20%20%20%20title%3A%22Planning%20for%20party%20food%22%2C%0A%20%20%20%20description%3A%22Planning%20for%20the%20food%20to%20be%20oredred%20for%20the%20party%22%2C%0A%20%20%20%20due%3A%222018-10-25%22%2C%0A%20%20%20%20tags%3A%22%22%0A%20%20%7D%0A%20%20%20%0A%20%20)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20title%0A%20%20%20%20description%0A%20%20%20%20due%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{\\n  addTask(owner:\\\"shawn1\\\",list:\\\"Party1\\\",task:{\\n    id:\\\"food\\\",\\n    title:\\\"Planning for party food\\\",\\n    description:\\\"Planning for the food to be oredred for the party\\\",\\n    due:\\\"2018-10-25\\\",\\n    tags:\\\"\\\"\\n  }\\n   \\n  )\\n  {\\n    id\\n    title\\n    description\\n    due\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddTask6",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7B%0A%20%20addTask(owner%3A%22shawn1%22%2Clist%3A%22Party%22%2Ctask%3A%7B%0A%20%20%20%20id%3A%22food%22%2C%0A%20%20%20%20title%3A%22Planning%20for%20party%20food%22%2C%0A%20%20%20%20description%3A%22Planning%20for%20the%20food%20to%20be%20oredred%20for%20the%20party%22%2C%0A%20%20%20%20due%3A%222018-10-30%22%2C%0A%20%20%20%20tags%3A%22%22%0A%20%20%7D%0A%20%20%20%0A%20%20)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20title%0A%20%20%20%20description%0A%20%20%20%20due%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{\\n  addTask(owner:\\\"shawn1\\\",list:\\\"Party1\\\",task:{\\n    id:\\\"food\\\",\\n    title:\\\"Planning for party food\\\",\\n    description:\\\"Planning for the food to be oredred for the party\\\",\\n    due:\\\"2018-10-30\\\",\\n    tags:\\\"\\\"\\n  }\\n   \\n  )\\n  {\\n    id\\n    title\\n    description\\n    due\\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				},
+				"description": "Using the same value for task id"
+			},
+			"response": []
+		},
+		{
+			"name": "Create List3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7B%0A%20%20createList(owner%3A%22shawn1%22%2Clist%3A%7B%0A%20%20%20%20id%3A%22food%22%2C%0A%20%20%20%20title%3A%22%22%0A%20%20%20%20%0A%20%20%7D%0A%20%20%20%0A%20%20)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20title%0A%20%20%20%20%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{\\n  createList(owner:\\\"shawn1\\\",list:{\\n    id:\\\"food\\\",\\n    title:\\\"\\\"\\n    \\n  }\\n   \\n  )\\n  {\\n    id\\n    title\\n    \\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create List4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=mutation%7B%0A%20%20createList(owner%3A%22shawn1%22%2Clist%3A%7B%0A%20%20%20%20id%3A%22games%22%0A%20%20%20%20%0A%20%20%7D%0A%20%20%20%0A%20%20)%0A%20%20%7B%0A%20%20%20%20id%0A%20%20%20%20%0A%20%20%20%20%0A%20%20%7D%0A%7D"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"mutation{\\n  createList(owner:\\\"shawn1\\\",list:{\\n    id:\\\"games\\\"\\n    \\n  }\\n   \\n  )\\n  {\\n    id\\n    \\n    \\n  }\\n}\",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query User4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "Origin",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					},
+					{
+						"key": "Referer",
+						"value": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphiQL?query=query%7B%0A%20user(userId%3A%22shawn1%22)%20%7B%0A%20%20%20id%0A%20%7D%0A%20%20%20%20%0A%20%20%7D%0A%20%20%20%0A%20%20"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"query\":\"query{\\n user(userId:\\\"shawn1\\\") {\\n   id\\n }\\n    \\n  }\\n   \\n  \",\"variables\":null}"
+				},
+				"url": {
+					"raw": "https://zv-s-webapi-borzoo.herokuapp.com/zv/GraphQL?",
+					"protocol": "https",
+					"host": [
+						"zv-s-webapi-borzoo",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"zv",
+						"GraphQL"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
