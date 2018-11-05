@@ -6,39 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "Create User (old)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"query\" : \"mutation {\\n createUser(user:{\\n id:\\\"aman\\\"\\n  }\\n {\\n firstName:\\\"Amanpreet\\\"\\n  } \\n {\\n lastName:\\\"Brar\\\"\\n } \\n{\\n  passphrase: \\\"pass1234\\\"\\n}) \\n}\" \n}"
-				},
-				"url": {
-					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL",
-					"protocol": "https",
-					"host": [
-						"zevere-staging",
-						"herokuapp",
-						"com"
-					],
-					"path": [
-						"zv",
-						"GraphQL"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create User",
+			"name": "Create user using passphrase as letters",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -88,7 +56,7 @@
 					"raw": "{\"query\":\"mutation {\\n  createUser(user: {\\n    name: \\\"aman\\\",\\n    firstName: \\\"aman\\\",\\n    lastName: \\\"brar\\\",\\n    passphrase: \\\"brarrr\\\"\\n  }) {\\n    id\\n  }\\n}\",\"variables\":null}"
 				},
 				"url": {
-					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL",
 					"protocol": "https",
 					"host": [
 						"zevere-staging",
@@ -99,37 +67,13 @@
 						"zv",
 						"GraphQL"
 					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Query User",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
 				},
-				"url": {
-					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
-					"protocol": "https",
-					"host": [
-						"zevere-staging",
-						"herokuapp",
-						"com"
-					],
-					"path": [
-						"zv",
-						"GraphQL"
-					]
-				}
+				"description": "Creating user with all required parameters and using only letters for values for passphrase."
 			},
 			"response": []
 		},
 		{
-			"name": "Query User2",
+			"name": "Quering user with three params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -190,12 +134,13 @@
 						"zv",
 						"GraphQL"
 					]
-				}
+				},
+				"description": "Quering user with only user id, first name and last name."
 			},
 			"response": []
 		},
 		{
-			"name": "Create User 2",
+			"name": "Create user using passphrase as num and char",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -222,12 +167,13 @@
 						"zv",
 						"GraphQL"
 					]
-				}
+				},
+				"description": "Creating user with all required parameters and passpharse with both letters and numbers as values."
 			},
 			"response": []
 		},
 		{
-			"name": "Create User3",
+			"name": "Create user using all params (not members)",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -254,12 +200,13 @@
 						"zv",
 						"GraphQL"
 					]
-				}
+				},
+				"description": "Creating user using required and optional parameters(except members)."
 			},
 			"response": []
 		},
 		{
-			"name": "Query User3",
+			"name": "Quering user with 5 params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -320,12 +267,13 @@
 						"zv",
 						"GraphQL"
 					]
-				}
+				},
+				"description": "Quering user with user id, first name, last name, days joined, joined at."
 			},
 			"response": []
 		},
 		{
-			"name": "Login",
+			"name": "Login with no username",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -357,7 +305,7 @@
 			"response": []
 		},
 		{
-			"name": "Login2",
+			"name": "Login with no username",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -389,7 +337,7 @@
 			"response": []
 		},
 		{
-			"name": "Create User4",
+			"name": "Create new user with all the params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -450,12 +398,13 @@
 						"zv",
 						"GraphQL"
 					]
-				}
+				},
+				"description": "Creating user using all required and optional parameters."
 			},
 			"response": []
 		},
 		{
-			"name": "Login4",
+			"name": "Login with required params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -521,7 +470,7 @@
 			"response": []
 		},
 		{
-			"name": "Login2",
+			"name": "Login with all required params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -571,7 +520,7 @@
 					"raw": "{\"query\":\"mutation {\\n  login(login:{\\n    username:\\\"aman4\\\",\\n    passphrase:\\\"pass123\\\",\\n    \\n  })\\n  {\\n    token\\n  }\\n}\",\"variables\":null}"
 				},
 				"url": {
-					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL?",
+					"raw": "https://zevere-staging.herokuapp.com/zv/GraphQL",
 					"protocol": "https",
 					"host": [
 						"zevere-staging",
@@ -587,7 +536,7 @@
 			"response": []
 		},
 		{
-			"name": "Login5",
+			"name": "Login with missing token",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -654,7 +603,7 @@
 			"response": []
 		},
 		{
-			"name": "Login3",
+			"name": "Login with missing passphrase",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -721,7 +670,7 @@
 			"response": []
 		},
 		{
-			"name": "Login6",
+			"name": "Login without username",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -788,7 +737,7 @@
 			"response": []
 		},
 		{
-			"name": "Login7",
+			"name": "Login with wrong passphrase",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -855,7 +804,7 @@
 			"response": []
 		},
 		{
-			"name": "Login8",
+			"name": "Login with invalid username",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -922,7 +871,7 @@
 			"response": []
 		},
 		{
-			"name": "Create User5",
+			"name": "Create user with null passphrase",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -984,12 +933,12 @@
 						"GraphQL"
 					]
 				},
-				"description": "With no value in the passphrase"
+				"description": "Creating user with no value in the passphrase"
 			},
 			"response": []
 		},
 		{
-			"name": "Create User6",
+			"name": "Create user while querying member",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1051,12 +1000,12 @@
 						"GraphQL"
 					]
 				},
-				"description": "Cannot query member in create user"
+				"description": "Creating user by trying to query member while it is not possible to query member in create user"
 			},
 			"response": []
 		},
 		{
-			"name": "Create User",
+			"name": "Create user when member can't be quered",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1118,12 +1067,12 @@
 						"GraphQL"
 					]
 				},
-				"description": "Member is added but cannot be quered "
+				"description": "Attempting to craete user when member is added but cannot be quered "
 			},
 			"response": []
 		},
 		{
-			"name": "Create List1",
+			"name": "Create list with all params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1189,7 +1138,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Task1",
+			"name": "Add task with all params and null values",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1255,7 +1204,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Task2",
+			"name": "Add task with all params and view all",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1321,7 +1270,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Task3",
+			"name": "Add task with all params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1387,7 +1336,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Task4",
+			"name": "Add task with all params and duplicate values",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1454,7 +1403,7 @@
 			"response": []
 		},
 		{
-			"name": "CreateList2",
+			"name": "Create list with all params",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1520,7 +1469,7 @@
 			"response": []
 		},
 		{
-			"name": "Add Task5",
+			"name": "Add task with all params and view all",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1586,7 +1535,7 @@
 			"response": []
 		},
 		{
-			"name": "AddTask6",
+			"name": "Add task with same value for task id",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1653,7 +1602,7 @@
 			"response": []
 		},
 		{
-			"name": "Create List3",
+			"name": "Create list with title as null",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1719,7 +1668,7 @@
 			"response": []
 		},
 		{
-			"name": "Create List4",
+			"name": "Create list with no title",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1785,7 +1734,7 @@
 			"response": []
 		},
 		{
-			"name": "Query User4",
+			"name": "Query user with user id only",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -1846,7 +1795,8 @@
 						"zv",
 						"GraphQL"
 					]
-				}
+				},
+				"description": "Quering user with user id only."
 			},
 			"response": []
 		}
