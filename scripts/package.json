@@ -1,5 +1,5 @@
 {
-  "name": "borzoo-scripts",
+  "name": "scripts",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -11,5 +11,8 @@
   "dependencies": {
     "chalk": "^2.3.1",
     "shelljs": "^0.8.1"
+  },
+  "devDependencies": {
+    "newman": "^4.2.2"
   }
 }
