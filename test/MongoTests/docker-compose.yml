@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - borzoo-network
+
+networks:
+  borzoo-network:
+    driver: bridge

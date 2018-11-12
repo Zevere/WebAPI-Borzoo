@@ -26,17 +26,17 @@ function get_docker_options() {
 }
 
 try {
-    console.info(`building Docker images`)
+    console.info(`BUILDING DOCKER IMAGES`)
 
     $.cd(root)
+
+    console.debug('building the final web app with "borzoo:latest" tag')
+    $.exec(`docker build --tag borzoo --target final .`)
 
     console.debug('building the solution with "Release" configuration and "borzoo:solution" tag')
     $.exec(
         `docker build --tag borzoo:solution --no-cache --target solution-build --build-arg "configuration=Release" .`
     )
-
-    console.debug('building the final web app with "borzoo:latest" tag')
-    $.exec(`docker build --tag borzoo --target final .`)
 
 
     console.debug('reading Docker deployment options')
@@ -56,8 +56,9 @@ try {
         console.warn('Docker deployment options not found. skipping Docker image push...')
     }
 } catch (e) {
+    console.error(`❎ AN UNEXPECTED ERROR OCURRED`)
     console.error(e)
     process.exit(1)
 }
 
-console.info(`✅ Build succeeded`)
+console.info(`✅ BUILD SUCCEEDED`)

@@ -24,13 +24,13 @@ jobs:
       name: "Borzoo tests"
       install: cd scripts && npm ci && cd ..
       script: echo ToDo
-    - name: "Vivid Operations - Systems Integration Tests"
+    - name: "MongoDB Integration Tests"
       install:
         - cd scripts && npm ci && cd ..
-        - docker pull zevere/botops-vivid:unstable-solution
+        - docker pull zevere/webapi-borzoo:unstable-solution
       env:
-        - image_tag=zevere/botops-vivid:unstable-solution
-      script: node scripts/test/ops.integration.test.js
+        - image_tag=zevere/webapi-borzoo:unstable-solution
+      script: node scripts/test/mongo.integration.test.js
     - name: "Postman Tests"
       install: cd scripts && npm ci && cd ..
       script: node scripts/test/postman.test.js
