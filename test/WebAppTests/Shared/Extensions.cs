@@ -14,5 +14,14 @@ namespace WebAppTests.Shared
                 "/zv/graphql",
                 new StringContent(json, Encoding.UTF8, "application/json")
             );
+
+        public static Task<HttpResponseMessage> PostGraphqlAsync(
+            this HttpClient client,
+            string query
+        ) =>
+            client.PostAsync(
+                "/zv/graphql",
+                new StringContent(query, Encoding.UTF8, "application/graphql")
+            );
     }
 }

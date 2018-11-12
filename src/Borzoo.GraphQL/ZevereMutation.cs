@@ -13,7 +13,7 @@ namespace Borzoo.GraphQL
                 "createUser",
                 "Create a new user account",
                 new QueryArguments(
-                    new QueryArgument<NonNullGraphType<UserInputType>> {Name = "user"}
+                    new QueryArgument<NonNullGraphType<UserInputType>> { Name = "user" }
                 ),
                 resolver.CreateUserAsync
             );
@@ -22,19 +22,20 @@ namespace Borzoo.GraphQL
                 "login",
                 "Login to a user account",
                 new QueryArguments(
-                    new QueryArgument<NonNullGraphType<LoginInputType>> {Name = "login"}
+                    new QueryArgument<NonNullGraphType<LoginInputType>> { Name = "login" }
                 ),
                 resolver.LoginAsync
             );
 
             Field<TaskListType>(
                 "createList",
-                "Create a new task list. Current user will be its owner.",
+                "Create a new task list.",
+                // ToDo use auth tokens and current logged in user will be the
                 new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>>
                     {
                         Name = "owner",
-                        Description = "Username of owner",
+                        Description = "Username of the list owner",
                     },
                     new QueryArgument<NonNullGraphType<TaskListInputType>>
                     {

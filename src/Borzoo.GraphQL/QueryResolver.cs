@@ -17,8 +17,11 @@ namespace Borzoo.GraphQL
 
         private readonly ITaskItemRepository _taskItemRepo;
 
-        public QueryResolver(IUserRepository userRepo, ITaskListRepository taskListRepo,
-                             ITaskItemRepository taskItemRepo)
+        public QueryResolver(
+            IUserRepository userRepo,
+            ITaskListRepository taskListRepo,
+            ITaskItemRepository taskItemRepo
+        )
         {
             _userRepo = userRepo;
             _taskListRepo = taskListRepo;
@@ -111,12 +114,25 @@ namespace Borzoo.GraphQL
 
         public async Task<TaskList> CreateTaskListAsync(ResolveFieldContext<object> context)
         {
-            string username = context.GetArgument<string>("owner");
+            string ownerId = context.GetArgument<string>("owner");
+            {
+                try
+                {
+                    await _userRepo.GetByNameAsync(ownerId, context.CancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (EntityNotFoundException)
+                {
+                    var err = new Error("User ID not found.");
+                    context.Errors.Add(err);
+                    return default;
+                }
+            }
+
             var dto = context.GetArgument<TaskListCreationDto>("list");
 
             var entity = (TaskList) dto;
-            await _taskListRepo.SetUsernameAsync(username)
-                .ConfigureAwait(false);
+            entity.OwnerId = ownerId;
             try
             {
                 await _taskListRepo.AddAsync(entity, context.CancellationToken)
@@ -138,17 +154,11 @@ namespace Borzoo.GraphQL
         public async Task<TaskList[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
         {
             string username = context.Source.Id;
-            await _taskListRepo.SetUsernameAsync(username, context.CancellationToken)
-                .ConfigureAwait(false);
 
             var taskLists = await _taskListRepo.GetUserTaskListsAsync(username, context.CancellationToken)
                 .ConfigureAwait(false);
 
-            var taskListDtos = taskLists
-                .Select(tl => tl)
-                .ToArray();
-
-            return taskListDtos;
+            return taskLists;
         }
 
         public async Task<TaskItemDto> CreateTaskItemAsync(ResolveFieldContext<object> context)
@@ -180,13 +190,11 @@ namespace Borzoo.GraphQL
 
         public async Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
         {
-            string tasklistName = context.Source.DisplayId;
-            string userName = (await _userRepo
-                    .GetByIdAsync(context.Source.OwnerId, cancellationToken: context.CancellationToken)
-                    .ConfigureAwait(false)
-                ).DisplayId;
+            return new TaskItemDto[0];
+            string taskListName = context.Source.DisplayId;
+            string ownerId = context.Source.OwnerId;
 
-            await _taskItemRepo.SetTaskListAsync(userName, tasklistName, context.CancellationToken)
+            await _taskItemRepo.SetTaskListAsync(ownerId, taskListName, context.CancellationToken)
                 .ConfigureAwait(false);
 
             var tasks = await _taskItemRepo.GetTaskItemsAsync(cancellationToken: context.CancellationToken)

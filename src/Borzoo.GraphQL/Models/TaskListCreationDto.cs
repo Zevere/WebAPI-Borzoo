@@ -10,12 +10,10 @@ namespace Borzoo.GraphQL.Models
     {
         [Required]
         [MinLength(1)]
-        [JsonProperty(Required = Required.Always)]
         public string Id { get; set; }
 
         [Required]
         [MinLength(1)]
-        [JsonProperty(Required = Required.Always)]
         public string Title { get; set; }
 
         [MinLength(1)]
@@ -28,12 +26,15 @@ namespace Borzoo.GraphQL.Models
         public string[] Tags { get; set; }
 
         public static explicit operator TaskList(TaskListCreationDto dto) =>
-            dto is null
+            dto == null
                 ? null
                 : new TaskList
                 {
                     DisplayId = dto.Id,
                     Title = dto.Title,
+                    Description = dto.Description,
+                    Collaborators = dto.Collaborators,
+                    Tags = dto.Tags,
                 };
     }
 }

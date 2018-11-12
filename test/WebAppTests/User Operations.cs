@@ -10,12 +10,11 @@ using Xunit;
 
 namespace WebAppTests
 {
-    [Collection("user operations")]
-    public class UserTests : IClassFixture<TestsFixture>
+    public class UserOpsTests : IClassFixture<TestsFixture>
     {
         private readonly TestsFixture _fxt;
 
-        public UserTests(TestsFixture fxt)
+        public UserOpsTests(TestsFixture fxt)
         {
             _fxt = fxt;
         }
