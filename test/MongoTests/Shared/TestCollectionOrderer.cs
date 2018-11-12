@@ -7,6 +7,7 @@ namespace MongoTests.Shared
         private static readonly string[] Collections =
         {
             "user repository",
+            "task list repository",
         };
 
         public TestCollectionOrderer()

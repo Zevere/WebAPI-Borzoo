@@ -4,11 +4,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
-using Borzoo.GraphQL;
 using Borzoo.GraphQL.Models;
 using GraphQL.Types;
 
-namespace Borzoo.Web.GraphQL
+namespace Borzoo.GraphQL
 {
     public class QueryResolver : IQueryResolver
     {
@@ -19,7 +18,7 @@ namespace Borzoo.Web.GraphQL
         private readonly ITaskItemRepository _taskItemRepo;
 
         public QueryResolver(IUserRepository userRepo, ITaskListRepository taskListRepo,
-            ITaskItemRepository taskItemRepo)
+                             ITaskItemRepository taskItemRepo)
         {
             _userRepo = userRepo;
             _taskListRepo = taskListRepo;
@@ -46,7 +45,7 @@ namespace Borzoo.Web.GraphQL
             {
                 var err = new Error("duplicate key")
                 {
-                    Path = new[] {"user"}
+                    Path = new[] { "user" }
                 };
                 context.Errors.Add(err);
                 return default;
@@ -69,7 +68,7 @@ namespace Borzoo.Web.GraphQL
             {
                 var err = new Error("authentication failed")
                 {
-                    Path = new[] {"login"}
+                    Path = new[] { "login" }
                 };
                 context.Errors.Add(err);
                 return null;
@@ -79,7 +78,7 @@ namespace Borzoo.Web.GraphQL
             {
                 var err = new Error("authentication failed")
                 {
-                    Path = new[] {"login"}
+                    Path = new[] { "login" }
                 };
                 context.Errors.Add(err);
                 return null;
@@ -101,7 +100,7 @@ namespace Borzoo.Web.GraphQL
             {
                 var err = new Error("not found")
                 {
-                    Path = new[] {"user"}
+                    Path = new[] { "user" }
                 };
                 context.Errors.Add(err);
                 return null;
@@ -127,7 +126,7 @@ namespace Borzoo.Web.GraphQL
             {
                 var err = new Error("duplicate key")
                 {
-                    Path = new[] {"list"}
+                    Path = new[] { "list" }
                 };
                 context.Errors.Add(err);
                 return default;
@@ -142,7 +141,7 @@ namespace Borzoo.Web.GraphQL
             await _taskListRepo.SetUsernameAsync(username, context.CancellationToken)
                 .ConfigureAwait(false);
 
-            var taskLists = await _taskListRepo.GetUserTaskListsAsync(context.CancellationToken)
+            var taskLists = await _taskListRepo.GetUserTaskListsAsync(username, context.CancellationToken)
                 .ConfigureAwait(false);
 
             var taskListDtos = taskLists
@@ -170,7 +169,7 @@ namespace Borzoo.Web.GraphQL
             {
                 var err = new Error("duplicate key")
                 {
-                    Path = new[] {"task"}
+                    Path = new[] { "task" }
                 };
                 context.Errors.Add(err);
                 return default;

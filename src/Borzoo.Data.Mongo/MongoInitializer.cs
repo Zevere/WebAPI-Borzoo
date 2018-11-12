@@ -34,21 +34,20 @@ namespace Borzoo.Data.Mongo
 
             {
                 // "task-lists" Collection
-                await database.CreateCollectionAsync(MongoConstants.Collections.TaskLists.Name, null,
-                    cancellationToken);
-                var listsCollection = database.GetCollection<TaskListMongo>(MongoConstants.Collections.TaskLists.Name);
-                var indexBuilder = Builders<TaskListMongo>.IndexKeys;
+                await database.CreateCollectionAsync("task-lists", cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+                var listsCollection = database.GetCollection<TaskList>("task-lists");
+                var indexBuilder = Builders<TaskList>.IndexKeys;
 
-                // create unique index "owner-list_name" on the fields "name" and "owner"
+                // create unique index "owner_list-name" on the fields "name" and "owner"
                 var key = indexBuilder.Combine(
-                    indexBuilder.Ascending(tl => tl.OwnerDbRef.Id),
+                    indexBuilder.Ascending(tl => tl.OwnerId),
                     indexBuilder.Ascending(tl => tl.DisplayId)
                 );
-                await listsCollection.Indexes.CreateOneAsync(new CreateIndexModel<TaskListMongo>(
-                        key,
-                        new CreateIndexOptions
-                            { Name = MongoConstants.Collections.TaskLists.Indexes.OwnerListName, Unique = true }),
-                    cancellationToken: cancellationToken
+                await listsCollection.Indexes.CreateOneAsync(
+                    new CreateIndexModel<TaskList>(
+                        key, new CreateIndexOptions { Name = "owner_list-name", Unique = true }
+                    ), cancellationToken: cancellationToken
                 ).ConfigureAwait(false);
             }
 
@@ -99,16 +98,14 @@ namespace Borzoo.Data.Mongo
                     map.MapIdProperty(tl => tl.Id)
                         .SetIdGenerator(StringObjectIdGenerator.Instance)
                         .SetSerializer(new StringSerializer(BsonType.ObjectId));
-                    map.MapProperty(tl => tl.DisplayId).SetElementName("name").SetOrder(1);
+                    map.MapProperty(tl => tl.DisplayId).SetElementName("name");
+                    map.MapProperty(tl => tl.OwnerId).SetElementName("owner");
                     map.MapProperty(tl => tl.Title).SetElementName("title");
                     map.MapProperty(tl => tl.CreatedAt).SetElementName("created");
-                    map.MapProperty(tl => tl.IsDeleted).SetElementName("deleted").SetIgnoreIfDefault(true);
-                });
-                BsonClassMap.RegisterClassMap<TaskListMongo>(map =>
-                {
-                    map.MapProperty(tl => tl.OwnerDbRef)
-                        .SetIsRequired(true)
-                        .SetElementName("owner");
+                    map.MapProperty(tl => tl.Description).SetElementName("description").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.Collaborators).SetElementName("collaborators").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.ModifiedAt).SetElementName("modified").SetIgnoreIfDefault(true);
+                    map.MapProperty(tl => tl.Tags).SetElementName("tags").SetIgnoreIfDefault(true);
                 });
             }
 

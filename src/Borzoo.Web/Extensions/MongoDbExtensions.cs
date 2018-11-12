@@ -1,5 +1,6 @@
 ﻿using System;
 using Borzoo.Data.Abstractions;
+using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo;
 using Borzoo.Data.Mongo.Entities;
 using Borzoo.Web.Options;
@@ -39,9 +40,9 @@ namespace Borzoo.Web.Extensions
                 _.GetRequiredService<IMongoDatabase>()
                     .GetCollection<UserEntity>(MongoConstants.Collections.Users.Name)
             );
-            services.AddTransient<IMongoCollection<TaskListMongo>>(_ =>
+            services.AddTransient<IMongoCollection<TaskList>>(_ =>
                 _.GetRequiredService<IMongoDatabase>()
-                    .GetCollection<TaskListMongo>(MongoConstants.Collections.TaskLists.Name)
+                    .GetCollection<TaskList>(MongoConstants.Collections.TaskLists.Name)
             );
             services.AddTransient<IMongoCollection<TaskItemMongo>>(_ =>
                 _.GetRequiredService<IMongoDatabase>()

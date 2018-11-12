@@ -1,6 +1,5 @@
 ﻿using Borzoo.GraphQL;
 using Borzoo.GraphQL.Types;
-using Borzoo.Web.GraphQL;
 using GraphQL;
 using GraphQL.Http;
 using GraphQL.Types;

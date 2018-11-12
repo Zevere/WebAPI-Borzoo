@@ -17,11 +17,15 @@ namespace Borzoo.Data.Abstractions.Entities
         [Required]
         public string Title { get; set; }
 
+        public string Description { get; set; }
+
         [Required]
-        public DateTimeOffset CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? ModifiedAt { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public string[] Tags { get; set; }
+
+        public string[] Collaborators { get; set; }
     }
 }

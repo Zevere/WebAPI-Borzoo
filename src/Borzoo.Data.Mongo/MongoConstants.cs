@@ -2,11 +2,6 @@
 {
     public static class MongoConstants
     {
-        public static class Database
-        {
-            public const string Test = "borzoo-test-mongo";
-        }
-
         public static class Collections
         {
             public static class Users

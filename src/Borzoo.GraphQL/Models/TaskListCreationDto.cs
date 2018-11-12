@@ -18,6 +18,15 @@ namespace Borzoo.GraphQL.Models
         [JsonProperty(Required = Required.Always)]
         public string Title { get; set; }
 
+        [MinLength(1)]
+        public string Description { get; set; }
+
+        [MinLength(1)]
+        public string[] Collaborators { get; set; }
+
+        [MinLength(1)]
+        public string[] Tags { get; set; }
+
         public static explicit operator TaskList(TaskListCreationDto dto) =>
             dto is null
                 ? null

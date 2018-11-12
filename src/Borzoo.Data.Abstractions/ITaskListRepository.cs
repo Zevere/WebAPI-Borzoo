@@ -10,11 +10,31 @@ namespace Borzoo.Data.Abstractions
 
         string UserId { get; }
 
-        Task SetUsernameAsync(string username, CancellationToken cancellationToken = default);
-        
-        Task<TaskList> GetByNameAsync(string name, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default);
-        
-        Task<TaskList[]> GetUserTaskListsAsync(CancellationToken cancellationToken = default);
+        Task SetUsernameAsync(
+            string username,
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
+        /// Gets a single task list by its name and owner id
+        /// </summary>
+        /// <param name="name">Display ID of the task list</param>
+        /// <param name="ownerId">User ID of the list owner</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        Task<TaskList> GetByNameAsync(
+            string name,
+            string ownerId,
+            CancellationToken cancellationToken = default
+        );
+
+        /// <summary>
+        /// Gets all the task lists for a user
+        /// </summary>
+        /// <param name="ownerId">User ID of the list owner</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        Task<TaskList[]> GetUserTaskListsAsync(
+            string ownerId,
+            CancellationToken cancellationToken = default
+        );
     }
 }

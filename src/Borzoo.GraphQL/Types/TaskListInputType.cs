@@ -11,11 +11,19 @@ namespace Borzoo.GraphQL.Types
             Description = "Input for creating a new task list";
 
             Field(_ => _.Id)
-                .Description("The desired task list name. Names are case insensitive and " +
-                             "valid characters are ASCII alphanumeric characters, '_', '.', and '-'.");
+                .Description("The desired task list name");
 
             Field(_ => _.Title)
                 .Description("Short title of task list");
+
+            Field(_ => _.Description, nullable: true)
+                .Description("List's descriptions");
+
+            Field(_ => _.Collaborators, type: typeof(ListGraphType<NonNullGraphType<StringGraphType>>))
+                .Description("User IDs of the list collaborators");
+
+            Field(_ => _.Tags, type: typeof(ListGraphType<NonNullGraphType<StringGraphType>>))
+                .Description("List's tags");
         }
     }
 }

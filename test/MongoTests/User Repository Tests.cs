@@ -160,7 +160,7 @@ namespace MongoTests
             );
 
             await Assert.ThrowsAsync<EntityNotFoundException>(() =>
-                userRepo.GetByIdAsync(@"object id ಠ_ಠ")
+                userRepo.GetByIdAsync("object id ಠ_ಠ")
             );
         }
 

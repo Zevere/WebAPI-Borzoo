@@ -7,6 +7,7 @@ namespace WebAppTests.Shared
         private static readonly string[] Collections =
         {
             "user operations",
+            "task list operations",
         };
 
         public TestCollectionOrderer()

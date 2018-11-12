@@ -34,7 +34,7 @@ namespace Borzoo.Data.Mongo
         {
             await _tasklistRepo.SetUsernameAsync(username, cancellationToken)
                 .ConfigureAwait(false);
-            var tasklist = await _tasklistRepo.GetByNameAsync(tasklistName, cancellationToken: cancellationToken)
+            var tasklist = await _tasklistRepo.GetByNameAsync(tasklistName, "", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             UserId = tasklist.OwnerId;

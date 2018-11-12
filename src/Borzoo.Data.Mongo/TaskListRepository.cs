@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
-using Borzoo.Data.Mongo.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -13,83 +11,42 @@ namespace Borzoo.Data.Mongo
 {
     public class TaskListRepository : ITaskListRepository
     {
-        public string UserName { get; private set; }
+        public string UserName { get; }
 
-        public string UserId { get; private set; }
+        public string UserId { get; }
 
-        private FilterDefinitionBuilder<TaskListMongo> Filter => Builders<TaskListMongo>.Filter;
+        private FilterDefinitionBuilder<TaskList> Filter => Builders<TaskList>.Filter;
 
-        private readonly IMongoCollection<TaskListMongo> _collection;
+        private readonly IMongoCollection<TaskList> _collection;
 
-        private readonly IUserRepository _userRepo;
-
-        public TaskListRepository(IMongoCollection<TaskListMongo> collection, IUserRepository userRepo)
+        public TaskListRepository(
+            IMongoCollection<TaskList> collection
+        )
         {
             _collection = collection;
-            _userRepo = userRepo;
         }
 
-        public async Task SetUsernameAsync(string username, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public async Task AddAsync(
+            TaskList entity,
+            CancellationToken cancellationToken = default
+        )
         {
-            var user = await _userRepo.GetByNameAsync(username, cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
-
-            UserName = user.DisplayId;
-            UserId = user.Id;
-        }
-
-        public async Task<TaskList> GetByNameAsync(string name, bool includeDeletedRecords = false,
-                                                   CancellationToken cancellationToken = default)
-        {
-            EnsureUserId();
-
-            name = Regex.Unescape(name).ToLower();
-
-            var filter = Filter.And(
-                Filter.Eq(list => list.OwnerDbRef.Id, UserId),
-                Filter.Regex(list => list.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
-                Filter.Exists(list => list.IsDeleted, includeDeletedRecords)
-            );
-
-            TaskListMongo tl;
+            entity.DisplayId = entity.DisplayId.ToLower();
+            entity.OwnerId = entity.OwnerId.ToLower();
 
             try
             {
-                tl = await _collection
-                    .Find(filter)
-                    .SingleAsync(cancellationToken)
+                await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             }
-            catch (InvalidOperationException)
-            {
-                throw new EntityNotFoundException(nameof(TaskList.DisplayId), name);
-            }
-
-            tl.DisplayId = name;
-            return tl;
-        }
-
-        public async Task AddAsync(TaskList entity, CancellationToken cancellationToken = default)
-        {
-            EnsureUserId();
-            entity.DisplayId = entity.DisplayId.ToLower();
-
-            var tlMongo = TaskListMongo.FromTaskList(entity);
-            tlMongo.OwnerDbRef = new MongoDBRef(MongoConstants.Collections.Users.Name, UserId);
-            try
-            {
-                await _collection.InsertOneAsync(tlMongo, null, cancellationToken);
-            }
-            catch (MongoWriteException e)
-                when (e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
-                      e.WriteError.Message
-                          .Contains($" index: {MongoConstants.Collections.TaskLists.Indexes.OwnerListName} ")
-                )
+            catch (MongoWriteException e) when (
+                e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
+                e.WriteError.Message.Contains($" index: owner_list-name ")
+            )
             {
                 throw new DuplicateKeyException(nameof(TaskList.OwnerId), nameof(TaskList.DisplayId));
             }
-
-            entity.OwnerId = tlMongo.OwnerDbRef.Id.AsString;
         }
 
         public Task<TaskList> GetByIdAsync(
@@ -100,7 +57,10 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public Task<TaskList> UpdateAsync(TaskList entity, CancellationToken cancellationToken = default)
+        public Task<TaskList> UpdateAsync(
+            TaskList entity,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }
@@ -113,28 +73,54 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public async Task<TaskList[]> GetUserTaskListsAsync(CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public async Task<TaskList> GetByNameAsync(
+            string name,
+            string ownerId,
+            CancellationToken cancellationToken = default
+        )
         {
-            EnsureUserId();
-            var filter = Builders<TaskListMongo>
-                .Filter.Eq(list => list.OwnerDbRef.Id, UserId);
+            name = Regex.Unescape(name);
+            ownerId = Regex.Unescape(ownerId);
+
+            var filter = Filter.And(
+                Filter.Regex(tl => tl.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
+                Filter.Regex(tl => tl.OwnerId, new BsonRegularExpression($"^{ownerId}$", "i"))
+            );
+
+            var taskList = await _collection
+                .Find(filter)
+                .SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            if (taskList is null)
+            {
+                throw new EntityNotFoundException(nameof(TaskList.DisplayId), name);
+            }
+
+            return taskList;
+        }
+
+        public async Task<TaskList[]> GetUserTaskListsAsync(
+            string ownerId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            // ToDO ensure id contains allowed characters only \.[A-Z]_\d
+
+            var filter = Filter.Regex(tl => tl.OwnerId, new BsonRegularExpression($"^{ownerId}$", "i"));
 
             var taskLists = await _collection
                 .Find(filter)
                 .ToListAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            var array = taskLists
-                .Cast<TaskList>()
-                .ToArray();
-
-            return array;
+            return taskLists.ToArray();
         }
 
-        private void EnsureUserId()
+        public async Task SetUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(UserId))
-                throw new ArgumentNullException(nameof(UserId), $"Call {nameof(SetUsernameAsync)} method first.");
+            throw new NotImplementedException();
         }
     }
 }
