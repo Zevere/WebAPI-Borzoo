@@ -28,7 +28,7 @@ jobs:
       env:
         - image_tag=zevere/webapi-borzoo:unstable-solution
       script: node scripts/test/borzoo.unit.test.js
-    - name: "Borzoo Systems Integration Tests"
+    - name: "MongoDB Integration Tests"
       install:
         - cd scripts && npm ci && cd ..
         - docker pull zevere/webapi-borzoo:unstable-solution
