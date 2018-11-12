@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using Borzoo.Web.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -26,12 +25,7 @@ namespace Borzoo.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            #region Database
-
-            string connStr = Configuration["data:mongo:connection"];
-            services.AddMongo(connStr);
-
-            #endregion
+            services.AddMongoDb(Configuration.GetSection("Mongo"));
 
             #region Auth
 
@@ -45,7 +39,7 @@ namespace Borzoo.Web
                     {
                         new AssertionRequirement(authContext => authContext.User.FindFirstValue("token") != default)
                     },
-                    new[] {"Basic"});
+                    new[] { "Basic" });
             });
 
             #endregion
@@ -55,13 +49,12 @@ namespace Borzoo.Web
             services.AddCors();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            logger.LogInformation($@"Using database ""{Configuration["data:use"]}"".");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.SeedData(Configuration.GetSection("data"));
+                app.SeedData();
             }
 
             app.UseCors(cors => cors

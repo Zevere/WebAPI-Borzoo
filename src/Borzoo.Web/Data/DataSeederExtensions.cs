@@ -12,7 +12,7 @@ namespace Borzoo.Web.Data
 {
     internal static class DataSeederExtensions
     {
-        public static IApplicationBuilder SeedData(this IApplicationBuilder app, IConfigurationSection dataConfig)
+        public static IApplicationBuilder SeedData(this IApplicationBuilder app)
         {
             using (var _ = app.ApplicationServices.CreateScope())
             {
