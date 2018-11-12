@@ -52,9 +52,6 @@ jobs:
           script: node scripts/deploy Staging
           on:
             branch: develop
-    - stage: PIV
-      name: "PIV Checks"
-      script: echo ToDo
 
 
 # Disable "Build pushed pull requests"
