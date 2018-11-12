@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Borzoo.Data.Abstractions.Entities
 {
-    public class TaskItem : EntityBase
+    public class TaskItem : IEntity
     {
         [Required] public string Id { get; set; }
 

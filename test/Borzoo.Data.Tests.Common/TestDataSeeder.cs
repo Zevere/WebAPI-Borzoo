@@ -15,7 +15,7 @@ namespace Borzoo.Data.Tests.Common
             GenFu.GenFu.Configure<User>()
                 .Fill(_ => _.DisplayId, Names.UserName)
                 .Fill(_ => _.FirstName, Names.FirstName)
-                .Fill(_ => _.LastName).WithRandom(new[] {null, Names.LastName()})
+                .Fill(_ => _.LastName).WithRandom(new[] { null, Names.LastName() })
                 .Fill(_ => _.PassphraseHash, Lorem.GenerateWords(3));
 
             GenFu.GenFu.Configure<TaskList>()
@@ -33,9 +33,7 @@ namespace Borzoo.Data.Tests.Common
                 {
                     await userRepo.AddAsync(user);
                 }
-                catch (DuplicateKeyException)
-                {
-                }
+                catch (DuplicateKeyException) { }
             }
 
             return testUsers;
@@ -51,9 +49,7 @@ namespace Borzoo.Data.Tests.Common
                 {
                     await tasklistRepo.AddAsync(tl);
                 }
-                catch (DuplicateKeyException)
-                {
-                }
+                catch (DuplicateKeyException) { }
             }
 
             return tasklists;
@@ -87,7 +83,6 @@ namespace Borzoo.Data.Tests.Common
                 u.Id = null;
                 u.Token = null;
                 u.ModifiedAt = null;
-                u.IsDeleted = false;
             }
 
             return testUsers;

@@ -12,7 +12,6 @@ namespace Borzoo.Data.Abstractions
             other.FirstName = _this.FirstName;
             other.JoinedAt = _this.JoinedAt.ToUniversalTime();
             other.LastName = _this.LastName;
-            other.IsDeleted = _this.IsDeleted;
             other.Token = _this.Token;
             other.ModifiedAt = _this.ModifiedAt?.ToUniversalTime();
         }

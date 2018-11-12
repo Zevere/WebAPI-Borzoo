@@ -26,6 +26,8 @@ namespace Borzoo.Data.Mongo
             CancellationToken cancellationToken = default
         )
         {
+            entity.DisplayId = entity.DisplayId.ToLower();
+
             try
             {
                 await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken)
@@ -39,11 +41,20 @@ namespace Borzoo.Data.Mongo
             }
         }
 
-        public async Task<User> GetByIdAsync(string id, bool includeDeletedRecords = false,
-                                             CancellationToken cancellationToken = default)
+        public async Task<User> GetByIdAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Id, id.ToLower());
-            User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new EntityNotFoundException(id);
+            }
+
+            User entity = await _collection
+                .Find(Filter.Eq(u => u.Id, id.ToLower()))
+                .SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             if (entity is null)
             {
@@ -53,20 +64,18 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public async Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
-                                               CancellationToken cancellationToken = default)
+        public async Task<User> GetByNameAsync(
+            string name,
+            CancellationToken cancellationToken = default
+        )
         {
             name = Regex.Escape(name);
-            var filter = Filter.And(
-                Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
-                includeDeletedRecords
-                    ? Filter.Where(u => u.IsDeleted)
-                    : Filter.Exists(u => u.IsDeleted, false)
-            );
+            var filter = Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i"));
 
             User entity = await _collection
                 .Find(filter)
-                .SingleOrDefaultAsync(cancellationToken);
+                .SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             if (entity is null)
             {
@@ -76,7 +85,10 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public async Task<User> UpdateAsync(User entity, CancellationToken cancellationToken = default)
+        public async Task<User> UpdateAsync(
+            User entity,
+            CancellationToken cancellationToken = default
+        )
         {
             var filter = Builders<User>.Filter.Eq(u => u.Id, entity.Id);
             var updates = Builders<User>.Update.Combine(
@@ -98,13 +110,18 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public Task DeleteAsync(string id, bool hardDelete = false, CancellationToken cancellationToken = default)
+        public Task DeleteAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }
 
-        public async Task<User> GetByTokenAsync(string token, bool includeDeletedRecords = false,
-                                                CancellationToken cancellationToken = default)
+        public async Task<User> GetByTokenAsync(
+            string token,
+            CancellationToken cancellationToken = default
+        )
         {
             var filter = Builders<User>.Filter.Eq(u => u.Token, token);
             User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
@@ -117,22 +134,30 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public Task<User> GetByPassphraseLoginAsync(string userName, string passphrase,
-                                                    bool includeDeletedRecords = false,
-                                                    CancellationToken cancellationToken = default)
+        public Task<User> GetByPassphraseLoginAsync(
+            string userName,
+            string passphrase,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }
 
-        public async Task SetTokenForUserAsync(string userId, string token,
-                                               CancellationToken cancellationToken = default)
+        public async Task SetTokenForUserAsync(
+            string userId,
+            string token,
+            CancellationToken cancellationToken = default
+        )
         {
             var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
             var update = Builders<User>.Update.Set(u => u.Token, token);
             await _collection.FindOneAndUpdateAsync(filter, update, cancellationToken: cancellationToken);
         }
 
-        public Task<bool> RevokeTokenAsync(string token, CancellationToken cancellationToken = default)
+        public Task<bool> RevokeTokenAsync(
+            string token,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }

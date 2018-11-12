@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Borzoo.Data.Abstractions.Entities
 {
-    public class TaskList : EntityBase
+    public class TaskList : IEntity
     {
         [Required]
         public string Id { get; set; }
 
         [Required]
         public string OwnerId { get; set; }
-        
+
         [Required]
         public string DisplayId { get; set; }
 

@@ -92,8 +92,10 @@ namespace Borzoo.Data.Mongo
             entity.OwnerId = tlMongo.OwnerDbRef.Id.AsString;
         }
 
-        public Task<TaskList> GetByIdAsync(string id, bool includeDeletedRecords = false,
-                                           CancellationToken cancellationToken = default)
+        public Task<TaskList> GetByIdAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }
@@ -103,7 +105,10 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(string id, bool hardDelete = false, CancellationToken cancellationToken = default)
+        public Task DeleteAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }

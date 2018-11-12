@@ -30,7 +30,7 @@ try {
         )
     } finally {
         console.debug('removing test dependency containers via docker-compose')
-        $.exec(`docker-compose --project-name mongotests rm -fv`)
+        $.exec(`docker-compose --project-name mongotests rm --stop -fv`)
     }
 } catch (e) {
     console.error(`❎ AN UNEXPECTED ERROR OCURRED`)

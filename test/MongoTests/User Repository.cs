@@ -11,6 +11,7 @@ using Xunit;
 
 namespace MongoTests
 {
+    [Collection("user repository")]
     public class UserRepoTests : IClassFixture<DatabaseFixture>
     {
         private readonly DatabaseFixture _fxt;
@@ -23,7 +24,7 @@ namespace MongoTests
         [OrderedFact("Should create a new user")]
         public async Task Should_Add_New_User()
         {
-            // 1. insert a new user into the collection
+            // insert a new user into the collection
             User user;
             {
                 IUserRepository userRepo = new UserRepository(
@@ -38,7 +39,7 @@ namespace MongoTests
                 await userRepo.AddAsync(user);
             }
 
-            // 2. ensure entity is updated
+            // ensure user object is updated
             {
                 Assert.Equal("Charles", user.FirstName);
                 Assert.Equal("chuck", user.DisplayId);
@@ -49,11 +50,10 @@ namespace MongoTests
 
                 Assert.Null(user.LastName);
                 Assert.Null(user.Token);
-                Assert.False(user.IsDeleted);
                 Assert.Null(user.ModifiedAt);
             }
 
-            // 3. ensure entity is created properly
+            // ensure user document is created in the collection
             {
                 BsonDocument userDocument = _fxt.Database
                     .GetCollection<BsonDocument>("users")
@@ -73,39 +73,107 @@ namespace MongoTests
             }
         }
 
-//        [OrderedFact(DisplayName = "Should set token for the user")]
-//        public async Task Should_Set_User_Token()
-//        {
-//            string userId = _fixture.UserId;
-//
-//            IUserRepository repo = new UserRepository(
-//                _fixture.Database.GetCollection<User>("users")
-//            );
-//
-//            await repo.SetTokenForUserAsync(userId, "~~Token~~");
-//        }
-//
-//        [OrderedFact(DisplayName = "Should get the user by his username")]
-//        public async Task Should_User_Get_By_Name()
-//        {
-//            string userId = _fixture.UserId;
-//
-//            IUserRepository repo = new UserRepository(
-//                _fixture.Database.GetCollection<User>("users")
-//            );
-//
-//            User user = await repo.GetByNameAsync("chuck");
-//
-//            Assert.Same(user, user);
-//            Assert.Equal(userId, user.Id);
-//            Assert.Equal("Charles", user.FirstName);
-//            Assert.Equal("chuck", user.DisplayId);
-//            Assert.Equal("secret_passphrase", user.PassphraseHash);
-//            Assert.Equal("~~Token~~", user.Token);
-//
-//            Assert.Null(user.LastName);
-//            Assert.False(user.IsDeleted);
-//            Assert.Null(user.ModifiedAt);
-//        }
+        [OrderedFact("Should get user 'chuck' by his username")]
+        public async Task Should_Get_User_By_Name()
+        {
+            IUserRepository userRepo = new UserRepository(
+                _fxt.Database.GetCollection<User>("users")
+            );
+
+            // get user by his username
+            User user = await userRepo.GetByNameAsync("CHuck");
+
+            Assert.Equal("Charles", user.FirstName);
+            Assert.Equal("chuck", user.DisplayId);
+            Assert.Equal("some secret-PASS", user.PassphraseHash);
+            Assert.NotNull(user.Id);
+            Assert.True(ObjectId.TryParse(user.Id, out _), "User ID should be a Mongo ObjectID.");
+            Assert.InRange(user.JoinedAt, DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
+
+            Assert.Null(user.LastName);
+            Assert.Null(user.Token);
+            Assert.Null(user.ModifiedAt);
+        }
+
+        [OrderedFact("Should get a user by its Object ID")]
+        public async Task Should_Get_User_By_ObjectId()
+        {
+            IUserRepository userRepo = new UserRepository(
+                _fxt.Database.GetCollection<User>("users")
+            );
+
+            // insert a new user into the collection
+            string userId;
+            {
+                User newUser = new User
+                {
+                    FirstName = "Dave",
+                    DisplayId = "dav3",
+                    PassphraseHash = "passphrase~hash"
+                };
+                await userRepo.AddAsync(newUser);
+
+                userId = newUser.Id;
+            }
+
+            User user = await userRepo.GetByIdAsync(userId);
+            Assert.Equal("Dave", user.FirstName);
+            Assert.Equal("dav3", user.DisplayId);
+            Assert.Equal("passphrase~hash", user.PassphraseHash);
+            Assert.True(ObjectId.TryParse(user.Id, out _), "User ID should be a Mongo ObjectID.");
+            Assert.InRange(user.JoinedAt, DateTime.UtcNow.AddSeconds(-5), DateTime.UtcNow);
+
+            Assert.Null(user.LastName);
+            Assert.Null(user.Token);
+            Assert.Null(user.ModifiedAt);
+        }
+
+        [OrderedFact("Should throw when adding another user with 'chuck' username")]
+        public async Task Should_Throw_When_Add_Duplicate_Username()
+        {
+            IUserRepository userRepo = new UserRepository(
+                _fxt.Database.GetCollection<User>("users")
+            );
+
+            await Assert.ThrowsAsync<DuplicateKeyException>(() =>
+                userRepo.AddAsync(new User { DisplayId = "CHuck" })
+            );
+        }
+
+        [OrderedFact("Should throw when getting non-existing user by username")]
+        public async Task Should_Throw_When_Get_NonExisting_Username()
+        {
+            IUserRepository userRepo = new UserRepository(
+                _fxt.Database.GetCollection<User>("users")
+            );
+
+            await Assert.ThrowsAsync<EntityNotFoundException>(() =>
+                userRepo.GetByNameAsync(@"username ¯\_(ツ)_/¯")
+            );
+        }
+
+        [OrderedFact("Should throw when getting non-existing user by invalid object id")]
+        public async Task Should_Throw_When_Get_NonExisting_Invalid_UserId()
+        {
+            IUserRepository userRepo = new UserRepository(
+                _fxt.Database.GetCollection<User>("users")
+            );
+
+            await Assert.ThrowsAsync<EntityNotFoundException>(() =>
+                userRepo.GetByIdAsync(@"object id ಠ_ಠ")
+            );
+        }
+
+        [OrderedFact("Should throw when getting non-existing user by object id")]
+        public async Task Should_Throw_When_Get_NonExisting_UserId()
+        {
+            IUserRepository userRepo = new UserRepository(
+                _fxt.Database.GetCollection<User>("users")
+            );
+
+            await Assert.ThrowsAsync<EntityNotFoundException>(() =>
+                userRepo.GetByIdAsync("5be91279beb91c512357c902")
+            );
+        }
     }
 }

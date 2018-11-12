@@ -33,7 +33,7 @@ jobs:
       script: node scripts/test/mongo.integration.test.js
     - name: "Postman Tests"
       install: cd scripts && npm ci && cd ..
-      script: node scripts/test/postman.test.js
+      script: echo ToDo
     - stage: Deploy
       name: "Deploy"
       script: skip

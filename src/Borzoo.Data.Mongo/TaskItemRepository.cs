@@ -30,7 +30,7 @@ namespace Borzoo.Data.Mongo
         }
 
         public async Task SetTaskListAsync(string username, string tasklistName,
-            CancellationToken cancellationToken = default)
+                                           CancellationToken cancellationToken = default)
         {
             await _tasklistRepo.SetUsernameAsync(username, cancellationToken)
                 .ConfigureAwait(false);
@@ -67,8 +67,10 @@ namespace Borzoo.Data.Mongo
             entity.ListId = taskMongo.ListDbRef.Id.AsString;
         }
 
-        public Task<TaskItem> GetByIdAsync(string id, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+        public Task<TaskItem> GetByIdAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }
@@ -78,19 +80,22 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(string id, bool hardDelete = false, CancellationToken cancellationToken = default)
+        public Task DeleteAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }
 
         public Task<TaskItem> GetByNameAsync(string name, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                             CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         public async Task<TaskItem[]> GetTaskItemsAsync(bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                                        CancellationToken cancellationToken = default)
         {
             EnsureListId();
 

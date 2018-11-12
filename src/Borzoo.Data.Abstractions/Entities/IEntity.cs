@@ -1,6 +1,7 @@
 ﻿namespace Borzoo.Data.Abstractions.Entities
 {
-    public interface IEntity
-    {
-    }
+    /// <summary>
+    /// A marker interface for the entity types that can be stored in a repository.
+    /// </summary>
+    public interface IEntity { }
 }
