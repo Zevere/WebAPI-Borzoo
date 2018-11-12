@@ -68,7 +68,7 @@ namespace WebAppTests
         }
 
         [OrderedFact("Should fail when creating task list for a non-existing user")]
-        public async Task Should_Fail_Create_TaskList_ForNonExisting_User()
+        public async Task Should_Fail_Create_TaskList_For_NonExisting_User()
         {
             string mutation = @"mutation {
                 createList(
@@ -89,6 +89,64 @@ namespace WebAppTests
                 }",
                 responseContent
             );
+        }
+
+        [OrderedFact("Should fail when deleting a non-existing task list")]
+        public async Task Should_Fail_Delete_NonExisting_TaskList()
+        {
+            string mutation = @"mutation {
+                deleteList(
+                    owner: ""poulad1024"",
+                    list: ""NOT.FOUND_list""
+                )
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.JsonEqual(
+                @"{
+                    data: { deleteList: false },
+                    errors: [ { message: ""Task list not found."" } ]
+                }",
+                responseContent
+            );
+        }
+
+        [OrderedFact("Should fail when deleting a task list for a non-existing user")]
+        public async Task Should_Fail_Delete_TaskList_For_NonExisting_User()
+        {
+            string mutation = @"mutation {
+                deleteList(
+                    owner: ""Random-user1"",
+                    list: ""my_list""
+                )
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.JsonEqual(
+                @"{
+                    data: { deleteList: false },
+                    errors: [ { message: ""Task list not found."" } ]
+                }",
+                responseContent
+            );
+        }
+
+        [OrderedFact("Should delete a task list")]
+        public async Task Should_Delete_TaskList()
+        {
+            string mutation = @"mutation { deleteList( owner: ""poulad1024"", list: ""todo_list"" ) }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.JsonEqual(@"{ data: { deleteList: true } }", responseContent);
         }
     }
 }

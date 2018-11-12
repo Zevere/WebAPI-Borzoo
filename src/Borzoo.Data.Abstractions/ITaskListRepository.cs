@@ -6,10 +6,6 @@ namespace Borzoo.Data.Abstractions
 {
     public interface ITaskListRepository : IEntityRepository<TaskList>
     {
-        string UserName { get; }
-
-        string UserId { get; }
-
         Task SetUsernameAsync(
             string username,
             CancellationToken cancellationToken = default

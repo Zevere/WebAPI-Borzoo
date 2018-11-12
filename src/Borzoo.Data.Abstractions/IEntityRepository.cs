@@ -31,6 +31,11 @@ namespace Borzoo.Data.Abstractions
             CancellationToken cancellationToken = default
         );
 
+        /// <summary>
+        /// Deletes an entity of type <see cref="TEntity"/> from the repository.
+        /// </summary>
+        /// <param name="id">Unique identifier of the entity.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         Task DeleteAsync(
             string id,
             CancellationToken cancellationToken = default

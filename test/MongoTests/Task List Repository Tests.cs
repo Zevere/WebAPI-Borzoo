@@ -120,5 +120,44 @@ namespace MongoTests
                 taskListRepo.GetByNameAsync("task name ಠ_ಠ", "owner id (ツ)")
             );
         }
+
+        [OrderedFact("Should delete a task list by object id")]
+        public async Task Should_Delete_TaskList_By_Id()
+        {
+            string documentId;
+
+            // get document id for the "groceries" task list
+            IMongoCollection<BsonDocument> taskListCollection;
+            {
+                taskListCollection = _fxt.Database.GetCollection<BsonDocument>("task-lists");
+                BsonDocument document = await taskListCollection
+                    .Find(Builders<BsonDocument>.Filter.Eq("name", "groceries"))
+                    .SingleAsync();
+                documentId = document.GetValue("_id").ToString();
+            }
+
+            ITaskListRepository taskListRepo = new TaskListRepository(
+                _fxt.Database.GetCollection<TaskList>("task-lists")
+            );
+
+            await taskListRepo.DeleteAsync(documentId);
+
+            var matchingDocuments = await taskListCollection
+                .Find(Builders<BsonDocument>.Filter.Eq("name", "groceries"))
+                .ToListAsync();
+            Assert.Empty(matchingDocuments);
+        }
+
+        [OrderedFact("Should throw when deleting a task list by invalid object id")]
+        public async Task Should_Throw_When_Delete_TaskList_By_Invalid_Id()
+        {
+            ITaskListRepository taskListRepo = new TaskListRepository(
+                _fxt.Database.GetCollection<TaskList>("task-lists")
+            );
+
+            await Assert.ThrowsAsync<EntityNotFoundException>(() =>
+                taskListRepo.DeleteAsync("5bea0d905f99824ffcc107d0")
+            );
+        }
     }
 }

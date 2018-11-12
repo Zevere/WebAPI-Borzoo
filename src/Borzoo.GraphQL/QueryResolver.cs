@@ -151,6 +151,30 @@ namespace Borzoo.GraphQL
             return entity;
         }
 
+        public async Task<bool> DeleteTaskListAsync(ResolveFieldContext<object> context)
+        {
+            string ownerId = context.GetArgument<string>("owner");
+            string listId = context.GetArgument<string>("list");
+
+            TaskList taskList;
+            try
+            {
+                taskList = await _taskListRepo.GetByNameAsync(listId, ownerId, context.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (EntityNotFoundException)
+            {
+                var err = new Error("Task list not found.");
+                context.Errors.Add(err);
+                return false;
+            }
+
+            await _taskListRepo.DeleteAsync(taskList.Id, context.CancellationToken)
+                .ConfigureAwait(false);
+
+            return true;
+        }
+
         public async Task<TaskList[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
         {
             string username = context.Source.Id;
@@ -188,23 +212,23 @@ namespace Borzoo.GraphQL
             return (TaskItemDto) entity;
         }
 
-        public async Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
+        public Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
         {
-            return new TaskItemDto[0];
-            string taskListName = context.Source.DisplayId;
-            string ownerId = context.Source.OwnerId;
-
-            await _taskItemRepo.SetTaskListAsync(ownerId, taskListName, context.CancellationToken)
-                .ConfigureAwait(false);
-
-            var tasks = await _taskItemRepo.GetTaskItemsAsync(cancellationToken: context.CancellationToken)
-                .ConfigureAwait(false);
-
-            var taskDtos = tasks
-                .Select(tl => (TaskItemDto) tl)
-                .ToArray();
-
-            return taskDtos;
+            return Task.FromResult(new TaskItemDto[0]);
+//            string taskListName = context.Source.DisplayId;
+//            string ownerId = context.Source.OwnerId;
+//
+//            await _taskItemRepo.SetTaskListAsync(ownerId, taskListName, context.CancellationToken)
+//                .ConfigureAwait(false);
+//
+//            var tasks = await _taskItemRepo.GetTaskItemsAsync(cancellationToken: context.CancellationToken)
+//                .ConfigureAwait(false);
+//
+//            var taskDtos = tasks
+//                .Select(tl => (TaskItemDto) tl)
+//                .ToArray();
+//
+//            return taskDtos;
         }
 
         private string GenerateAlphaNumericString(int charCount)

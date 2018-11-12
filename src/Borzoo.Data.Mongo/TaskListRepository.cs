@@ -11,10 +11,6 @@ namespace Borzoo.Data.Mongo
 {
     public class TaskListRepository : ITaskListRepository
     {
-        public string UserName { get; }
-
-        public string UserId { get; }
-
         private FilterDefinitionBuilder<TaskList> Filter => Builders<TaskList>.Filter;
 
         private readonly IMongoCollection<TaskList> _collection;
@@ -65,12 +61,19 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(
+        public async Task DeleteAsync(
             string id,
             CancellationToken cancellationToken = default
         )
         {
-            throw new NotImplementedException();
+            var result = await _collection
+                .DeleteOneAsync(Filter.Eq("_id", ObjectId.Parse(id)), cancellationToken)
+                .ConfigureAwait(false);
+
+            if (result.DeletedCount == 0)
+            {
+                throw new EntityNotFoundException(nameof(TaskList.Id));
+            }
         }
 
         /// <inheritdoc />
@@ -118,7 +121,7 @@ namespace Borzoo.Data.Mongo
             return taskLists.ToArray();
         }
 
-        public async Task SetUsernameAsync(string username, CancellationToken cancellationToken = default)
+        public Task SetUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

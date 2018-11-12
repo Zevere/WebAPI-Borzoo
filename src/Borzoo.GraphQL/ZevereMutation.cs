@@ -46,6 +46,25 @@ namespace Borzoo.GraphQL
                 resolver.CreateTaskListAsync
             );
 
+            Field<NonNullGraphType<BooleanGraphType>>(
+                "deleteList",
+                "Delete a task list owned by the user",
+                // ToDo use auth tokens and current logged in user will be the
+                new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "owner",
+                        Description = "Username of the list owner",
+                    },
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "list",
+                        Description = "Name of the list to be deleted",
+                    }
+                ),
+                resolver.DeleteTaskListAsync
+            );
+
             Field<TaskItemType>(
                 "addTask",
                 "Add a new task to the list",
