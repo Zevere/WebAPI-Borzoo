@@ -21,16 +21,27 @@ jobs:
         # DEPLOY_SETTINGS_JSON='{"CI":[{"type":"docker","options":{"user":"","pass":""}}]}'
         - secure: HYDbAUFc6muMg6mkpyWqIiNi/sC4//fUcTBeEC3/dV2s3HxD3wXDIcO+yn3HhQnSHqA+7LHGCDVjeWIFpw6+jbSSWsSPbr9U6pyQHQHk+jNOPpLi9J2QiFS5z/Tr9sN+ca+fOv/xN8/RK1uicFwT5nZi0J96jGzrDDSCfYFhQWmaAy8dHmO/MF2ssjbQTTXePIg8x3nYsQEInVALh7iGmg3QBHC5wswLFGzH8rKc2CfQ6PJ4BQrJCkM9nERqrICp+YGCXjMo3jvrQ2qzepHKcLrl1Pst1kkgjjDi2/3NxbsyuIfSmwYtvX4GwbVJMXLLbHO//AmVH5gwQRaYPZJHJW6AVA3ByyiE3AeatogLyE5lfcDS59p6ov70Mn3kbH9M+tNHu7tGtMIkoslVAVmLkm+0Nyl8quEXr3ZcCv/Gs0JFqUZZya5Dmax9wq9QnDr/iEeoKHoW/g9I5gfQSGOvOdvzJOZH7HAVpoWP35Ufpt4u0Dc43rh867R7yog7FQFylBDSKA588/pzA+e3UakU8pLcy/D31H5F+h+dV2fS1O04Vjt48q6e8QI8lQC/vPNd9HBn0Yu63n2CJ1iwwki591mio+Bji3qlHEQpekXTQXS07smcS6wW8zoidyX0QW+3hEDf1DdcirAZPVY1PM9h/N7RpotNXvgY6IE1h+e/o14=
     - stage: Test
-      name: "Borzoo tests"
-      install: cd scripts && npm ci && cd ..
-      script: echo ToDo
-    - name: "MongoDB Integration Tests"
+      name: "Unit Tests"
+      install:
+        - cd scripts && npm ci && cd ..
+        - docker pull zevere/webapi-borzoo:unstable-solution
+      env:
+        - image_tag=zevere/webapi-borzoo:unstable-solution
+      script: node scripts/test/borzoo.unit.test.js
+    - name: "Borzoo Systems Integration Tests"
       install:
         - cd scripts && npm ci && cd ..
         - docker pull zevere/webapi-borzoo:unstable-solution
       env:
         - image_tag=zevere/webapi-borzoo:unstable-solution
       script: node scripts/test/mongo.integration.test.js
+    - name: "Borzoo Systems Integration Tests"
+      install:
+        - cd scripts && npm ci && cd ..
+        - docker pull zevere/webapi-borzoo:unstable-solution
+      env:
+        - image_tag=zevere/webapi-borzoo:unstable-solution
+      script: node scripts/test/webapp.integration.test.js
     - name: "Postman Tests"
       install: cd scripts && npm ci && cd ..
       script: echo ToDo

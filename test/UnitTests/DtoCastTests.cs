@@ -1,7 +1,10 @@
 using System;
+using System.Threading.Tasks;
 using Borzoo.Data.Abstractions.Entities;
+using Borzoo.GraphQL;
 using Borzoo.Web.Models.Task;
 using Framework;
+using GraphQL;
 using Xunit;
 
 namespace UnitTests
