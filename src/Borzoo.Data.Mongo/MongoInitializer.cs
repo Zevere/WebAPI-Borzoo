@@ -10,7 +10,7 @@ using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
 {
-    public static class Initializer
+    public static class MongoInitializer
     {
         public static async Task CreateSchemaAsync(
             IMongoDatabase database,
@@ -19,16 +19,16 @@ namespace Borzoo.Data.Mongo
         {
             {
                 // "users" Collection
-                await database.CreateCollectionAsync(MongoConstants.Collections.Users.Name, null, cancellationToken);
-                var usersCollection = database.GetCollection<User>(MongoConstants.Collections.Users.Name);
+                await database.CreateCollectionAsync("users", cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+                var usersCollection = database.GetCollection<User>("users");
 
                 // create unique index "username" on the field "name"
-                var key = Builders<User>.IndexKeys.Ascending(u => u.DisplayId);
-                await usersCollection.Indexes.CreateOneAsync(new CreateIndexModel<User>(
-                        key,
-                        new CreateIndexOptions
-                            {Name = MongoConstants.Collections.Users.Indexes.Username, Unique = true}),
-                    cancellationToken: cancellationToken
+                await usersCollection.Indexes.CreateOneAsync(
+                    new CreateIndexModel<User>(
+                        Builders<User>.IndexKeys.Ascending(u => u.DisplayId),
+                        new CreateIndexOptions { Name = "username", Unique = true }
+                    ), cancellationToken: cancellationToken
                 ).ConfigureAwait(false);
             }
 
@@ -47,7 +47,7 @@ namespace Borzoo.Data.Mongo
                 await listsCollection.Indexes.CreateOneAsync(new CreateIndexModel<TaskListMongo>(
                         key,
                         new CreateIndexOptions
-                            {Name = MongoConstants.Collections.TaskLists.Indexes.OwnerListName, Unique = true}),
+                            { Name = MongoConstants.Collections.TaskLists.Indexes.OwnerListName, Unique = true }),
                     cancellationToken: cancellationToken
                 ).ConfigureAwait(false);
             }
@@ -67,7 +67,7 @@ namespace Borzoo.Data.Mongo
                 await tasksCollection.Indexes.CreateOneAsync(new CreateIndexModel<TaskItemMongo>(
                         key,
                         new CreateIndexOptions
-                            {Name = MongoConstants.Collections.TaskItems.Indexes.ListTaskName, Unique = true}),
+                            { Name = MongoConstants.Collections.TaskItems.Indexes.ListTaskName, Unique = true }),
                     cancellationToken: cancellationToken
                 ).ConfigureAwait(false);
             }
@@ -86,7 +86,7 @@ namespace Borzoo.Data.Mongo
                     map.MapProperty(u => u.PassphraseHash).SetElementName("pass");
                     map.MapProperty(u => u.FirstName).SetElementName("fname");
                     map.MapProperty(u => u.JoinedAt).SetElementName("joined");
-                    map.MapProperty(u => u.Token).SetElementName("token");
+                    map.MapProperty(u => u.Token).SetElementName("token").SetIgnoreIfDefault(true);
                     map.MapProperty(u => u.LastName).SetElementName("lname").SetIgnoreIfDefault(true);
                     map.MapProperty(u => u.IsDeleted).SetElementName("deleted").SetIgnoreIfDefault(true);
                     map.MapProperty(u => u.ModifiedAt).SetElementName("modified").SetIgnoreIfDefault(true);

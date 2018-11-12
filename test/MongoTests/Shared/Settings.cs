@@ -1,11 +1,11 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 
-namespace Data.Mongo.Tests.Shared
+namespace MongoTests.Shared
 {
     public class Settings
     {
-        public string Connection { get; }
+        public string ConnectionString { get; }
 
         public Settings()
         {
@@ -15,7 +15,7 @@ namespace Data.Mongo.Tests.Shared
                 .AddJsonEnvVar("BORZOO_TEST_SETTINGS", optional: true)
                 .Build();
 
-            Connection = configuration[nameof(Connection)];
+            ConnectionString = configuration[nameof(ConnectionString)];
         }
     }
 }

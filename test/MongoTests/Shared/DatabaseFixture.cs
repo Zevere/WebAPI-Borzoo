@@ -5,7 +5,7 @@ using Borzoo.Data.Mongo;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
 
-namespace Data.Mongo.Tests.Shared
+namespace MongoTests.Shared
 {
     public class DatabaseFixture
     {
@@ -16,7 +16,7 @@ namespace Data.Mongo.Tests.Shared
         /// </summary>
         static DatabaseFixture()
         {
-            Initializer.RegisterClassMaps();
+            MongoInitializer.RegisterClassMaps();
         }
 
         public DatabaseFixture()
@@ -30,9 +30,9 @@ namespace Data.Mongo.Tests.Shared
         private static async Task<IMongoDatabase> InitializeDatabase()
         {
             var settings = new Settings();
-            var connectionString = new ConnectionString(settings.Connection);
+            var connectionString = new ConnectionString(settings.ConnectionString);
 
-            var clientSettings = MongoClientSettings.FromConnectionString(settings.Connection);
+            var clientSettings = MongoClientSettings.FromConnectionString(settings.ConnectionString);
             clientSettings.ClusterConfigurator = ClientSettingsClusterConfigurator;
 
             var client = new MongoClient(clientSettings);
@@ -40,7 +40,7 @@ namespace Data.Mongo.Tests.Shared
             await client.DropDatabaseAsync(connectionString.DatabaseName);
             var db = client.GetDatabase(connectionString.DatabaseName);
 
-            await Initializer.CreateSchemaAsync(db);
+            await MongoInitializer.CreateSchemaAsync(db);
 
             return db;
         }

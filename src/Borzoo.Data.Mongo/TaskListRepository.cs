@@ -39,7 +39,7 @@ namespace Borzoo.Data.Mongo
         }
 
         public async Task<TaskList> GetByNameAsync(string name, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                                   CancellationToken cancellationToken = default)
         {
             EnsureUserId();
 
@@ -69,7 +69,7 @@ namespace Borzoo.Data.Mongo
             return tl;
         }
 
-        public async Task<TaskList> AddAsync(TaskList entity, CancellationToken cancellationToken = default)
+        public async Task AddAsync(TaskList entity, CancellationToken cancellationToken = default)
         {
             EnsureUserId();
             entity.DisplayId = entity.DisplayId.ToLower();
@@ -90,11 +90,10 @@ namespace Borzoo.Data.Mongo
             }
 
             entity.OwnerId = tlMongo.OwnerDbRef.Id.AsString;
-            return entity;
         }
 
         public Task<TaskList> GetByIdAsync(string id, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                           CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

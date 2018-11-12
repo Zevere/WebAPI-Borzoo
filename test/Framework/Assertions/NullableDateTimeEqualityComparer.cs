@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace Framework.Helpers
+// ReSharper disable once CheckNamespace
+namespace Framework
 {
     public class NullableDateTimeEqualityComparer : IEqualityComparer<DateTime?>
     {

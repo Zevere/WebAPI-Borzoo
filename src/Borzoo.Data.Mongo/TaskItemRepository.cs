@@ -43,7 +43,7 @@ namespace Borzoo.Data.Mongo
             TaskListName = tasklist.DisplayId;
         }
 
-        public async Task<TaskItem> AddAsync(TaskItem entity, CancellationToken cancellationToken = default)
+        public async Task AddAsync(TaskItem entity, CancellationToken cancellationToken = default)
         {
             EnsureListId();
             entity.DisplayId = entity.DisplayId.ToLower();
@@ -65,7 +65,6 @@ namespace Borzoo.Data.Mongo
 
             entity.Id = taskMongo.Id;
             entity.ListId = taskMongo.ListDbRef.Id.AsString;
-            return entity;
         }
 
         public Task<TaskItem> GetByIdAsync(string id, bool includeDeletedRecords = false,

@@ -66,19 +66,6 @@ All the [scripts for build, test, and deploy](./scripts) are written in JavaScri
 
 > [ShellJS](https://github.com/shelljs/shelljs) scripts are good to run on any operating system that is supported by NodeJS. This means we no longer need to be worry about whether we deploy to a Unix-like or a Windows machine.
 
-##### Tests
-
-There are different kinds of tests such as:
-
-- SQLite Repository Tests
-- Mongo Db Repository Tests
-- Web API Unit Tests
-- Web API Systems Integration Tests
-
-Testing framework in use is mainly [xUnit](https://github.com/xunit/xunit/).
-
-Some tests such as systems integration tests take advantage of Docker-in-Docker approach where a temporary Mongo container runs in background to store data.
-
 ### Continuous Delivery
 
 Deployment only happens if commit is pushed on `master` branch. If all the tests pass(process exits with return code of 0), deployment process begins. Application environment is set to _Staging_.
@@ -109,8 +96,19 @@ Docker Compose deploys multiple containers at the same time. (See [`docker-compo
 
 Nginx acts as a reverse proxy here. Nginx container loads the configurations file on the host at `/var/nginx/nginx.conf`. See the [sample `nginx.conf`](./scripts/deploy/nginx.conf).
 
+There are different kinds of tests such as:
+
+- [MongoDB Integration Tests]
+- Web API Unit Tests
+- Web API Systems Integration Tests
+
+Testing framework in use is mainly [xUnit](https://github.com/xunit/xunit/).
+
+Some tests such as systems integration tests take advantage of Docker-in-Docker approach where a temporary Mongo container runs in background to store data.
+
 <!-- ------ -->
 
 [Zevere GraphQL Web API]: https://github.com/Zevere/Zevere-Specs
 [AppVeyor]: https://www.appveyor.com
 [Travis-CI]: https://travis-ci.org
+[MongoDB Integration Tests]: ./test/MongoTests

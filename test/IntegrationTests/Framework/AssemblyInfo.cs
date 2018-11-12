@@ -2,4 +2,4 @@
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
-[assembly: TestCaseOrderer(Constants.TestCaseOrderer, Constants.AssemblyName)]
+[assembly: TestCaseOrderer(TestConstants.TestCaseOrderer, TestConstants.AssemblyName)]

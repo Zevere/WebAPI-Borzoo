@@ -38,7 +38,7 @@ namespace Borzoo.Web.Extensions
             services.AddTransient<ITaskListRepository, TaskListRepository>();
             services.AddTransient<ITaskItemRepository, TaskItemRepository>();
             
-            Initializer.RegisterClassMaps();
+            MongoInitializer.RegisterClassMaps();
             
             return services;
         }

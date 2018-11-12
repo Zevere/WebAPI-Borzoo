@@ -1,5 +1,5 @@
 using Framework;
 using Xunit;
 
-[assembly: TestCaseOrderer(Constants.TestCaseOrderer, Constants.AssemblyName)]
+[assembly: TestCaseOrderer(TestConstants.TestCaseOrderer, TestConstants.AssemblyName)]
 [assembly: CollectionBehavior(DisableTestParallelization = true)]

@@ -2,7 +2,6 @@
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo;
-using Borzoo.Data.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,22 +14,14 @@ namespace Borzoo.Web.Data
     {
         public static IApplicationBuilder SeedData(this IApplicationBuilder app, IConfigurationSection dataConfig)
         {
-            string dataStore = dataConfig["use"];
             using (var _ = app.ApplicationServices.CreateScope())
             {
                 var logger = _.ServiceProvider.GetRequiredService<ILogger<Startup>>();
-                if (dataStore == "sqlite")
-                {
-                    logger.LogInformation("Applying SQLite migrations...");
-                    ApplySQLiteMigrations(dataConfig["sqlite:migrations"]);
-                }
-                else if (dataStore == "mongo")
-                {
-                    var db = _.ServiceProvider.GetRequiredService<IMongoDatabase>();
-                    bool dbInitialized = InitMongoDbAsync(db).GetAwaiter().GetResult();
-                    if (dbInitialized)
-                        logger.LogInformation("Mongo database is initialized.");
-                }
+
+                var db = _.ServiceProvider.GetRequiredService<IMongoDatabase>();
+                bool dbInitialized = InitMongoDbAsync(db).GetAwaiter().GetResult();
+                if (dbInitialized)
+                    logger.LogInformation("Mongo database is initialized.");
 
                 var userRepo = _.ServiceProvider.GetRequiredService<IUserRepository>();
                 bool seeded = SeedData(userRepo).GetAwaiter().GetResult();
@@ -88,11 +79,6 @@ namespace Borzoo.Web.Data
             return userExists;
         }
 
-        private static void ApplySQLiteMigrations(string migrationsSqlFile)
-        {
-            DatabaseInitializer.EnsureMigrationsApplied(migrationsSqlFile);
-        }
-
         private static async Task<bool> InitMongoDbAsync(IMongoDatabase db)
         {
             var cursor = await db.ListCollectionNamesAsync();
@@ -102,7 +88,7 @@ namespace Borzoo.Web.Data
 
             if (!collectionsExist)
             {
-                await Initializer.CreateSchemaAsync(db);
+                await MongoInitializer.CreateSchemaAsync(db);
             }
 
             return !collectionsExist;

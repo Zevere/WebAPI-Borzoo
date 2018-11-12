@@ -20,11 +20,16 @@ namespace Borzoo.Data.Mongo
             _collection = collection;
         }
 
-        public async Task<User> AddAsync(User entity, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public async Task AddAsync(
+            User entity,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
-                await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
+                await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (MongoWriteException e)
                 when (e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
@@ -32,12 +37,10 @@ namespace Borzoo.Data.Mongo
             {
                 throw new DuplicateKeyException(nameof(User.DisplayId));
             }
-
-            return entity;
         }
 
         public async Task<User> GetByIdAsync(string id, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                             CancellationToken cancellationToken = default)
         {
             var filter = Builders<User>.Filter.Eq(u => u.Id, id.ToLower());
             User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
@@ -51,15 +54,15 @@ namespace Borzoo.Data.Mongo
         }
 
         public async Task<User> GetByNameAsync(string name, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                               CancellationToken cancellationToken = default)
         {
             name = Regex.Escape(name);
-           var filter = Filter.And(
-               Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
-               includeDeletedRecords
-                   ? Filter.Where(u => u.IsDeleted)
-                   : Filter.Exists(u => u.IsDeleted, false)
-           );
+            var filter = Filter.And(
+                Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
+                includeDeletedRecords
+                    ? Filter.Where(u => u.IsDeleted)
+                    : Filter.Exists(u => u.IsDeleted, false)
+            );
 
             User entity = await _collection
                 .Find(filter)
@@ -101,7 +104,7 @@ namespace Borzoo.Data.Mongo
         }
 
         public async Task<User> GetByTokenAsync(string token, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                                CancellationToken cancellationToken = default)
         {
             var filter = Builders<User>.Filter.Eq(u => u.Token, token);
             User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
@@ -115,14 +118,14 @@ namespace Borzoo.Data.Mongo
         }
 
         public Task<User> GetByPassphraseLoginAsync(string userName, string passphrase,
-            bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default)
+                                                    bool includeDeletedRecords = false,
+                                                    CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         public async Task SetTokenForUserAsync(string userId, string token,
-            CancellationToken cancellationToken = default)
+                                               CancellationToken cancellationToken = default)
         {
             var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
             var update = Builders<User>.Update.Set(u => u.Token, token);

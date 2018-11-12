@@ -1,6 +1,6 @@
 ﻿namespace Framework
 {
-    public static class Constants
+    public static class TestConstants
     {
         public const string AssemblyName = nameof(Framework);
 

@@ -16,9 +16,7 @@ RUN dotnet publish src/Borzoo.Web/Borzoo.Web.csproj --configuration Release --ou
 
 FROM base AS final
 WORKDIR /app/
-COPY src/Borzoo.Data.SQLite/scripts/migrations.sql /var/data/sqlite/
 COPY --from=publish /app /app
-ENV BORZOO_SETTINGS='{"data":{"sqlite":{"migrations":"/var/data/sqlite/migrations.sql"}}}'
 CMD ASPNETCORE_URLS=http://+:${PORT:-80} dotnet Borzoo.Web.dll
 
 

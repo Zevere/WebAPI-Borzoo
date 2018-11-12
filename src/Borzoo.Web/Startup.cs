@@ -28,18 +28,8 @@ namespace Borzoo.Web
         {
             #region Database
 
-            string dataStore = Configuration["data:use"];
-            if (dataStore == "sqlite")
-            {
-                string dbFile = Configuration["data:sqlite:db"];
-                if (string.IsNullOrWhiteSpace(dbFile)) dbFile = "borzoo.db";
-                services.AddSQLite(dbFile);
-            }
-            else if (dataStore == "mongo")
-            {
-                string connStr = Configuration["data:mongo:connection"];
-                services.AddMongo(connStr);
-            }
+            string connStr = Configuration["data:mongo:connection"];
+            services.AddMongo(connStr);
 
             #endregion
 
