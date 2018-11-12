@@ -10,7 +10,8 @@ configuration:
 build:
   project: Borzoo.sln
 
-test:
-  assemblies:
-    only:
-      - '**\UnitTests.dll'
+after_build:
+  - cmd: cd test/UnitTests
+  - cmd: dotnet test --no-build --configuration $(configuration) --verbosity normal
+
+test: off
