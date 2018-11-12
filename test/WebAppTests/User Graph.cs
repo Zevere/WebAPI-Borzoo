@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Framework;
 using Framework.Extensions;
+using Newtonsoft.Json;
 using WebAppTests.Shared;
 using Xunit;
 
@@ -24,7 +25,8 @@ namespace WebAppTests
         {
             string mutation = @"mutation SomeMutation($u: UserInput!) {
                 createUser(user: $u) {
-                    id firstName lastName token daysJoined joinedAt lists { id }
+                    id firstName lastName daysJoined joinedAt token
+                    lists { id }
                 }
             }";
             HttpResponseMessage response = await _fxt.HttpClient.PostJsonGraphqlAsync($@"{{
@@ -40,6 +42,13 @@ namespace WebAppTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            dynamic result = JsonConvert.DeserializeObject(responseContent);
+
+            string token = result.data.createUser.token;
+            Assert.NotEmpty(token);
+
             Asserts.JsonEqual(
                 $@"{{
                     data: {{
@@ -48,7 +57,9 @@ namespace WebAppTests
                             firstName: ""Poulad"",
                             lastName: null,
                             daysJoined: 0,
-                            joinedAt: ""{DateTime.Today:yyyy-MM-dd}""
+                            joinedAt: ""{DateTime.Today:yyyy-MM-dd}"",
+                            token: ""{token}"",
+                            lists: [ ]
                         }}
                     }}
                 }}",

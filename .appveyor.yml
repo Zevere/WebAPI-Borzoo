@@ -11,7 +11,7 @@ build:
   project: Borzoo.sln
 
 after_build:
-  - cmd: cd test/UnitTests
-  - cmd: dotnet test --no-build --configuration $(configuration) --verbosity normal
+  - ps: cd test/UnitTests
+  - ps: dotnet test --no-build --configuration $env:CONFIGURATION --verbosity normal
 
 test: off
