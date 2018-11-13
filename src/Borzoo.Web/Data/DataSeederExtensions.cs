@@ -3,7 +3,6 @@ using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -12,7 +11,7 @@ namespace Borzoo.Web.Data
 {
     internal static class DataSeederExtensions
     {
-        public static IApplicationBuilder SeedData(this IApplicationBuilder app)
+        public static void SeedData(this IApplicationBuilder app)
         {
             using (var _ = app.ApplicationServices.CreateScope())
             {
@@ -27,8 +26,6 @@ namespace Borzoo.Web.Data
                 bool seeded = SeedData(userRepo).GetAwaiter().GetResult();
                 logger.LogInformation($"Database is{(seeded ? "" : " NOT")} seeded.");
             }
-
-            return app;
         }
 
         private static async Task<bool> SeedData(IUserRepository userRepo)

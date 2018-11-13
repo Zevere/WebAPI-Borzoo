@@ -9,7 +9,7 @@ namespace Borzoo.Web.Extensions
 {
     public static class GraphQLExtensions
     {
-        public static IServiceCollection AddGraphQL(this IServiceCollection services)
+        public static void AddGraphQL(this IServiceCollection services)
         {
             services.AddTransient<IQueryResolver, QueryResolver>();
 
@@ -23,9 +23,10 @@ namespace Borzoo.Web.Extensions
             services.AddSingleton<TaskItemType>();
             services.AddSingleton<TaskItemInputType>();
 
-            services.AddSingleton<ZevereQuery>();
-            services.AddSingleton<ZevereMutation>();
-            services.AddSingleton<ISchema, ZevereSchema>(_ => new ZevereSchema(
+            // ToDo use singletons
+            services.AddScoped<ZevereQuery>();
+            services.AddScoped<ZevereMutation>();
+            services.AddScoped<ISchema, ZevereSchema>(_ => new ZevereSchema(
                 new FuncDependencyResolver(_.GetRequiredService)
             ));
 
@@ -34,8 +35,6 @@ namespace Borzoo.Web.Extensions
                 schema.SetQueryType<ZevereQuery>();
                 schema.SetMutationType<ZevereMutation>();
             });
-
-            return services;
         }
     }
 }
