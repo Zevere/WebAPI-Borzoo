@@ -4,13 +4,11 @@ using Borzoo.Data.Abstractions.Entities;
 
 namespace Borzoo.Data.Abstractions
 {
+    /// <summary>
+    /// Contains operations to work with a task list collection
+    /// </summary>
     public interface ITaskListRepository : IEntityRepository<TaskList>
     {
-        Task SetUsernameAsync(
-            string username,
-            CancellationToken cancellationToken = default
-        );
-
         /// <summary>
         /// Gets a single task list by its name and owner id
         /// </summary>

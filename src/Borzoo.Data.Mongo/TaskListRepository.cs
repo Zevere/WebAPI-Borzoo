@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -9,12 +8,14 @@ using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
 {
+    /// <inheritdoc />
     public class TaskListRepository : ITaskListRepository
     {
         private FilterDefinitionBuilder<TaskList> Filter => Builders<TaskList>.Filter;
 
         private readonly IMongoCollection<TaskList> _collection;
 
+        /// <inheritdoc />
         public TaskListRepository(
             IMongoCollection<TaskList> collection
         )
@@ -38,29 +39,14 @@ namespace Borzoo.Data.Mongo
             }
             catch (MongoWriteException e) when (
                 e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
-                e.WriteError.Message.Contains($" index: owner_list-name ")
+                e.WriteError.Message.Contains(" index: owner_list-name ")
             )
             {
                 throw new DuplicateKeyException(nameof(TaskList.OwnerId), nameof(TaskList.DisplayId));
             }
         }
 
-        public Task<TaskList> GetByIdAsync(
-            string id,
-            CancellationToken cancellationToken = default
-        )
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TaskList> UpdateAsync(
-            TaskList entity,
-            CancellationToken cancellationToken = default
-        )
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <inheritdoc />
         public async Task DeleteAsync(
             string id,
             CancellationToken cancellationToken = default
@@ -83,9 +69,6 @@ namespace Borzoo.Data.Mongo
             CancellationToken cancellationToken = default
         )
         {
-            name = Regex.Unescape(name);
-            ownerId = Regex.Unescape(ownerId);
-
             var filter = Filter.And(
                 Filter.Regex(tl => tl.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
                 Filter.Regex(tl => tl.OwnerId, new BsonRegularExpression($"^{ownerId}$", "i"))
@@ -104,6 +87,7 @@ namespace Borzoo.Data.Mongo
             return taskList;
         }
 
+        /// <inheritdoc />
         public async Task<TaskList[]> GetUserTaskListsAsync(
             string ownerId,
             CancellationToken cancellationToken = default
@@ -121,7 +105,20 @@ namespace Borzoo.Data.Mongo
             return taskLists.ToArray();
         }
 
-        public Task SetUsernameAsync(string username, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public Task<TaskList> GetByIdAsync(
+            string id,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public Task<TaskList> UpdateAsync(
+            TaskList entity,
+            CancellationToken cancellationToken = default
+        )
         {
             throw new NotImplementedException();
         }

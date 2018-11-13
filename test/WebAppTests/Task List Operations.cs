@@ -57,7 +57,7 @@ namespace WebAppTests
                             description: null,
                             collaborators: null,
                             tags: null,
-                            createdAt: ""{DateTime.Today:yyyy-MM-dd}"",
+                            createdAt: ""{DateTime.UtcNow:yyyy-MM-dd}"",
                             updatedAt: null,
                             tasks: [ ]
                         }}

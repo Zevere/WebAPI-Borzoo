@@ -32,8 +32,6 @@ namespace Borzoo.Data.Mongo
         public async Task SetTaskListAsync(string username, string tasklistName,
                                            CancellationToken cancellationToken = default)
         {
-            await _tasklistRepo.SetUsernameAsync(username, cancellationToken)
-                .ConfigureAwait(false);
             var tasklist = await _tasklistRepo.GetByNameAsync(tasklistName, "", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 

@@ -56,7 +56,7 @@ namespace WebAppTests
                             firstName: ""Poulad"",
                             lastName: null,
                             daysJoined: 0,
-                            joinedAt: ""{DateTime.Today:yyyy-MM-dd}"",
+                            joinedAt: ""{DateTime.UtcNow:yyyy-MM-dd}"",
                             token: ""{token}"",
                             lists: [ ]
                         }}

@@ -21,6 +21,11 @@ namespace Borzoo.Data.Abstractions
             CancellationToken cancellationToken = default
         );
 
+        /// <summary>
+        /// Gets an entity by its unique identifier.
+        /// </summary>
+        /// <param name="id">Unique identifier of the entity.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         Task<TEntity> GetByIdAsync(
             string id,
             CancellationToken cancellationToken = default

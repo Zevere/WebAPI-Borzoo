@@ -9,13 +9,17 @@ using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
 {
+    /// <inheritdoc />
     public class UserRepository : IUserRepository
     {
         private readonly IMongoCollection<User> _collection;
 
         private FilterDefinitionBuilder<User> Filter => Builders<User>.Filter;
 
-        public UserRepository(IMongoCollection<User> collection)
+        /// <inheritdoc />
+        public UserRepository(
+            IMongoCollection<User> collection
+        )
         {
             _collection = collection;
         }
@@ -33,26 +37,28 @@ namespace Borzoo.Data.Mongo
                 await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
             }
-            catch (MongoWriteException e)
-                when (e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
-                      e.WriteError.Message.Contains($" index: {MongoConstants.Collections.Users.Indexes.Username} "))
+            catch (MongoWriteException e) when (
+                e.WriteError.Category == ServerErrorCategory.DuplicateKey &&
+                e.WriteError.Message.Contains(" index: username ")
+            )
             {
                 throw new DuplicateKeyException(nameof(User.DisplayId));
             }
         }
 
+        /// <inheritdoc />
         public async Task<User> GetByIdAsync(
             string id,
             CancellationToken cancellationToken = default
         )
         {
-            if (!ObjectId.TryParse(id, out _))
+            if (!ObjectId.TryParse(id, out var objectId))
             {
                 throw new EntityNotFoundException(id);
             }
 
             User entity = await _collection
-                .Find(Filter.Eq(u => u.Id, id.ToLower()))
+                .Find(Filter.Eq("_id", objectId))
                 .SingleOrDefaultAsync(cancellationToken)
                 .ConfigureAwait(false);
 
@@ -64,12 +70,12 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
+        /// <inheritdoc />
         public async Task<User> GetByNameAsync(
             string name,
             CancellationToken cancellationToken = default
         )
         {
-            name = Regex.Escape(name);
             var filter = Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i"));
 
             User entity = await _collection
@@ -90,7 +96,7 @@ namespace Borzoo.Data.Mongo
             CancellationToken cancellationToken = default
         )
         {
-            var filter = Builders<User>.Filter.Eq(u => u.Id, entity.Id);
+            var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(entity.Id));
             var updates = Builders<User>.Update.Combine(
                 Builders<User>.Update.Set(u => u.DisplayId, entity.DisplayId.ToLower()),
                 Builders<User>.Update.Set(u => u.PassphraseHash, entity.PassphraseHash),
@@ -99,11 +105,12 @@ namespace Borzoo.Data.Mongo
                 Builders<User>.Update.Set(u => u.LastName, entity.LastName)
             );
 
-            var updatedEntity = await _collection.FindOneAndUpdateAsync(filter, updates,
-                new FindOneAndUpdateOptions<User>
-                {
-                    ReturnDocument = ReturnDocument.After
-                }, cancellationToken);
+            var updatedEntity = await _collection.FindOneAndUpdateAsync(
+                filter,
+                updates,
+                new FindOneAndUpdateOptions<User> { ReturnDocument = ReturnDocument.After },
+                cancellationToken
+            ).ConfigureAwait(false);
 
             updatedEntity.CopyTo(entity);
 
