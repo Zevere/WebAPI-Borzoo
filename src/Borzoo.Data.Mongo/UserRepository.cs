@@ -76,6 +76,7 @@ namespace Borzoo.Data.Mongo
             CancellationToken cancellationToken = default
         )
         {
+            name = Regex.Escape(name);
             var filter = Filter.Regex(u => u.DisplayId, new BsonRegularExpression($"^{name}$", "i"));
 
             User entity = await _collection
@@ -131,7 +132,10 @@ namespace Borzoo.Data.Mongo
         )
         {
             var filter = Builders<User>.Filter.Eq(u => u.Token, token);
-            User entity = await _collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
+            User entity = await _collection
+                .Find(filter)
+                .SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             if (entity is null)
             {

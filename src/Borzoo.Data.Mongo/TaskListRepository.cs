@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -69,6 +70,9 @@ namespace Borzoo.Data.Mongo
             CancellationToken cancellationToken = default
         )
         {
+            name = Regex.Escape(name);
+            ownerId = Regex.Escape(ownerId);
+
             var filter = Filter.And(
                 Filter.Regex(tl => tl.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
                 Filter.Regex(tl => tl.OwnerId, new BsonRegularExpression($"^{ownerId}$", "i"))
@@ -94,7 +98,7 @@ namespace Borzoo.Data.Mongo
         )
         {
             // ToDO ensure id contains allowed characters only \.[A-Z]_\d
-
+            ownerId = Regex.Escape(ownerId);
             var filter = Filter.Regex(tl => tl.OwnerId, new BsonRegularExpression($"^{ownerId}$", "i"));
 
             var taskLists = await _collection
