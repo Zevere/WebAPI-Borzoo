@@ -52,17 +52,17 @@ jobs:
         - cd scripts && npm ci && cd ..
         - docker pull zevere/webapi-borzoo:unstable
       env:
-        # DEPLOY_SETTINGS_JSON='{"Staging":[
-        #   {"type":"docker","options":{"source":"zevere/webapi-borzoo:unstable","target":"zevere/webapi-borzoo:edge","user":"","pass":""}},
-        #   {"type":"heroku","options":{"app":"zv-s-webapi-borzoo","source":"zevere/webapi-borzoo:edge","dyno":"web","user":"","token":""}}
+        # DEPLOY_SETTINGS_JSON='{"Production":[
+        #   {"type":"docker","options":{"source":"zevere/webapi-borzoo:unstable","target":"zevere/webapi-borzoo","user":"","pass":""}},
+        #   {"type":"heroku","options":{"app":"zv-webapi-borzoo","source":"zevere/webapi-borzoo","dyno":"web","user":"","token":""}}
         # ]}'
-        - secure: 0R6NW4t25+8i/9bzjUHlY2wnYyfoMkDG8PRY5n+ObnY4ely1YehVNSefqbGZMbf5u6xehIlwHJm6ecLtMjuzV3nOvVOPuptzDdu2cqPJcpy8QQMJCe40uNTWKc+3/1OGNWUhkxMy+rn7XJLJXi9b24olvn41LYK0Bq1r0Y1rmYP568boJpdjyKMUTAt5Ghcg1WvKeVS8FttzyQgLJiwgP3muKVA3Iv3kysUMVMVw7qb6yAsp4Z7ZU1k6042F8LqEqRNEPAFIIUM8/nhd6xeR+otVn8nd4skUS++vKqPVtO91tfGeF5n7bnmbh3Xjfljqy5ZivWFvMOMLmEteEEJAQ+FOkxT6tRhPJX1DQGiwLXKYjyA359VonNjaIsZRoGewJKas1FmRgp9JCjUiY2XAewG9ukCC7hDrfeBXu47plM45JZxbCjniFTzFc8E4TMD7bGTUU6FUbeZYSHOB0KZgOppIVVWKogu4AOLNcUXh96ZyZFOwX+1zN8EBJRBin0Ry6GJ9VseRFPJR1TqSohqdlN7f7yHNi9XNGzh7XlCuOKKMf6Hyx1XgCuNcmR8qbwBjO8n/F/Cun+Y1o7PEVMT1oxbIy5ttcZwDSsxQ5X5aj08OSxi8K2yiViYHDTdhm4IoZHuoqvYtSczfFcdEsx/h4m+LjOGFfW+BvVV8JUdKT2Q=
+        - secure: VA5xyC5Rofe6s1NYpWyx9jt8h9gyKLlQffc4LTZT/aA3gmTTPrnKmqqGR+35oRUY2r8W2DQHDQfkBdv9i96XJKYft7L3rYH6CxLefpErE5cpl1lohwBha/SvLYToAWiWkOmsIwgS6B2v6YUNO+xRSnyWkAMLf7l2Ha2m7OqPer/nNk/8eO0gjNdwZkfRYT5VKDWdteyB3PR32vScCq1swcDB/jG/IrLKuY819gvSoEljeRHO9z9DKb3Xq+VZCyugfh332FP4TyLs+pTPA3G+6zPkx7rrp1EArzU5kQT4E3huUZZK+RbK+uEHMv13euuIqI8FqrDgWdljy0rYxLi77d1Hy2kfRoMiZkWGVaada7yrtE5CD6YHrSdd/zHs6Q1U99NjO6AFcBa/a49bs26E/H6igpLE/ESfA4CQMPOnxm3CjfNPH4rhlA2po9H7R/skh0R9aTFtmex1r3dFdqon7w7l0PNCZvhWFrgX/pG8qXufPvNoIFajLLaWeXno5bBPiyloRHADWTzEtp71Tj7tUS/d03Px0gdgm3cqttlhiF0VDq+6z4ZrOZ8OIF8Bp5CeBOL956bdSN1gGbsT9II0KRhDr4gq9uByPthkFVc2649htm+M9IOsiqWH1/8DJrRAvKPXnBVniJdG3w9eURMe3Mcx/NRVtL6JJmRi4x2umpw=
       deploy:
         - provider: script
           skip_cleanup: true
-          script: node scripts/deploy Staging
+          script: node scripts/deploy Production
           on:
-            branch: develop
+            branch: master
 
 
 # Disable "Build pushed pull requests"
