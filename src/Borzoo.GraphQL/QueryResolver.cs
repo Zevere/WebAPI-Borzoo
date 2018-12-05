@@ -175,7 +175,32 @@ namespace Borzoo.GraphQL
             return true;
         }
 
-        public async Task<TaskList[]> GetTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
+        /// <inheritdoc />
+        public async Task<TaskList> GetTaskListForUserAsync(ResolveFieldContext<UserDto> context)
+        {
+            string username = context.Source.Id;
+            string listName = context.Arguments["listId"].ToString();
+
+            TaskList taskList;
+            try
+            {
+                taskList = await _taskListRepo.GetByNameAsync(listName, username, context.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (EntityNotFoundException)
+            {
+                var err = new Error("Task List not found.")
+                {
+                    Path = new[] { "user.list" }
+                };
+                context.Errors.Add(err);
+                return default;
+            }
+
+            return taskList;
+        }
+
+        public async Task<TaskList[]> GetAllTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
         {
             string username = context.Source.Id;
 

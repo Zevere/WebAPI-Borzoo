@@ -28,10 +28,23 @@ namespace Borzoo.GraphQL.Types
             Field(_ => _.JoinedAt)
                 .Description("The date account was created in UTC format. Time should be set to the midnight.");
 
+            Field<TaskListType>(
+                "list",
+                "A list that this user has access to",
+                new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "listId",
+                        Description = "Name of the list",
+                    }
+                ),
+                queryResolver.GetTaskListForUserAsync
+            );
+
             Field<ListGraphType<TaskListType>>(
                 "lists",
                 "Tasks lists that this user has access to",
-                resolve: queryResolver.GetTaskListsForUserAsync
+                resolve: queryResolver.GetAllTaskListsForUserAsync
             );
         }
     }

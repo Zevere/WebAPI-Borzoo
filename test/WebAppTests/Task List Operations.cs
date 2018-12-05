@@ -67,6 +67,73 @@ namespace WebAppTests
             );
         }
 
+        [OrderedFact("Should query a task list by its ID")]
+        public async Task Should_Query_Single_TaskList()
+        {
+            string query = @"
+            query {
+                user(userId: ""Poulad1024"") {
+                    list(listId: ""todo_list"") {
+                        id owner title description collaborators tags createdAt updatedAt tasks { id }
+                    }
+                }
+            }
+            ";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(query);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            Asserts.JsonEqual(
+                $@"{{
+                    data: {{
+                        user: {{
+                            list: {{
+                                id: ""todo_list"",
+                                owner: ""poulad1024"",
+                                title: ""A ToDo List"",
+                                description: null,
+                                collaborators: null,
+                                tags: null,
+                                createdAt: ""{DateTime.UtcNow:yyyy-MM-dd}"",
+                                updatedAt: null,
+                                tasks: [ ]
+                            }}
+                        }}
+                    }}
+                }}",
+                responseContent
+            );
+        }
+
+        [OrderedFact("Should fail when querying a non-existing task list")]
+        public async Task Should_Fail_Query_NonExisting_TaskList()
+        {
+            string query = @"
+            query {
+                user(userId: ""Poulad1024"") {
+                    list(listId: ""NOT.a.List"") {
+                        id owner title description collaborators tags createdAt updatedAt tasks { id }
+                    }
+                }
+            }
+            ";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(query);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.JsonEqual(
+                @"{
+                    data: { user: { list: null } },
+                    errors: [ { message: ""Task List not found."", path: [ ""user.list"" ] } ]
+                }",
+                responseContent
+            );
+        }
+
         [OrderedFact("Should fail when creating task list for a non-existing user")]
         public async Task Should_Fail_Create_TaskList_For_NonExisting_User()
         {
