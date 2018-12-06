@@ -36,8 +36,8 @@ namespace WebAppTests
             string mutation = @"
             mutation TaskCreation($t: TaskInput!) {
                 createTask(
-                    owner: ""Poulad1024"",
-                    list: ""a_test_list"",
+                    ownerId: ""Poulad1024"",
+                    listId: ""a_test_list"",
                     task: $t
                 )
                 { id title description due tags createdAt }
@@ -84,8 +84,8 @@ namespace WebAppTests
             string mutation = $@"
             mutation {{
                 createTask(
-                    owner: ""Poulad1024"",
-                    list: ""a_test_list"",
+                    ownerId: ""Poulad1024"",
+                    listId: ""a_test_list"",
                     task: {{
                         id: ""{id}"",
                         title: ""A Task of Testing""
@@ -133,8 +133,8 @@ namespace WebAppTests
             string mutation = $@"
             mutation {{
                 createTask(
-                    owner: ""Poulad1024"",
-                    list: ""a_test_list"",
+                    ownerId: ""Poulad1024"",
+                    listId: ""a_test_list"",
                     task: {{
                         id: ""{id}"",
                         title: ""THIS IS INVALID!""

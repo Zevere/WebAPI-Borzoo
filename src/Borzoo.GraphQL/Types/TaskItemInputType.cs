@@ -15,7 +15,7 @@ namespace Borzoo.GraphQL.Types
             Description = "Input for creating a new task";
 
             Field(_ => _.Id, nullable: true)
-                .Description("The desired task list name. Names are case insensitive and " +
+                .Description("Task list name. Names are case insensitive and " +
                              "valid characters are ASCII alphanumeric characters, '_', '.', and '-'.");
 
             Field(_ => _.Title)

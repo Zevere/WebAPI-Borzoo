@@ -76,13 +76,13 @@ namespace Borzoo.GraphQL
                 new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>>
                     {
-                        Name = "owner",
-                        Description = "Username of owner"
+                        Name = "ownerId",
+                        Description = "Username of the list owner"
                     },
                     new QueryArgument<NonNullGraphType<StringGraphType>>
                     {
-                        Name = "list",
-                        Description = "ID of the task list"
+                        Name = "listId",
+                        Description = "Unique name of the task list"
                     },
                     new QueryArgument<NonNullGraphType<TaskItemInputType>>
                     {

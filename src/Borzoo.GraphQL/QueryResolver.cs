@@ -232,8 +232,8 @@ namespace Borzoo.GraphQL
         /// <inheritdoc />
         public async Task<TaskItem> CreateTaskItemAsync(ResolveFieldContext<object> context)
         {
-            string ownerId = context.GetArgument<string>("owner");
-            string listId = context.GetArgument<string>("list");
+            string ownerId = context.GetArgument<string>("ownerId");
+            string listId = context.GetArgument<string>("listId");
             var dto = context.GetArgument<TaskItemCreationDto>("task");
 
             var entity = (TaskItem) dto;
@@ -267,7 +267,7 @@ namespace Borzoo.GraphQL
             {
                 var err = new Error("duplicate key")
                 {
-                    Path = new[] { "task" }
+                    Path = new[] { "createTask" }
                 };
                 context.Errors.Add(err);
                 return default;
