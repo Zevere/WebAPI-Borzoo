@@ -333,6 +333,32 @@ namespace Borzoo.GraphQL
             return taskItems;
         }
 
+        /// <inheritdoc />
+        public async Task<bool> DeleteTaskItemAsync(ResolveFieldContext<object> context)
+        {
+            string ownerId = context.GetArgument<string>("ownerId");
+            string listId = context.GetArgument<string>("listId");
+            string taskId = context.GetArgument<string>("taskId");
+
+            TaskItem taskItem;
+            try
+            {
+                taskItem = await _taskItemRepo.GetByNameAsync(taskId, ownerId, listId, context.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (EntityNotFoundException)
+            {
+                var err = new Error("Task item not found.");
+                context.Errors.Add(err);
+                return false;
+            }
+
+            await _taskItemRepo.DeleteAsync(taskItem.Id, context.CancellationToken)
+                .ConfigureAwait(false);
+
+            return true;
+        }
+
         private string GenerateAlphaNumericString(int charCount)
         {
             var rnd = new Random(DateTime.UtcNow.Millisecond);

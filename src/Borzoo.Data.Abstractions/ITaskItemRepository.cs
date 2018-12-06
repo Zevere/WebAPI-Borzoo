@@ -8,8 +8,8 @@ namespace Borzoo.Data.Abstractions
     {
         Task<TaskItem> GetByNameAsync(
             string name,
-            string username,
-            string taskListName,
+            string ownerName,
+            string listName,
             CancellationToken cancellationToken = default
         );
 

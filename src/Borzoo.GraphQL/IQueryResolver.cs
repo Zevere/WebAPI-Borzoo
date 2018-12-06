@@ -33,5 +33,10 @@ namespace Borzoo.GraphQL
         Task<TaskItem> CreateTaskItemAsync(ResolveFieldContext<object> context);
 
         Task<TaskItem[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context);
+
+        /// <summary>
+        /// Deletes a task item from the list
+        /// </summary>
+        Task<bool> DeleteTaskItemAsync(ResolveFieldContext<object> context);
     }
 }

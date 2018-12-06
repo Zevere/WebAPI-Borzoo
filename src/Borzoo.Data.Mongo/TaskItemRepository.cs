@@ -60,19 +60,50 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(
+        public async Task DeleteAsync(
             string id,
             CancellationToken cancellationToken = default
         )
         {
-            throw new NotImplementedException();
+            var result = await _collection
+                .DeleteOneAsync(Filter.Eq("_id", ObjectId.Parse(id)), cancellationToken)
+                .ConfigureAwait(false);
+
+            if (result.DeletedCount == 0)
+            {
+                throw new EntityNotFoundException(nameof(TaskItem.Id));
+            }
         }
 
-        public Task<TaskItem> GetByNameAsync(string name, string username, string taskListName,
-                                             CancellationToken cancellationToken = default)
+        public async Task<TaskItem> GetByNameAsync(
+            string name,
+            string ownerName,
+            string listName,
+            CancellationToken cancellationToken = default
+        )
 
         {
-            throw new NotImplementedException();
+            name = Regex.Escape(name);
+            ownerName = Regex.Escape(ownerName);
+            listName = Regex.Escape(listName);
+
+            var filter = Filter.And(
+                Filter.Regex(t => t.DisplayId, new BsonRegularExpression($"^{name}$", "i")),
+                Filter.Regex(t => t.OwnerId, new BsonRegularExpression($"^{ownerName}$", "i")),
+                Filter.Regex(t => t.ListId, new BsonRegularExpression($"^{listName}$", "i"))
+            );
+
+            var taskItem = await _collection
+                .Find(filter)
+                .SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            if (taskItem is null)
+            {
+                throw new EntityNotFoundException(nameof(TaskItem.DisplayId), name);
+            }
+
+            return taskItem;
         }
 
         public async Task<TaskItem[]> GetTaskItemsForListAsync(

@@ -92,6 +92,30 @@ namespace Borzoo.GraphQL
                 ),
                 resolver.CreateTaskItemAsync
             );
+
+            Field<NonNullGraphType<BooleanGraphType>>(
+                "deleteTask",
+                "Delete a task item for the list",
+                // ToDo use auth tokens and current logged in user will be the
+                new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "ownerId",
+                        Description = "Username of the list owner",
+                    },
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "listId",
+                        Description = "Unique name of the task list"
+                    },
+                    new QueryArgument<NonNullGraphType<StringGraphType>>
+                    {
+                        Name = "taskId",
+                        Description = "Unique name of the task item to be deleted"
+                    }
+                ),
+                resolver.DeleteTaskItemAsync
+            );
         }
     }
 }

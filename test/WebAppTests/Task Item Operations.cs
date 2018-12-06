@@ -279,5 +279,49 @@ namespace WebAppTests
                 responseContent
             );
         }
+
+        [OrderedFact("Should fail when deleting a non-existing task item")]
+        public async Task Should_Fail_Delete_NonExisting_TaskItem()
+        {
+            string mutation = @"
+            mutation {
+                deleteTask(
+                    ownerId: ""franky"",
+                    listId: ""a_test_list"",
+                    taskId: ""NON.existing""
+                )
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.JsonEqual(
+                @"{
+                    data: { deleteTask: false },
+                    errors: [ { message: ""Task item not found."" } ]
+                }",
+                responseContent
+            );
+        }
+
+        [OrderedFact("Should delete a task item")]
+        public async Task Should_Delete_TaskItem()
+        {
+            string mutation = @"
+               mutation {
+                deleteTask(
+                    ownerId: ""poulad1024"",
+                    listId: ""a_test_list"",
+                    taskId: ""do-something""
+                )
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.JsonEqual(@"{ data: { deleteTask: true } }", responseContent);
+        }
     }
 }
