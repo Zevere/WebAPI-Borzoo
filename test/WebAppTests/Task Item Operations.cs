@@ -157,5 +157,86 @@ namespace WebAppTests
                 responseContent
             );
         }
+
+        [OrderedFact("Should fail when creating task item with invalid owner ID")]
+        public async Task Should_Fail_Create_TaskItem_Invalid_OwnerID()
+        {
+            string mutation = @"
+            mutation {
+                createTask(
+                    ownerId: ""_invalid"",
+                    listId: ""whatever"",
+                    task: { title: ""foo"" }
+                ) { id }
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            Asserts.JsonEqual(
+                @"{
+                    data: { createTask: null },
+                    errors: [ { message: ""Invalid owner ID."", path: [ ""createTask"" ] } ]
+                }",
+                responseContent
+            );
+        }
+
+        [OrderedFact("Should fail when creating task item with invalid list ID")]
+        public async Task Should_Fail_Create_TaskItem_Invalid_ListID()
+        {
+            string mutation = @"
+            mutation {
+                createTask(
+                    ownerId: ""franky"",
+                    listId: ""...wrong..."",
+                    task: { title: ""title"" }
+                ) { id }
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            Asserts.JsonEqual(
+                @"{
+                    data: { createTask: null },
+                    errors: [ { message: ""Invalid list ID."", path: [ ""createTask"" ] } ]
+                }",
+                responseContent
+            );
+        }
+
+        [OrderedFact("Should fail when creating task item for a non-existing list")]
+        public async Task Should_Fail_Create_TaskItem_NonExisting_List()
+        {
+            string mutation = @"
+            mutation {
+                createTask(
+                    ownerId: ""franky"",
+                    listId: ""not.found"",
+                    task: { title: ""title"" }
+                ) { id }
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            Asserts.JsonEqual(
+                @"{
+                    data: { createTask: null },
+                    errors: [ { message: ""Task list not found."", path: [ ""createTask"" ] } ]
+                }",
+                responseContent
+            );
+        }
     }
 }

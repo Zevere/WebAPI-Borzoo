@@ -9,6 +9,7 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL
 {
+    /// <inheritdoc />
     public class QueryResolver : IQueryResolver
     {
         private readonly IUserRepository _userRepo;
@@ -17,6 +18,7 @@ namespace Borzoo.GraphQL
 
         private readonly ITaskItemRepository _taskItemRepo;
 
+        /// <inheritdoc />
         public QueryResolver(
             IUserRepository userRepo,
             ITaskListRepository taskListRepo,
@@ -28,6 +30,7 @@ namespace Borzoo.GraphQL
             _taskItemRepo = taskItemRepo;
         }
 
+        /// <inheritdoc />
         public async Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context)
         {
             var dto = context.GetArgument<UserCreationDto>("user");
@@ -57,6 +60,7 @@ namespace Borzoo.GraphQL
             return (UserDto) entity;
         }
 
+        /// <inheritdoc />
         public async Task<UserDto> LoginAsync(ResolveFieldContext<object> context)
         {
             var login = context.GetArgument<UserLoginDto>("login");
@@ -90,6 +94,7 @@ namespace Borzoo.GraphQL
             return (UserDto) entity;
         }
 
+        /// <inheritdoc />
         public async Task<UserDto> GetUserAsync(ResolveFieldContext<object> context)
         {
             string username = context.GetArgument<string>("userId");
@@ -112,6 +117,7 @@ namespace Borzoo.GraphQL
             return (UserDto) entity;
         }
 
+        /// <inheritdoc />
         public async Task<TaskList> CreateTaskListAsync(ResolveFieldContext<object> context)
         {
             string ownerId = context.GetArgument<string>("owner");
@@ -170,6 +176,7 @@ namespace Borzoo.GraphQL
             return entity;
         }
 
+        /// <inheritdoc />
         public async Task<bool> DeleteTaskListAsync(ResolveFieldContext<object> context)
         {
             string ownerId = context.GetArgument<string>("owner");
@@ -219,6 +226,7 @@ namespace Borzoo.GraphQL
             return taskList;
         }
 
+        /// <inheritdoc />
         public async Task<TaskList[]> GetAllTaskListsForUserAsync(ResolveFieldContext<UserDto> context)
         {
             string username = context.Source.Id;
@@ -234,8 +242,45 @@ namespace Borzoo.GraphQL
         {
             string ownerId = context.GetArgument<string>("ownerId");
             string listId = context.GetArgument<string>("listId");
-            var dto = context.GetArgument<TaskItemCreationDto>("task");
 
+            if (!IdGenerator.IsValid(ownerId))
+            {
+                var err = new Error("Invalid owner ID.")
+                {
+                    Path = new[] { "createTask" }
+                };
+                context.Errors.Add(err);
+                return default;
+            }
+
+            if (IdGenerator.IsValid(listId))
+            {
+                try
+                {
+                    await _taskListRepo.GetByNameAsync(listId, ownerId, context.CancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (EntityNotFoundException)
+                {
+                    var err = new Error("Task list not found.")
+                    {
+                        Path = new[] { "createTask" }
+                    };
+                    context.Errors.Add(err);
+                    return default;
+                }
+            }
+            else
+            {
+                var err = new Error("Invalid list ID.")
+                {
+                    Path = new[] { "createTask" }
+                };
+                context.Errors.Add(err);
+                return default;
+            }
+
+            var dto = context.GetArgument<TaskItemCreationDto>("task");
             var entity = (TaskItem) dto;
             entity.OwnerId = ownerId;
             entity.ListId = listId;
@@ -276,6 +321,7 @@ namespace Borzoo.GraphQL
             return entity;
         }
 
+        /// <inheritdoc />
         public Task<TaskItem[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
         {
             return Task.FromResult(new TaskItem[0]);
