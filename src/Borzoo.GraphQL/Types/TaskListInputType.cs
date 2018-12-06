@@ -3,14 +3,18 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
+    /// <summary>
+    /// Represents input type for the mutation of creating a task list
+    /// </summary>
     public class TaskListInputType : InputObjectGraphType<TaskListCreationDto>
     {
+        /// <inheritdoc />
         public TaskListInputType()
         {
             Name = "ListInput";
             Description = "Input for creating a new task list";
 
-            Field(_ => _.Id)
+            Field(_ => _.Id, nullable: true)
                 .Description("The desired task list name");
 
             Field(_ => _.Title)

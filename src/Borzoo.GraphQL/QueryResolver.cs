@@ -133,6 +133,25 @@ namespace Borzoo.GraphQL
 
             var entity = (TaskList) dto;
             entity.OwnerId = ownerId;
+
+            if (entity.DisplayId == null)
+            {
+                entity.DisplayId = IdGenerator.GetIdFromTitle(entity.Title);
+            }
+            else
+            {
+                bool isIdValid = IdGenerator.IsValid(entity.DisplayId);
+                if (!isIdValid)
+                {
+                    var err = new Error("Invalid List ID.")
+                    {
+                        Path = new[] { "list" }
+                    };
+                    context.Errors.Add(err);
+                    return default;
+                }
+            }
+
             try
             {
                 await _taskListRepo.AddAsync(entity, context.CancellationToken)

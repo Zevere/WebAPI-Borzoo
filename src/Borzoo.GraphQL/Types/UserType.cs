@@ -3,8 +3,12 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
+    /// <summary>
+    /// Represents User type in the GraphQL schema
+    /// </summary>
     public class UserType : ObjectGraphType<UserDto>
     {
+        /// <inheritdoc />
         public UserType(IQueryResolver queryResolver)
         {
             Name = "User";

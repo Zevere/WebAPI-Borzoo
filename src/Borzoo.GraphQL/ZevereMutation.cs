@@ -3,11 +3,16 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL
 {
+    /// <summary>
+    /// Represents root of the graph for mutation operations
+    /// </summary>
     public class ZevereMutation : ObjectGraphType
     {
+        /// <inheritdoc />
         public ZevereMutation(IQueryResolver resolver)
         {
             Name = nameof(ZevereMutation);
+            Description = "Root of the graph for mutation operations";
 
             Field<UserType>(
                 "createUser",

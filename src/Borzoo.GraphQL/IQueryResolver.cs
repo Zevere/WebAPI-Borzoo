@@ -13,12 +13,15 @@ namespace Borzoo.GraphQL
 
         Task<UserDto> GetUserAsync(ResolveFieldContext<object> context);
 
+        /// <summary>
+        /// Creates a new task list
+        /// </summary>
         Task<TaskList> CreateTaskListAsync(ResolveFieldContext<object> context);
 
         Task<bool> DeleteTaskListAsync(ResolveFieldContext<object> context);
 
         /// <summary>
-        /// Resolve a single task list for user
+        /// Resolves a single task list for user
         /// </summary>
         Task<TaskList> GetTaskListForUserAsync(ResolveFieldContext<UserDto> context);
 

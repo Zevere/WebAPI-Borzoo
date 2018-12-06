@@ -34,8 +34,7 @@ namespace WebAppTests
                 createList(
                     owner: ""Poulad1024"",
                     list: {
-                        id: ""todo_list"",
-                        title: ""A ToDo List""
+                        title: ""ToDo List""
                     }
                 )
                 { id owner title description collaborators tags createdAt updatedAt tasks { id } }
@@ -51,9 +50,55 @@ namespace WebAppTests
                 $@"{{
                     data: {{
                         createList: {{
-                            id: ""todo_list"",
+                            id: ""todo-list"",
                             owner: ""poulad1024"",
-                            title: ""A ToDo List"",
+                            title: ""ToDo List"",
+                            description: null,
+                            collaborators: null,
+                            tags: null,
+                            createdAt: ""{DateTime.UtcNow:yyyy-MM-dd}"",
+                            updatedAt: null,
+                            tasks: [ ]
+                        }}
+                    }}
+                }}",
+                responseContent
+            );
+        }
+
+        [OrderedTheory("Should create a new task list with valid ID")]
+        [InlineData("foo.BAR")]
+        [InlineData("A1")]
+        [InlineData("z_")]
+        [InlineData("z-d")]
+        [InlineData("f-3")]
+        public async Task Should_Create_New_TaskList_ID(string id)
+        {
+            string mutation = $@"
+            mutation {{
+                createList(
+                    owner: ""Poulad1024"",
+                    list: {{
+                        id: ""{id}"",
+                        title: ""Test List Title""
+                    }}
+                )
+                {{ id owner title description collaborators tags createdAt updatedAt tasks {{ id }} }}
+            }}";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            Asserts.JsonEqual(
+                $@"{{
+                    data: {{
+                        createList: {{
+                            id: ""{id.ToLower()}"",
+                            owner: ""poulad1024"",
+                            title: ""Test List Title"",
                             description: null,
                             collaborators: null,
                             tags: null,
@@ -73,7 +118,7 @@ namespace WebAppTests
             string query = @"
             query {
                 user(userId: ""Poulad1024"") {
-                    list(listId: ""todo_list"") {
+                    list(listId: ""todo-list"") {
                         id owner title description collaborators tags createdAt updatedAt tasks { id }
                     }
                 }
@@ -91,9 +136,9 @@ namespace WebAppTests
                     data: {{
                         user: {{
                             list: {{
-                                id: ""todo_list"",
+                                id: ""todo-list"",
                                 owner: ""poulad1024"",
-                                title: ""A ToDo List"",
+                                title: ""ToDo List"",
                                 description: null,
                                 collaborators: null,
                                 tags: null,
@@ -158,6 +203,46 @@ namespace WebAppTests
             );
         }
 
+        [OrderedTheory("Should fail when creating task list with invalid ID")]
+        [InlineData("")]
+        [InlineData("p")]
+        [InlineData("3")]
+        [InlineData(".")]
+        [InlineData("-")]
+        [InlineData("_")]
+        [InlineData("_invalid")]
+        [InlineData("2_0")]
+        [InlineData("#")]
+        [InlineData("val!d")]
+        public async Task Should_Fail_Create_TaskList_Invalid_ID(string id)
+        {
+            string mutation = $@"
+            mutation {{
+                createList(
+                    owner: ""Poulad1024"",
+                    list: {{
+                        id: ""{id}"",
+                        title: ""Won't Happen!""
+                    }}
+                )
+                {{ id }}
+            }}";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            Asserts.JsonEqual(
+                @"{
+                    data: { createList: null },
+                    errors: [ { message: ""Invalid List ID."", path: [ ""list"" ] } ]
+                }",
+                responseContent
+            );
+        }
+
         [OrderedFact("Should fail when deleting a non-existing task list")]
         public async Task Should_Fail_Delete_NonExisting_TaskList()
         {
@@ -207,7 +292,7 @@ namespace WebAppTests
         [OrderedFact("Should delete a task list")]
         public async Task Should_Delete_TaskList()
         {
-            string mutation = @"mutation { deleteList( owner: ""poulad1024"", list: ""todo_list"" ) }";
+            string mutation = @"mutation { deleteList( owner: ""poulad1024"", list: ""todo-list"" ) }";
 
             HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(mutation);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
