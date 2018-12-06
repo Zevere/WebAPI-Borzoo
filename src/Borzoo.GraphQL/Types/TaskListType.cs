@@ -3,8 +3,12 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
+    /// <summary>
+    /// Represents task list type in the GraphQL schema
+    /// </summary>
     public class TaskListType : ObjectGraphType<TaskList>
     {
+        /// <inheritdoc />
         public TaskListType(IQueryResolver queryResolver)
         {
             Name = "List";

@@ -3,14 +3,18 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
+    /// <summary>
+    /// Represents input type for creating a new task
+    /// </summary>
     public class TaskItemInputType : InputObjectGraphType<TaskItemCreationDto>
     {
+        /// <inheritdoc />
         public TaskItemInputType()
         {
             Name = "TaskInput";
             Description = "Input for creating a new task";
 
-            Field(_ => _.Id)
+            Field(_ => _.Id, nullable: true)
                 .Description("The desired task list name. Names are case insensitive and " +
                              "valid characters are ASCII alphanumeric characters, '_', '.', and '-'.");
 

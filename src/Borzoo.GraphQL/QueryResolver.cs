@@ -229,15 +229,35 @@ namespace Borzoo.GraphQL
             return taskLists;
         }
 
-        public async Task<TaskItemDto> CreateTaskItemAsync(ResolveFieldContext<object> context)
+        /// <inheritdoc />
+        public async Task<TaskItem> CreateTaskItemAsync(ResolveFieldContext<object> context)
         {
-            string userName = context.GetArgument<string>("owner");
-            string listName = context.GetArgument<string>("list");
+            string ownerId = context.GetArgument<string>("owner");
+            string listId = context.GetArgument<string>("list");
             var dto = context.GetArgument<TaskItemCreationDto>("task");
 
             var entity = (TaskItem) dto;
-            await _taskItemRepo.SetTaskListAsync(userName, listName, context.CancellationToken)
-                .ConfigureAwait(false);
+            entity.OwnerId = ownerId;
+            entity.ListId = listId;
+
+            if (entity.DisplayId == null)
+            {
+                entity.DisplayId = IdGenerator.GetIdFromTitle(entity.Title);
+            }
+            else
+            {
+                bool isIdValid = IdGenerator.IsValid(entity.DisplayId);
+                if (!isIdValid)
+                {
+                    var err = new Error("Invalid Task ID.")
+                    {
+                        Path = new[] { "createTask" }
+                    };
+                    context.Errors.Add(err);
+                    return default;
+                }
+            }
+
             try
             {
                 await _taskItemRepo.AddAsync(entity, context.CancellationToken)
@@ -253,12 +273,12 @@ namespace Borzoo.GraphQL
                 return default;
             }
 
-            return (TaskItemDto) entity;
+            return entity;
         }
 
-        public Task<TaskItemDto[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
+        public Task<TaskItem[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
         {
-            return Task.FromResult(new TaskItemDto[0]);
+            return Task.FromResult(new TaskItem[0]);
 //            string taskListName = context.Source.DisplayId;
 //            string ownerId = context.Source.OwnerId;
 //

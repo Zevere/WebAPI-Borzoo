@@ -2,7 +2,6 @@
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
 using Borzoo.Data.Mongo;
-using Borzoo.Data.Mongo.Entities;
 using Borzoo.Web.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,15 +37,15 @@ namespace Borzoo.Web.Extensions
 
             services.AddTransient<IMongoCollection<UserEntity>>(_ =>
                 _.GetRequiredService<IMongoDatabase>()
-                    .GetCollection<UserEntity>(MongoConstants.Collections.Users.Name)
+                    .GetCollection<UserEntity>("users")
             );
             services.AddTransient<IMongoCollection<TaskList>>(_ =>
                 _.GetRequiredService<IMongoDatabase>()
-                    .GetCollection<TaskList>(MongoConstants.Collections.TaskLists.Name)
+                    .GetCollection<TaskList>("task-lists")
             );
-            services.AddTransient<IMongoCollection<TaskItemMongo>>(_ =>
+            services.AddTransient<IMongoCollection<TaskItem>>(_ =>
                 _.GetRequiredService<IMongoDatabase>()
-                    .GetCollection<TaskItemMongo>(MongoConstants.Collections.TaskItems.Name)
+                    .GetCollection<TaskItem>("task-items")
             );
 
             services.AddTransient<IUserRepository, UserRepository>();

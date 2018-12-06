@@ -6,20 +6,17 @@ namespace Borzoo.Data.Abstractions
 {
     public interface ITaskItemRepository : IEntityRepository<TaskItem>
     {
-        string TaskListName { get; }
+        Task<TaskItem> GetByNameAsync(
+            string name,
+            string username,
+            string taskListName,
+            CancellationToken cancellationToken = default
+        );
 
-        string UserName { get; }
-        
-        string TaskListId { get; }
-        
-        string UserId { get; }
-
-        Task SetTaskListAsync(string username, string tasklistName, CancellationToken cancellationToken = default);
-        
-        Task<TaskItem> GetByNameAsync(string name, bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default);
-
-        Task<TaskItem[]> GetTaskItemsAsync(bool includeDeletedRecords = false,
-            CancellationToken cancellationToken = default);
+        Task<TaskItem[]> GetTaskItemsAsync(
+            string username,
+            string taskListName,
+            CancellationToken cancellationToken = default
+        );
     }
 }

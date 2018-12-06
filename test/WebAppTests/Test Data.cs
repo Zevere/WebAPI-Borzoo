@@ -28,5 +28,34 @@ namespace WebAppTests
                 }"),
             });
         }
+
+        public static void SeedTaskLists(IMongoDatabase db)
+        {
+            var usersCollection = db.GetCollection<BsonDocument>("task-lists");
+
+            usersCollection.InsertMany(new[]
+            {
+                BsonDocument.Parse(@"{
+                    name : ""a_test_list"",
+                    owner : ""poulad1024"",
+                    title : ""Test title here"",
+                    created : new Date(),
+                }"),
+
+                BsonDocument.Parse(@"{
+                    name : ""s2nd.list"",
+                    owner : ""poulad1024"",
+                    title : ""my 2nd list"",
+                    created : new Date(),
+                }"),
+
+                BsonDocument.Parse(@"{
+                    name : ""a_test_list"",
+                    owner : ""franky"",
+                    title : ""Testing..."",
+                    created : new Date(),
+                }"),
+            });
+        }
     }
 }

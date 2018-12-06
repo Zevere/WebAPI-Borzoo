@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions.Entities;
-using Borzoo.Data.Mongo.Entities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
@@ -53,21 +52,21 @@ namespace Borzoo.Data.Mongo
 
             {
                 // "task-items" Collection
-                await database.CreateCollectionAsync(MongoConstants.Collections.TaskItems.Name, null,
-                    cancellationToken);
-                var tasksCollection = database.GetCollection<TaskItemMongo>(MongoConstants.Collections.TaskItems.Name);
-                var indexBuilder = Builders<TaskItemMongo>.IndexKeys;
+                await database.CreateCollectionAsync("task-items", cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+                var tasksCollection = database.GetCollection<TaskItem>("task-items");
+                var indexBuilder = Builders<TaskItem>.IndexKeys;
 
-                // create unique index "list-task_name" on the fields "name" and "list"
+                // create unique index "owner_list_task-name" on the fields "name", "list" and "owner"
                 var key = indexBuilder.Combine(
-                    indexBuilder.Ascending(tl => tl.ListDbRef.Id),
+                    indexBuilder.Ascending(ti => ti.OwnerId),
+                    indexBuilder.Ascending(ti => ti.ListId),
                     indexBuilder.Ascending(tl => tl.DisplayId)
                 );
-                await tasksCollection.Indexes.CreateOneAsync(new CreateIndexModel<TaskItemMongo>(
-                        key,
-                        new CreateIndexOptions
-                            { Name = MongoConstants.Collections.TaskItems.Indexes.ListTaskName, Unique = true }),
-                    cancellationToken: cancellationToken
+                await tasksCollection.Indexes.CreateOneAsync(
+                    new CreateIndexModel<TaskItem>(
+                        key, new CreateIndexOptions { Name = "owner_list_task-name", Unique = true }
+                    ), cancellationToken: cancellationToken
                 ).ConfigureAwait(false);
             }
         }
@@ -113,23 +112,18 @@ namespace Borzoo.Data.Mongo
             {
                 BsonClassMap.RegisterClassMap<TaskItem>(map =>
                 {
-                    map.MapIdProperty(tl => tl.Id)
+                    map.MapIdProperty(ti => ti.Id)
                         .SetIdGenerator(StringObjectIdGenerator.Instance)
                         .SetSerializer(new StringSerializer(BsonType.ObjectId));
-                    map.MapProperty(tl => tl.DisplayId).SetElementName("name").SetOrder(1);
-                    map.MapProperty(tl => tl.Title).SetElementName("title");
-                    map.MapProperty(tl => tl.Description).SetElementName("description").SetIgnoreIfDefault(true);
-                    map.MapProperty(tl => tl.Due).SetElementName("due").SetIgnoreIfDefault(true);
-                    map.MapProperty(tl => tl.Tags).SetElementName("tags").SetIgnoreIfDefault(true);
-                    map.MapProperty(tl => tl.ModifiedAt).SetElementName("modified").SetIgnoreIfDefault(true);
-                    map.MapProperty(tl => tl.IsDeleted).SetElementName("deleted").SetIgnoreIfDefault(true);
-                    map.MapProperty(tl => tl.CreatedAt).SetElementName("created");
-                });
-                BsonClassMap.RegisterClassMap<TaskItemMongo>(map =>
-                {
-                    map.MapProperty(tl => tl.ListDbRef)
-                        .SetIsRequired(true)
-                        .SetElementName("list");
+                    map.MapProperty(ti => ti.DisplayId).SetElementName("name").SetOrder(1);
+                    map.MapProperty(ti => ti.Title).SetElementName("title");
+                    map.MapProperty(ti => ti.OwnerId).SetElementName("owner");
+                    map.MapProperty(ti => ti.ListId).SetElementName("list");
+                    map.MapProperty(ti => ti.Description).SetElementName("description").SetIgnoreIfDefault(true);
+                    map.MapProperty(ti => ti.Due).SetElementName("due").SetIgnoreIfDefault(true);
+                    map.MapProperty(ti => ti.Tags).SetElementName("tags").SetIgnoreIfDefault(true);
+                    map.MapProperty(ti => ti.ModifiedAt).SetElementName("modified").SetIgnoreIfDefault(true);
+                    map.MapProperty(ti => ti.CreatedAt).SetElementName("created");
                 });
             }
         }

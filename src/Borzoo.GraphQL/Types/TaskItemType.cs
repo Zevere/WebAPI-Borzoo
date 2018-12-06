@@ -1,22 +1,27 @@
-﻿using Borzoo.GraphQL.Models;
+﻿using Borzoo.Data.Abstractions.Entities;
 using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
-    public class TaskItemType : ObjectGraphType<TaskItemDto>
+    /// <summary>
+    /// Represents task item type in the GraphQL schema
+    /// </summary>
+    public class TaskItemType : ObjectGraphType<TaskItem>
     {
+        /// <inheritdoc />
         public TaskItemType()
         {
             Name = "Task";
             Description = "Task item";
 
-            Field(_ => _.Id)
+            Field(_ => _.DisplayId)
+                .Name("id")
                 .Description("Task's ID");
 
             Field(_ => _.Title)
                 .Description("Short title of this task");
 
-            Field(_ => _.Description)
+            Field(_ => _.Description, nullable: true)
                 .Description("Description of this task");
 
             Field(_ => _.Due, true, typeof(DateGraphType))

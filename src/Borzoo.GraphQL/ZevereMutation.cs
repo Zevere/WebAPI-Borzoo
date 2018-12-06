@@ -71,8 +71,8 @@ namespace Borzoo.GraphQL
             );
 
             Field<TaskItemType>(
-                "addTask",
-                "Add a new task to the list",
+                "createTask",
+                "Create a new task in the list",
                 new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>>
                     {
