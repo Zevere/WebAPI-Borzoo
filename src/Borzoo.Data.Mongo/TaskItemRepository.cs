@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
 using Borzoo.Data.Abstractions.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
 {
     public class TaskItemRepository : ITaskItemRepository
     {
+        private FilterDefinitionBuilder<TaskItem> Filter => Builders<TaskItem>.Filter;
+
         private readonly IMongoCollection<TaskItem> _collection;
 
         public TaskItemRepository(
@@ -72,25 +75,26 @@ namespace Borzoo.Data.Mongo
             throw new NotImplementedException();
         }
 
-        public async Task<TaskItem[]> GetTaskItemsAsync(
-            string username,
-            string taskListName,
+        public async Task<TaskItem[]> GetTaskItemsForListAsync(
+            string ownerName,
+            string listName,
             CancellationToken cancellationToken = default
         )
         {
-            var filter = Builders<TaskItem>
-                .Filter.Eq(task => task.ListId, taskListName);
+            ownerName = Regex.Escape(ownerName);
+            listName = Regex.Escape(listName);
+
+            var filter = Filter.And(
+                Filter.Regex(t => t.OwnerId, new BsonRegularExpression($"^{ownerName}$", "i")),
+                Filter.Regex(t => t.ListId, new BsonRegularExpression($"^{listName}$", "i"))
+            );
 
             var taskItems = await _collection
                 .Find(filter)
                 .ToListAsync(cancellationToken)
                 .ConfigureAwait(false);
 
-            var array = taskItems
-                .Cast<TaskItem>()
-                .ToArray();
-
-            return array;
+            return taskItems.ToArray();
         }
     }
 }

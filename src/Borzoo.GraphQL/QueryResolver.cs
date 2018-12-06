@@ -322,23 +322,15 @@ namespace Borzoo.GraphQL
         }
 
         /// <inheritdoc />
-        public Task<TaskItem[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
+        public async Task<TaskItem[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context)
         {
-            return Task.FromResult(new TaskItem[0]);
-//            string taskListName = context.Source.DisplayId;
-//            string ownerId = context.Source.OwnerId;
-//
-//            await _taskItemRepo.SetTaskListAsync(ownerId, taskListName, context.CancellationToken)
-//                .ConfigureAwait(false);
-//
-//            var tasks = await _taskItemRepo.GetTaskItemsAsync(cancellationToken: context.CancellationToken)
-//                .ConfigureAwait(false);
-//
-//            var taskDtos = tasks
-//                .Select(tl => (TaskItemDto) tl)
-//                .ToArray();
-//
-//            return taskDtos;
+            string listId = context.Source.DisplayId;
+            string ownerId = context.Source.OwnerId;
+
+            var taskItems = await _taskItemRepo.GetTaskItemsForListAsync(ownerId, listId, context.CancellationToken)
+                .ConfigureAwait(false);
+
+            return taskItems;
         }
 
         private string GenerateAlphaNumericString(int charCount)

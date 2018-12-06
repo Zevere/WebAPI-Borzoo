@@ -73,6 +73,47 @@ namespace WebAppTests
             );
         }
 
+        [OrderedFact("Should query task items in a list")]
+        public async Task Should_Query_TaskItems()
+        {
+            string query = @"
+            query {
+                user(userId: ""Poulad1024"") {
+                    list(listId: ""a_test_list"") {
+                        tasks { id title description due tags createdAt }
+                    }
+                }
+            }";
+
+            HttpResponseMessage response = await _fxt.HttpClient.PostGraphqlAsync(query);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            Asserts.IsJson(responseContent);
+
+            Asserts.JsonEqual(
+                $@"{{
+                    data: {{
+                        user: {{
+                            list: {{
+                                tasks: [
+                                    {{
+                                        id: ""do-something"",
+                                        title: ""Do Something!"",
+                                        description: null,
+                                        due: null,
+                                        tags: null,
+                                        createdAt: ""{DateTime.UtcNow:yyyy-MM-dd}""
+                                    }}
+                                ]
+                            }}
+                        }}
+                    }}
+                }}",
+                responseContent
+            );
+        }
+
         [OrderedTheory("Should create a new task item with valid ID")]
         [InlineData("foo.BAR")]
         [InlineData("A1")]

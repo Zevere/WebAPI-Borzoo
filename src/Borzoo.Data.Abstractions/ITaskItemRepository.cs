@@ -13,9 +13,9 @@ namespace Borzoo.Data.Abstractions
             CancellationToken cancellationToken = default
         );
 
-        Task<TaskItem[]> GetTaskItemsAsync(
-            string username,
-            string taskListName,
+        Task<TaskItem[]> GetTaskItemsForListAsync(
+            string ownerName,
+            string listName,
             CancellationToken cancellationToken = default
         );
     }

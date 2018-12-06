@@ -11,7 +11,7 @@ namespace Borzoo.GraphQL
 
             Field<UserType>("user",
                 "Get user account information by id",
-                new QueryArguments(new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "userId"}),
+                new QueryArguments(new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "userId" }),
                 resolver.GetUserAsync
             );
         }
