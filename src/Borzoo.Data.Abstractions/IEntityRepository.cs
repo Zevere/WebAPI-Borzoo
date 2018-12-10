@@ -31,11 +31,6 @@ namespace Borzoo.Data.Abstractions
             CancellationToken cancellationToken = default
         );
 
-        Task<TEntity> UpdateAsync(
-            TEntity entity,
-            CancellationToken cancellationToken = default
-        );
-
         /// <summary>
         /// Deletes an entity of type <see cref="TEntity"/> from the repository.
         /// </summary>

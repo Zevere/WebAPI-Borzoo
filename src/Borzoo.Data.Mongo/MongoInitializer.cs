@@ -9,8 +9,16 @@ using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
 {
+    /// <summary>
+    /// MongoDB initialization helper
+    /// </summary>
     public static class MongoInitializer
     {
+        /// <summary>
+        /// Creates the database schema
+        /// </summary>
+        /// <param name="database">Database instance</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         public static async Task CreateSchemaAsync(
             IMongoDatabase database,
             CancellationToken cancellationToken = default
@@ -71,6 +79,9 @@ namespace Borzoo.Data.Mongo
             }
         }
 
+        /// <summary>
+        /// Registers all the mappings between data entities and the documents stored in MongoDB collections
+        /// </summary>
         public static void RegisterClassMaps()
         {
             if (!BsonClassMap.IsClassMapRegistered(typeof(User)))

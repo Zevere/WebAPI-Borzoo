@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -92,40 +91,23 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public async Task<User> UpdateAsync(
-            User entity,
-            CancellationToken cancellationToken = default
-        )
-        {
-            var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(entity.Id));
-            var updates = Builders<User>.Update.Combine(
-                Builders<User>.Update.Set(u => u.DisplayId, entity.DisplayId.ToLower()),
-                Builders<User>.Update.Set(u => u.PassphraseHash, entity.PassphraseHash),
-                Builders<User>.Update.Set(u => u.FirstName, entity.FirstName),
-                Builders<User>.Update.Set(u => u.ModifiedAt, entity.ModifiedAt?.ToUniversalTime() ?? DateTime.UtcNow),
-                Builders<User>.Update.Set(u => u.LastName, entity.LastName)
-            );
-
-            var updatedEntity = await _collection.FindOneAndUpdateAsync(
-                filter,
-                updates,
-                new FindOneAndUpdateOptions<User> { ReturnDocument = ReturnDocument.After },
-                cancellationToken
-            ).ConfigureAwait(false);
-
-            updatedEntity.CopyTo(entity);
-
-            return entity;
-        }
-
-        public Task DeleteAsync(
+        /// <inheritdoc />
+        public async Task DeleteAsync(
             string id,
             CancellationToken cancellationToken = default
         )
         {
-            throw new NotImplementedException();
+            var result = await _collection
+                .DeleteOneAsync(Filter.Eq("_id", ObjectId.Parse(id)), cancellationToken)
+                .ConfigureAwait(false);
+
+            if (result.DeletedCount == 0)
+            {
+                throw new EntityNotFoundException(nameof(User.Id));
+            }
         }
 
+        /// <inheritdoc />
         public async Task<User> GetByTokenAsync(
             string token,
             CancellationToken cancellationToken = default
@@ -145,15 +127,7 @@ namespace Borzoo.Data.Mongo
             return entity;
         }
 
-        public Task<User> GetByPassphraseLoginAsync(
-            string userName,
-            string passphrase,
-            CancellationToken cancellationToken = default
-        )
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <inheritdoc />
         public async Task SetTokenForUserAsync(
             string userId,
             string token,
@@ -163,14 +137,6 @@ namespace Borzoo.Data.Mongo
             var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
             var update = Builders<User>.Update.Set(u => u.Token, token);
             await _collection.FindOneAndUpdateAsync(filter, update, cancellationToken: cancellationToken);
-        }
-
-        public Task<bool> RevokeTokenAsync(
-            string token,
-            CancellationToken cancellationToken = default
-        )
-        {
-            throw new NotImplementedException();
         }
     }
 }

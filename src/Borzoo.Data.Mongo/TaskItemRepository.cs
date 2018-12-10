@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -9,12 +8,14 @@ using MongoDB.Driver;
 
 namespace Borzoo.Data.Mongo
 {
+    /// <inheritdoc />
     public class TaskItemRepository : ITaskItemRepository
     {
         private FilterDefinitionBuilder<TaskItem> Filter => Builders<TaskItem>.Filter;
 
         private readonly IMongoCollection<TaskItem> _collection;
 
+        /// <inheritdoc />
         public TaskItemRepository(
             IMongoCollection<TaskItem> collection
         )
@@ -22,6 +23,7 @@ namespace Borzoo.Data.Mongo
             _collection = collection;
         }
 
+        /// <inheritdoc />
         public async Task AddAsync(
             TaskItem entity,
             CancellationToken cancellationToken = default
@@ -47,19 +49,28 @@ namespace Borzoo.Data.Mongo
             }
         }
 
-        public Task<TaskItem> GetByIdAsync(
+        /// <inheritdoc />
+        public async Task<TaskItem> GetByIdAsync(
             string id,
             CancellationToken cancellationToken = default
         )
         {
-            throw new NotImplementedException();
+            var filter = Filter.Eq("_id", new ObjectId(id));
+
+            var taskItem = await _collection
+                .Find(filter)
+                .SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            if (taskItem is null)
+            {
+                throw new EntityNotFoundException(nameof(TaskItem.Id), id);
+            }
+
+            return taskItem;
         }
 
-        public Task<TaskItem> UpdateAsync(TaskItem entity, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <inheritdoc />
         public async Task DeleteAsync(
             string id,
             CancellationToken cancellationToken = default
@@ -75,6 +86,7 @@ namespace Borzoo.Data.Mongo
             }
         }
 
+        /// <inheritdoc />
         public async Task<TaskItem> GetByNameAsync(
             string name,
             string ownerName,
@@ -106,7 +118,8 @@ namespace Borzoo.Data.Mongo
             return taskItem;
         }
 
-        public async Task<TaskItem[]> GetTaskItemsForListAsync(
+        /// <inheritdoc />
+        public async Task<TaskItem[]> GetAllTaskItemsForListAsync(
             string ownerName,
             string listName,
             CancellationToken cancellationToken = default

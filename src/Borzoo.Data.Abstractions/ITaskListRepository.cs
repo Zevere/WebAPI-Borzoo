@@ -14,7 +14,7 @@ namespace Borzoo.Data.Abstractions
         /// </summary>
         /// <param name="name">Display ID of the task list</param>
         /// <param name="ownerId">User ID of the list owner</param>
-        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel operation</param>
         Task<TaskList> GetByNameAsync(
             string name,
             string ownerId,
@@ -25,8 +25,8 @@ namespace Borzoo.Data.Abstractions
         /// Gets all the task lists for a user
         /// </summary>
         /// <param name="ownerId">User ID of the list owner</param>
-        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-        Task<TaskList[]> GetUserTaskListsAsync(
+        /// <param name="cancellationToken">The cancellation token to cancel operation</param>
+        Task<TaskList[]> GetAllUserTaskListsAsync(
             string ownerId,
             CancellationToken cancellationToken = default
         );

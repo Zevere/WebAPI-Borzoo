@@ -231,7 +231,7 @@ namespace Borzoo.GraphQL
         {
             string username = context.Source.Id;
 
-            var taskLists = await _taskListRepo.GetUserTaskListsAsync(username, context.CancellationToken)
+            var taskLists = await _taskListRepo.GetAllUserTaskListsAsync(username, context.CancellationToken)
                 .ConfigureAwait(false);
 
             return taskLists;
@@ -327,7 +327,7 @@ namespace Borzoo.GraphQL
             string listId = context.Source.DisplayId;
             string ownerId = context.Source.OwnerId;
 
-            var taskItems = await _taskItemRepo.GetTaskItemsForListAsync(ownerId, listId, context.CancellationToken)
+            var taskItems = await _taskItemRepo.GetAllTaskItemsForListAsync(ownerId, listId, context.CancellationToken)
                 .ConfigureAwait(false);
 
             return taskItems;

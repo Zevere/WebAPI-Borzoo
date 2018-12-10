@@ -2,8 +2,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0"/>
   </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Borzoo.Data.Abstractions;
@@ -92,12 +91,11 @@ namespace Borzoo.Data.Mongo
         }
 
         /// <inheritdoc />
-        public async Task<TaskList[]> GetUserTaskListsAsync(
+        public async Task<TaskList[]> GetAllUserTaskListsAsync(
             string ownerId,
             CancellationToken cancellationToken = default
         )
         {
-            // ToDO ensure id contains allowed characters only \.[A-Z]_\d
             ownerId = Regex.Escape(ownerId);
             var filter = Filter.Regex(tl => tl.OwnerId, new BsonRegularExpression($"^{ownerId}$", "i"));
 
@@ -110,21 +108,24 @@ namespace Borzoo.Data.Mongo
         }
 
         /// <inheritdoc />
-        public Task<TaskList> GetByIdAsync(
+        public async Task<TaskList> GetByIdAsync(
             string id,
             CancellationToken cancellationToken = default
         )
         {
-            throw new NotImplementedException();
-        }
+            var filter = Filter.Eq("_id", new ObjectId(id));
 
-        /// <inheritdoc />
-        public Task<TaskList> UpdateAsync(
-            TaskList entity,
-            CancellationToken cancellationToken = default
-        )
-        {
-            throw new NotImplementedException();
+            var taskList = await _collection
+                .Find(filter)
+                .SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            if (taskList is null)
+            {
+                throw new EntityNotFoundException(nameof(TaskList.Id), id);
+            }
+
+            return taskList;
         }
     }
 }
