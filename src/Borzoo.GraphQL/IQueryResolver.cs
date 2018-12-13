@@ -5,8 +5,14 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL
 {
+    /// <summary>
+    /// Contains resolver functions for GraphQL operations
+    /// </summary>
     public interface IQueryResolver
     {
+        /// <summary>
+        /// Creates a new user account
+        /// </summary>
         Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context);
 
         Task<UserDto> LoginAsync(ResolveFieldContext<object> context);
