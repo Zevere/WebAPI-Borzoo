@@ -3,11 +3,13 @@
 // ReSharper disable once CheckNamespace
 namespace Borzoo.Data.Abstractions
 {
-    public class RepositoryException : Exception
+    /// <summary>
+    /// Indicates an error in the operations on an entity repository
+    /// </summary>
+    public abstract class RepositoryException : Exception
     {
-        public RepositoryException(string message)
-            : base(message)
-        {
-        }
+        /// <inheritdoc />
+        protected RepositoryException(string message)
+            : base(message) { }
     }
 }

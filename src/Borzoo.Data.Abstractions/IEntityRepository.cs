@@ -12,7 +12,7 @@ namespace Borzoo.Data.Abstractions
         where TEntity : IEntity
     {
         /// <summary>
-        /// Adds an entity of type <see cref="TEntity"/> to the repository.
+        /// Adds an entity of type <typeparamref name="TEntity" /> to the repository.
         /// </summary>
         /// <param name="entity">Entity to be added.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
@@ -32,7 +32,7 @@ namespace Borzoo.Data.Abstractions
         );
 
         /// <summary>
-        /// Deletes an entity of type <see cref="TEntity"/> from the repository.
+        /// Deletes an entity of type <typeparamref name="TEntity"/> from the repository.
         /// </summary>
         /// <param name="id">Unique identifier of the entity.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
