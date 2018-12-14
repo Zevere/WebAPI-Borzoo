@@ -14,15 +14,23 @@ using Microsoft.AspNetCore.Http;
 
 namespace Borzoo.Web
 {
+    /// <summary>
+    /// Application startup
+    /// </summary>
     public class Startup
     {
         private IConfiguration Configuration { get; }
 
+        /// <inheritdoc />
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Configures application services
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMongoDb(Configuration.GetSection("Mongo"));
@@ -44,11 +52,14 @@ namespace Borzoo.Web
 
             #endregion
 
-            services.AddGraphQL();
+            services.AddGraphQl();
 
             services.AddCors();
         }
 
+        /// <summary>
+        /// Configures web application request pipeline
+        /// </summary>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

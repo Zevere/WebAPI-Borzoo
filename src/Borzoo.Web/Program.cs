@@ -5,7 +5,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Borzoo.Web
 {
-    public class Program
+    /// <summary>
+    /// Program's entry point
+    /// </summary>
+    internal class Program
     {
         public static void Main(string[] args)
         {

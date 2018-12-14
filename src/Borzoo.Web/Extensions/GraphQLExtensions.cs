@@ -7,9 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Borzoo.Web.Extensions
 {
-    public static class GraphQLExtensions
+    internal static class GraphQlExtensions
     {
-        public static void AddGraphQL(this IServiceCollection services)
+        /// <summary>
+        /// Adds GraphQL services to the app's service collection
+        /// </summary>
+        public static void AddGraphQl(this IServiceCollection services)
         {
             services.AddTransient<IQueryResolver, QueryResolver>();
 
