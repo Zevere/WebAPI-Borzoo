@@ -3,8 +3,12 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL
 {
+    /// <summary>
+    /// Represents root of the graph for query operations
+    /// </summary>
     public class ZevereQuery : ObjectGraphType
     {
+        /// <inheritdoc />
         public ZevereQuery(IQueryResolver resolver)
         {
             Name = nameof(ZevereQuery);

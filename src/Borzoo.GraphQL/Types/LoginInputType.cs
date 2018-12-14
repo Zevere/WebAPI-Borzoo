@@ -3,8 +3,12 @@ using GraphQL.Types;
 
 namespace Borzoo.GraphQL.Types
 {
+    /// <summary>
+    /// Represents the user login input type
+    /// </summary>
     public class LoginInputType : InputObjectGraphType<UserLoginDto>
     {
+        /// <inheritdoc />
         public LoginInputType()
         {
             Name = "LoginInput";

@@ -4,7 +4,7 @@ using GraphQL.Types;
 namespace Borzoo.GraphQL.Types
 {
     /// <summary>
-    /// Represents User type in the GraphQL schema
+    /// Represents User type
     /// </summary>
     public class UserType : ObjectGraphType<UserDto>
     {

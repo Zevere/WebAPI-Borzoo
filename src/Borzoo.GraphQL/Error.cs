@@ -3,18 +3,17 @@ using GraphQL;
 
 namespace Borzoo.GraphQL
 {
+    /// <summary>
+    /// An execution error in GraphQL operations
+    /// </summary>
     public class Error : ExecutionError
     {
-        public string Type { get; set; }
-        
+        /// <inheritdoc />
         public Error(string message)
-            : base(message)
-        {
-        }
+            : base(message) { }
 
-        public Error(string message, Exception innerException) 
-            : base(message, innerException)
-        {
-        }
+        /// <inheritdoc />
+        public Error(string message, Exception innerException)
+            : base(message, innerException) { }
     }
 }

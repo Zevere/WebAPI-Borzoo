@@ -15,8 +15,14 @@ namespace Borzoo.GraphQL
         /// </summary>
         Task<UserDto> CreateUserAsync(ResolveFieldContext<object> context);
 
+        /// <summary>
+        /// Creates a user login
+        /// </summary>
         Task<UserDto> LoginAsync(ResolveFieldContext<object> context);
 
+        /// <summary>
+        /// Gets a user account
+        /// </summary>
         Task<UserDto> GetUserAsync(ResolveFieldContext<object> context);
 
         /// <summary>
@@ -24,6 +30,9 @@ namespace Borzoo.GraphQL
         /// </summary>
         Task<TaskList> CreateTaskListAsync(ResolveFieldContext<object> context);
 
+        /// <summary>
+        /// Deletes a task list
+        /// </summary>
         Task<bool> DeleteTaskListAsync(ResolveFieldContext<object> context);
 
         /// <summary>
@@ -31,6 +40,9 @@ namespace Borzoo.GraphQL
         /// </summary>
         Task<TaskList> GetTaskListForUserAsync(ResolveFieldContext<UserDto> context);
 
+        /// <summary>
+        /// Gets all the task lists owned by a user
+        /// </summary>
         Task<TaskList[]> GetAllTaskListsForUserAsync(ResolveFieldContext<UserDto> context);
 
         /// <summary>
@@ -38,6 +50,9 @@ namespace Borzoo.GraphQL
         /// </summary>
         Task<TaskItem> CreateTaskItemAsync(ResolveFieldContext<object> context);
 
+        /// <summary>
+        /// Gets all the task items in a list
+        /// </summary>
         Task<TaskItem[]> GetTaskItemsForListAsync(ResolveFieldContext<TaskList> context);
 
         /// <summary>
